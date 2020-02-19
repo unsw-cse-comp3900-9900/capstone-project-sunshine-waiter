@@ -1,0 +1,12 @@
+{
+	"dependencies": {
+		"mongodb": "3.5.3",
+		"express": "4.17.1",
+		"nodemon": "2.0.2",
+		"mongoose": "5.9.1"
+	},
+	"scripts": {
+		"start": "node index.js",
+		"dev": "nodemon"
+	}
+}
