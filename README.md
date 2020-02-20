@@ -23,7 +23,9 @@
     - git commit -m "some thing"
     - git push origin username/branch_name
     ```
--   After push code, go to `github`, your pr will be prompted in the page, go and click `compare & pul request` and fill information
+-   After push code, go to `github`, your pr will be prompted in the page, go and click `compare & pul request` and fill information and request a reviewer
+
+-   A PR cannot be merged before being approved
 
 ## Tech Stack
 
