@@ -1,0 +1,13 @@
+Week1
+
+2020/2/17
+Group formed.
+
+2020/2/18
+Self learned JavaScript Basics.
+
+2020/2/19
+Self learned React Basics.
+
+2020/2/20
+Self learned Html5 Basics.
