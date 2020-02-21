@@ -1,0 +1,46 @@
+version: '3'
+services:
+    mongo:
+        image: 'mongo:latest'
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: root
+            MONGO_INITDB_ROOT_PASSWORD: example
+            MONGO_INITDB_DATABASE: waiter
+        ports:
+            - 27017:27017
+        volumes:
+            - ./backend/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    backend:
+        depends_on:
+            - mongo
+        build:
+            dockerfile: Dockerfile.dev
+            context: ./backend
+        volumes:
+            - /app/node_modules
+            - ./backend:/app
+        # environment:
+        #     - PGUSER=postgres
+        #     - PGHOST=postgres
+        #     - PGDATABASE=postgres
+        #     - PGPASSWORD=postgres_password
+        #     - PGPORT=5432
+    frontend:
+        build:
+            dockerfile: Dockerfile.dev
+            context: ./frontend
+        ports:
+            - '3000:3000'
+        volumes:
+            - /app/node_modules
+            - ./frontend:/app
+    nginx:
+        restart: always
+        depends_on:
+            - backend
+            - frontend
+        build:
+            dockerfile: Dockerfile.dev
+            context: ./nginx
+        ports:
+            - '3050:80'
