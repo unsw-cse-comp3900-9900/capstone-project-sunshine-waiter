@@ -1,8 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-export default class Navigation extends React.Component {
-  state = { activeItem: "customer" };
+export default class DevNav extends React.Component {
+  state = {
+    activeItem: "Resturant",
+    mode: "development"
+  };
 
   handleItemClick = e => {
     this.setState({ activeItem: e.target.name });
@@ -12,10 +15,18 @@ export default class Navigation extends React.Component {
     const { activeItem } = this.state;
 
     return (
-      <div className="ui four pointing item menu">
+      <div className="ui five pointing item menu">
         {/* <Link className="active item">Customer</Link> */}
         <Link
           to="/"
+          name="Resturant"
+          onClick={this.handleItemClick}
+          className={activeItem === "Resturant" ? "active item" : "item"}
+        >
+          Resturant
+        </Link>
+        <Link
+          to="/customer"
           name="customer"
           onClick={this.handleItemClick}
           className={activeItem === "customer" ? "active item" : "item"}
