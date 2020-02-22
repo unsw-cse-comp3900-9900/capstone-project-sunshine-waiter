@@ -6,11 +6,11 @@
 
 -   install [Docker](https://www.docker.com/products/docker-desktop)
 -   After installation, start the docker in your computer
--   In the terminal, `git clone` the repository from remote and in the working directory run `docker-compse up --build`
+-   In the terminal, `git clone` the repository from remote and in the working directory run `docker-compose up --build`
 
 ### Subsequent runs
 
--   Just run `docker-compse up`
+-   Just run `docker-compose up`
 -   Access to the waiter page throught `https://localhost:3000`
 
 ## How to push your code
