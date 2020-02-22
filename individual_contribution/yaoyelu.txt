@@ -1,4 +1,5 @@
 - WEEK 1
-    - DevOps SetUp
-        - Dockerizing
     - Planning the application workflow and architecture
+    - Setup application
+    - DevOps SetUp
+        - Dockerizing backend/frontend/nginx/database
