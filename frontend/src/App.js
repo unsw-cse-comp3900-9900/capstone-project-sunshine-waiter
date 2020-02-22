@@ -1,17 +1,19 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import { Route, Redirect, Switch } from "react-router";
 
 import Customer from "./components/Customer";
 import Waiter from "./components/Waiter";
 import Kitchen from "./components/Kitchen";
 import Manager from "./components/Manager";
+import Navigation from "./components/Navigation";
 import NotFound from "./components/NotFound";
 
 const App = () => {
   return (
     <div className="ui container">
       <h1>Welcome to Sunshine Waiter!</h1>
+
+      <Navigation />
 
       <Switch>
         <Route exact path="/">
