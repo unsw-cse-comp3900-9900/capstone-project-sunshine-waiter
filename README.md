@@ -11,7 +11,7 @@
 ### Subsequent runs
 
 -   Just run `docker-compose up`
--   Access to the waiter page throught `https://localhost:3000`
+-   Access to the waiter page throught `http://localhost:3000`
 
 ## How to push your code
 
@@ -23,7 +23,7 @@
     - git commit -m "some thing"
     - git push origin branch_name:username/branch_name
     ```
--   After push code, go to `github`, your pr will be prompted in the page, go and click `compare & pul request` and fill information and request a reviewer
+-   After push code, go to `github`, your pr will be prompted in the page, go and click `compare & pull request` and fill information and request a reviewer
 
 -   A PR cannot be merged before being approved
 
