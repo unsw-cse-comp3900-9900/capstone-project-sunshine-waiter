@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react'
 
 const NotFound = props => {
   return (
@@ -6,7 +6,7 @@ const NotFound = props => {
       <h1>Not Found</h1>
       <div>{props.children}</div>
     </React.Fragment>
-  );
-};
+  )
+}
 
-export default NotFound;
+export default NotFound

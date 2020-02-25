@@ -1,21 +1,20 @@
-import React from "react";
-import { Route, Redirect, Switch } from "react-router";
+import React from 'react'
+import { Route, Redirect, Switch } from 'react-router'
 
-import Customer from "./components/Customer";
-import Resturant from "./components/Resturant";
-import Kitchen from "./components/Kitchen";
-import Waiter from "./components/Waiter";
-import Manager from "./components/Manager";
-import NotFound from "./components/NotFound";
+import Customer from './components/Customer'
+import Resturant from './components/Resturant'
+import Kitchen from './components/Kitchen'
+import Waiter from './components/Waiter'
+import Manager from './components/Manager'
+import NotFound from './components/NotFound'
 
 const App = () => {
   return (
-    <div className="ui container">
+    <div className="ui contanier">
       <Switch>
         <Route exact path="/">
           <Resturant />
         </Route>
-
         <Route exact path="/waiter">
           <Waiter />
         </Route>
@@ -33,7 +32,7 @@ const App = () => {
         <Redirect to="/not-found"></Redirect>
       </Switch>
     </div>
-  );
-};
+  )
+}
 
-export default App;
+export default App

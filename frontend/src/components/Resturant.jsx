@@ -1,13 +1,16 @@
-import React from "react";
-import Navigation from "./Navigation";
+import React from 'react'
 
-const Restaurant = () => (
-  <div>
-    <Navigation />
-    <h2>Here is the Restaurant page.</h2>
-    <h3>Here will have a nice landing page.</h3>
-    <h3>Here will have a login frame.</h3>
-  </div>
-);
+import Nivagation from './Navigation'
 
-export default Restaurant;
+const Restaurant = () => {
+  return (
+    <div>
+      <h1 className="ui inverted header" style={{ fontSize: '70px' }}>
+        Welcome to the Resturant
+      </h1>
+      <Nivagation />
+    </div>
+  )
+}
+
+export default Restaurant
