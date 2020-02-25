@@ -1,5 +1,5 @@
 import React from 'react'
-import { Route, Redirect, Switch } from 'react-router'
+import { Route, Redirect, Switch } from 'react-router-dom'
 
 import Customer from './components/Customer'
 import Resturant from './components/Resturant'
