@@ -1,46 +1,46 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React from 'react'
+
+import NavigationButtonCard from './NavigationButtonCard'
 
 export default class Navigation extends React.Component {
   state = {
-    activeItem: "",
-    mode: "development"
-  };
+    activeItem: '',
+  }
 
   handleItemClick = e => {
-    this.setState({ activeItem: e.target.name });
-  };
+    this.setState({ activeItem: e.target.name })
+  }
 
   render() {
-    const { activeItem } = this.state;
+    const { activeItem } = this.state
 
     return (
-      <div className="ui three pointing item menu">
-        <Link
-          to="/waiter"
-          name="waiter"
-          onClick={this.handleItemClick}
-          className={activeItem === "waiter" ? "active item" : "item"}
+      <div>
+        <NavigationButtonCard
+          linkActiveItem={activeItem}
+          linkTo="/waiter"
+          linkName="waiter"
+          linkOnClick={this.handleItemClick}
         >
-          Waiter
-        </Link>
-        <Link
-          to="/kitchen"
-          name="kitchen"
-          onClick={this.handleItemClick}
-          className={activeItem === "kitchen" ? "active item" : "item"}
+          <i class="user icon"></i>
+        </NavigationButtonCard>
+        <NavigationButtonCard
+          linkActiveItem={activeItem}
+          linkTo="/kitchen"
+          linkName="kitchen"
+          linkOnClick={this.handleItemClick}
         >
-          Kitchen
-        </Link>
-        <Link
-          to="/manager"
-          name="manager"
-          onClick={this.handleItemClick}
-          className={activeItem === "manager" ? "active item" : "item"}
+          <i class="food icon"></i>
+        </NavigationButtonCard>
+        <NavigationButtonCard
+          linkActiveItem={activeItem}
+          linkTo="/manager"
+          linkName="manager"
+          linkOnClick={this.handleItemClick}
         >
-          Manager
-        </Link>
+          <i class="spy icon"></i>
+        </NavigationButtonCard>
       </div>
-    );
+    )
   }
 }
