@@ -1,13 +1,22 @@
 {
-	"dependencies": {
-		"express": "^4.17.1",
-		"mongodb": "^3.5.3",
-		"mongoose": "5.9.1",
-		"nodemon": "2.0.2",
-		"pg": "7.18.1"
-	},
-	"scripts": {
-		"start": "node index.js",
-		"dev": "nodemon"
-	}
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongodb": "^3.5.3",
+    "mongoose": "5.9.1",
+    "nodemon": "2.0.2",
+    "pg": "7.18.1"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon"
+  },
+  "devDependencies": {
+    "prettier": "1.19.1"
+  },
+  "prettier": {
+    "trailingComma": "es5",
+    "tabWidth": 2,
+    "semi": false,
+    "singleQuote": true
+  }
 }
