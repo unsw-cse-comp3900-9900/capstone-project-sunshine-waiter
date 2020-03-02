@@ -1,16 +1,16 @@
-const keys = require('./keys');
+// lib dependency
+const express = require('express')
+const connectDb = require('./src/connection')
+const api = require('./src/api')
 
-const express = require('express');
-const app = express();
+// const
+const app = express()
+const PORT = 8000
 
-//mongodb
-const mongoose = require('mongoose');
+app.use('/api', api)
 
-mongoose
-	.connect(keys.url, {
-		useNewUrlParser: true,
-		user: keys.user,
-		pass: keys.pwd,
-	})
-	.then(() => console.log('Connected to MongoDB'))
-	.catch((err) => console.log(`Fail to connect to MongoDB: ${err}`));
+app.listen(PORT, () => {
+  console.log('Listening at ' + PORT)
+})
+
+connectDb()
