@@ -10,7 +10,6 @@ Many restaurants or cafes now have an increasingly demanding for an automated or
 2.  Can take care of multiple customers simultaneously, which may need extra waiters/waitresses if not using such a system.
 3.  Having a database that stores all the activities data (logs) so that it can provide some insights on the business condition for the restaurant owner.
 
-
 ## Existing systems and their drawbacks
 
 There are several restaurant management systems used on the market, but cannot exactly fulfil the needs of this project. The market lacks such a waiter service system that can be generally implemented by any kind of restaurants/cafes.
@@ -39,7 +38,8 @@ Every customer who wants to order something has to sign in with his/her e-mail o
 And the visual style of its online menu is not modern enough, which might not be attractive to some users.
 
 ### 4. Toast
-Toast offers a popular point of sale system for restaurants that also includes an online ordering system. This option is most suited to the restaurants that already use Toast POS. The whole system is meant to work together to help restaurants manage all of their operations in one system, to even include online order reports and delivery systems. Pricing starts at $140 per month.
+
+Toast offers a popular point of sale system for restaurants that also includes an online ordering system. This option is most suited to the restaurants that already use Toast POS. The whole system is meant to work together to help restaurants manage all of their operations in one system, to even include online order reports and delivery systems. Pricing starts at \$140 per month.
 
 **Drawbacks:**
 High pricing. Same potential problems as MenuDrive.
@@ -53,33 +53,37 @@ Therefore, our product "waiter" is proposed to address these issues.we are aimin
 For customers, our system provides functions of placing orders online and requesting assistance from a waiter.
 
 For restuarant, our product provides different **pages** according to different roles including waiter, kitchen staff and mananger, which is as following:
-1. The page for waiter allows them to get request from customer and mark as completed once it is dealed with.Besides, it allows them to deal with the  prepared order from kitchen and serve it to customer. 
+
+1. The page for waiter allows them to get request from customer and mark as completed once it is dealed with.Besides, it allows them to deal with the prepared order from kitchen and serve it to customer.
 2. The page for kitchen provides kitchen staff a time-sorted list of customer orders and allow them to mark an order item as prepared once it is ready for serving.
 3. The page for manager allow them to create ,update,delete menu. With an easy menu tool, the manager can quickly add items to site complete with high resolution images,description,pricing, category and more. And also, the manager can update the order of menu items or categories.
 
 During the brainstorming, we think of many other functions, including payment and marketing analysis. Due to the relative complicated implementation and time limitation, we decide to let customers go to the front counter to pay instead of paying online. Besides, the marketing analysis includes data collection and analysis, which is relative time-consuming. Therefore, this part is out of our scope.
+
 ## Epics
 
 In this project, we have four main epics including basic, core , management and business analysis part. The structure picture is as following:
-![](https://codimd.s3.shivering-isles.com/demo/uploads/upload_eacf7daa7445fb20153119caec1f0e2c.png)
-
-
-
-
-
+![](proposal.assets/epic.png)
 
 ### 1. Basics
+
 As basic part of our application, we will realize two main functions: adminstration and authentication, menu presentation.
 
 ### 2. Core
+
 After defining the main structure, we will set up 4 main functions: dishes-to-cook for kitchen, place order for customer,dishes-to-serve for waiter, menu builder for manager.
 
 ### 3. Management
+
 After finishing the main body of the system, this epic will add three functions: assistance request between customer and waiter,orderers management for manager,dashboard for manager.
+
 ### 4. Analysis
-This epic will analyse the order data to  arrange work schedule more suitabley and have a reasonable recuritment plan.
+
+This epic will analyse the order data to arrange work schedule more suitabley and have a reasonable recuritment plan.
+
 ## Software architecture
-![](https://codimd.s3.shivering-isles.com/demo/uploads/upload_ab4eb9e588844f68d3e793829c08b51d.png)
+
+![](proposal.assets/Softeware_Architecture.png)
 
 ## Service design
 
@@ -89,15 +93,15 @@ This epic will analyse the order data to  arrange work schedule more suitabley a
 
 1. Customer places order
 2. Server recieves order
-3. Server maintain the dishes-to-cook queue and push update to cook page.  
-> The dishes-to-cook is a time-sorted queue that cook can view and mark a dish as cooked
-4. Cooks 
+3. Server maintain the dishes-to-cook queue and push update to cook page.
+    > The dishes-to-cook is a time-sorted queue that cook can view and mark a dish as cooked
+4. Cooks
     5. cook dishes lished on dishes-to-cook queue
     6. deliver them to ready-to-serve area
-    7. mark them as cooked on dishes-to-cook queue 
+    7. mark them as cooked on dishes-to-cook queue
 5. Server recieves dishes status update \(geting cooked\)
-6. Server maintain the dishes-to-serve queue and push update to waiter page.  
-7. Waiters 
+6. Server maintain the dishes-to-serve queue and push update to waiter page.
+7. Waiters
     1. serve dishes listed on dishes-to-serve queue
     2. deliver them to corresponding customer
     3. mark these dishes as served
@@ -107,21 +111,21 @@ This epic will analyse the order data to  arrange work schedule more suitabley a
 
 ![flow_of_assistance_requesting](proposal.assets/flow_of_assistance_requesting.png)
 
->   Very similar to *Flow of an order getting fulfilled*
+> Very similar to _Flow of an order getting fulfilled_
 
 1. Customer request assistance
 2. Server recieves assistance-request
-3. Server maintain the `request-to-handle ` queue and push update to waiter page.  
-4. Waiters 
-    1. pick an request listed on `request-to-handle ` queue
-    3. mark it as handled
+3. Server maintain the `request-to-handle` queue and push update to waiter page.
+4. Waiters
+    1. pick an request listed on `request-to-handle` queue
+    2. mark it as handled
     3. go to corresponding customer and provide help
 
->   If an customer doesn't recieve help but the request get marked as handled by mistake, he/she can simply request again.
+> If an customer doesn't recieve help but the request get marked as handled by mistake, he/she can simply request again.
 
 ### Functionalities for manager
 
-Managers 
+Managers
 
 -   have a dashboard showing history data of their restaurant
 -   can update the menu by performing CRUD operations on categories and items.
@@ -137,26 +141,20 @@ Managers
 
 ![Customer Placing Order](proposal.assets/Customer Placing Order.png)
 
-
-
 -   Wire frame showing the information-architecture of restaurant-side.
 
-    >   manager-page is in next picture
-
-
+    > manager-page is in next picture
 
 ![Restaruant](proposal.assets/Restaruant.png)
 
 -   Wire frame of manager-page
 
-
 ![Manager](proposal.assets/Manager.png)
-
-
 
 ## Technical depth
 
 We decide to utilize these framworks as tools:
-- Frontend: React + Antd + Semantic UI
-- Backend: Node.js + Express + MongoDB
-- DevOps: AWS EB + Docker + Nginx
+
+-   Frontend: React + Antd + Semantic UI
+-   Backend: Node.js + Express + MongoDB
+-   DevOps: AWS EB + Docker + Nginx
