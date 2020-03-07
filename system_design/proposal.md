@@ -30,7 +30,7 @@ The app is designed specifically for Mcdonald's customers. Other restaurant mana
 
 ### 3. MenuDrive
 
-This website provides a service that can transfer your traditional menu into an interactive online menu by just sending them the pictures, so No HTML or programming knowledge is required. Once the system is implemented into your restaurant, it can handle multiple order types like a pickup, delivery, curbside and dine-in.
+This website provides a service that can transfer your traditional menu into an interactive online menu by just sending them the pictures, so no HTML or programming knowledge is required. Once the system is implemented into your restaurant, it can handle multiple order types like a pickup, delivery, curbside and dine-in.
 
 **Drawbacks:**
 Every customer who wants to order something has to sign in with his/her e-mail or other social accounts. So on the side of customers, their personal information might be used for marketing promotions like advertising and customers may also find it cumbersome because sometimes they just want a fast meal ("Why do I have to sign in just for a hot dog?").
@@ -46,19 +46,19 @@ High pricing. Same potential problems as MenuDrive.
 
 ## Purpose of the system and features
 
-When people go out for a meal, sometimes they need to wait for a long time to place order in peak time. Too long waiting time may make them feel frustrated and unhappy. In order to control the waiting time, the restuarant has to employee more waiters , which will increase the financial burden.
+When people go out for a meal, sometimes they need to wait for a long time to place order in peak time. Too long waiting time may make them feel frustrated and unhappy. In order to control the waiting time, the restuarant has to hire more waiters, which will increase the financial burden.
 
-Therefore, our product "waiter" is proposed to address these issues.we are aiming to create a useful system that benefits both customer and resturant.
+Therefore, our product "waiter" is proposed to address these issues as well as the drawbacks mentioned above in the existing competitors. we are aiming to create a useful and easy-to-use ordering system that benefits both customer and resturant.
 
-For customers, our system provides functions of placing orders online and requesting assistance from a waiter.
+For customers, our system provides functions of placing orders online and requesting assistance from a waiter without registration.
 
 For restuarant, our product provides different **pages** according to different roles including waiter, kitchen staff and mananger, which is as following:
 
-1. The page for waiter allows them to get request from customer and mark as completed once it is dealed with.Besides, it allows them to deal with the prepared order from kitchen and serve it to customer.
+1. The page for waiter allows to get request from customer and mark as completed once it is hanlded. Besides, it allows them to deal with the prepared order from kitchen and serve it to customer.
 2. The page for kitchen provides kitchen staff a time-sorted list of customer orders and allow them to mark an order item as prepared once it is ready for serving.
-3. The page for manager allow them to create ,update,delete menu. With an easy menu tool, the manager can quickly add items to site complete with high resolution images,description,pricing, category and more. And also, the manager can update the order of menu items or categories.
+3. The page for manager allows to create, update, delete menu. With a menu editting tool, the manager can easily and quickly add items to site completing with high resolution images, description, pricing, category and more. And also, the manager can update the sequence of menu items or categories.
 
-During the brainstorming, we think of many other functions, including payment and marketing analysis. Due to the relative complicated implementation and time limitation, we decide to let customers go to the front counter to pay instead of paying online. Besides, the marketing analysis includes data collection and analysis, which is relative time-consuming. Therefore, this part is out of our scope.
+During the brainstorming, we think of many other features, including payment and marketing analysis. Due to the relative complicated implementation and time limitation, we decide to let customers go to the front counter to pay instead of paying online. Besides, the marketing analysis includes data collection and analysis, which is relative time-consuming. Therefore, this part is out of our scope.
 
 ## Epics
 
@@ -67,23 +67,39 @@ In this project, we have four main epics including basic, core , management and 
 
 ### 1. Basics
 
-As basic part of our application, we will realize two main functions: adminstration and authentication, menu presentation.
+As basic part of our application, we will realize two main functions: adminstration and authentication for the resturant side, menu presentation.
 
 ### 2. Core
 
-After defining the main structure, we will set up 4 main functions: dishes-to-cook for kitchen, place order for customer,dishes-to-serve for waiter, menu builder for manager.
+After defining the main structure, we will set up 4 main functions: dishes-to-cook for kitchen, order placing for customer, dishes-to-serve for waiter, menu builder for manager.
 
 ### 3. Management
 
-After finishing the main body of the system, this epic will add three functions: assistance request between customer and waiter,orderers management for manager,dashboard for manager.
+After finishing the main body of the system, this epic will add three functions: assistance request from customer, orders management and dashboard for manager.
 
 ### 4. Analysis
 
-This epic will analyse the order data to arrange work schedule more suitabley and have a reasonable recuritment plan.
+This epic will analyse the order data to arrange work schedule more effectively and reasonably, and have a reasonable recuritment plan.
 
 ## Software architecture
 
 ![](proposal.assets/Softeware_Architecture.png)
+
+### Overview of this application
+
+This high level of this application is quite straightforward. We use nginx to route the requests from browser to React server or Express server, and use axios to make the http request and handle the CRUD operations. MongoDB is used as the database to store all the data due to its convenience and non-relational property.
+
+### Workflow of Development and Deployment
+
+-   The developement phase
+
+We will follow the industrial workflow using github to host all our codes and use pull request to push our work to the master to avoid our master being contaminated.
+
+All coding work will be run in the docker image to ease the running of the developing environment.
+
+-   The deployment phase
+
+This application will be hosted on AWS Elastic Beanstalk. We use travis CI to build projects and integrate service between github and AWS EB.
 
 ## Service design
 
