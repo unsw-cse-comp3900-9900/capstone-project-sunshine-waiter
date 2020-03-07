@@ -14,4 +14,5 @@
 #### WEEK 3
 
     - Finish unauthenticated resturant Homepage
-    - Todo: Google OAuth
+    - Design Software Architecture
+    - finsih Google OAuth
