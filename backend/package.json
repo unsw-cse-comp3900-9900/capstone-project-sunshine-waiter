@@ -6,6 +6,7 @@
     "express": "^4.17.1",
     "mongodb": "^3.5.3",
     "mongoose": "5.9.1",
+    "joi": "^13.1.0"
   },
   "scripts": {
     "start": "nodemon index.js",
