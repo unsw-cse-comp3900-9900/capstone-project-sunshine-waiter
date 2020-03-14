@@ -6,6 +6,14 @@ const { User, validate } = require('../models/user')
 const express = require('express')
 const router = express.Router()
 
+async function hashPassword(password) {
+  const salt = await bcrypt.genSalt(10)
+  return await bcrypt.hash(password, salt)
+}
+
+async function validatePassword(plainPassword, hashedPassword) {
+  return await bcrypt.compare(plainPassword, hashedPassword)
+}
 router.post('/', async (req, res) => {
   const { error } = validate(req.body)
   if (error) {
@@ -15,8 +23,7 @@ router.post('/', async (req, res) => {
   if (user) return res.status(400).send('User already registered.')
 
   user = new User(_.pick(req.body, ['name', 'email', 'password']))
-  const salt = await bcrypt.genSalt(10)
-  user.password = await bcrypt.hash(user.password, salt)
+  user.password = await hashPassword(user.password)
 
   await user.save()
 

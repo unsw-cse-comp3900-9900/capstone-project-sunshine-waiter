@@ -11,7 +11,7 @@ const app = express()
 const PORT = 8000
 
 // environment variables
-if (!config.get('jwtPrivatKey')) {
+if (!config.get('JWT_SECRET')) {
   console.error(
     'FATAL ERROR: environment variable "jwtPrivatKey" is not defined.'
   )

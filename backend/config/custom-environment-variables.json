@@ -1,3 +1,3 @@
 {
-  "jwtPrivatKey": "sw_jwtPrivatKey"
+  "JWT_SECRET": "SW_JWT_SECRET"
 }
