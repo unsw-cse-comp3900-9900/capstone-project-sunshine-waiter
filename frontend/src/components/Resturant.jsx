@@ -1,7 +1,6 @@
 import React from 'react'
 
 import GoogleAuth from './authenticate/GoogleAuth'
-import Nivagation from './Navigation'
 import './Resturant.css'
 
 class Restaurant extends React.Component {
@@ -15,7 +14,6 @@ class Restaurant extends React.Component {
           </h1>
         </div>
         <div className="buttons">
-          <Nivagation />
           <GoogleAuth />
         </div>
       </div>
