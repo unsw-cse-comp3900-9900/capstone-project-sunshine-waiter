@@ -1,24 +1,29 @@
-.welcome-message {
+.restaurant .welcome-message {
   width: 900px;
   height: 100px;
   position: absolute;
   top: 50%;
-  left: 30%;
+  left: 25%;
   margin-top: -100px;
   margin-left: -100px;
 }
 
+.restaurant h1 {
+  color: white;
+}
+
 .buttons {
+  padding: 10px;
   width: 900px;
   height: 100px;
   position: absolute;
   top: 60%;
-  left: 30%;
+  left: 25%;
   margin-top: -100px;
   margin-left: -100px;
 }
 
-img {
+.restaurant img {
   /* Set rules to fill background */
   min-height: 100%;
   min-width: 1024px;

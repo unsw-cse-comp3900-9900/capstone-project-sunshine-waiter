@@ -6,10 +6,10 @@ import './Resturant.css'
 class Restaurant extends React.Component {
   render() {
     return (
-      <div>
+      <div className="restaurant">
         <img src={require('../resturant.jpg')} alt="" />
         <div className="welcome-message">
-          <h1 className="ui inverted header" style={{ fontSize: '70px' }}>
+          <h1 className="ui inverted" style={{ fontSize: '70px' }}>
             Welcome to the Resturant
           </h1>
         </div>
