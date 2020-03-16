@@ -1,6 +1,7 @@
 import React from 'react'
 
 import Nivagation from '../Navigation'
+
 class GoogleAuth extends React.Component {
   state = { isSignedIn: null }
 
