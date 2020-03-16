@@ -8,8 +8,7 @@ const menus = [
     ingredients: ['jam'],
     cost: 20,
     category: { _id: '1', name: 'Sandwich' },
-    src:
-      'https://www.ivsky.com/tupian/sanmingzhi_v58422/pic_918571.html#al_tit',
+    image: '../services/statics/Roseberry.jpg',
 
     alt: 'Roseberry Sandwich',
     note: 'Available after 10:30am at participating restaurants',
@@ -23,8 +22,7 @@ const menus = [
     ingredients: ['mayonnaise', 'cheese'],
     cost: 25,
     category: { _id: '1', name: 'Sandwich' },
-    src:
-      'https://www.ivsky.com/tupian/sanmingzhi_v58422/pic_918574.html#al_tit',
+    image: '../services/statics/Beef.jpg',
 
     alt: 'Beef Sandwich',
     note: 'Available after 10:30am at participating restaurants',
@@ -37,8 +35,7 @@ const menus = [
     ingredients: ['mayonnaise'],
     cost: 15,
     category: { _id: '1', name: 'Sandwich' },
-    src:
-      'https://www.ivsky.com/tupian/sanmingzhi_v58422/pic_918579.html#al_tit',
+    image: '../services/statics/Health.jpg',
     alt: 'Beef Sandwich',
     note: 'Available after 10:30am at participating restaurants',
     href: '/menu/health-sandwich',
@@ -50,7 +47,7 @@ const menus = [
     ingredients: ['tommato sauce'],
     cost: 25,
     category: { _id: '2', name: 'Pasta' },
-    src: 'https://www.ivsky.com/tupian/pasta_v57859/pic_907368.html#al_tit',
+    image: '../services/statics/TomatoPasta.jpg',
     alt: 'Tomato Pasta',
     note: 'Available after 10:30am at participating restaurants',
     href: '/menu/tomato-pasta',
@@ -62,7 +59,7 @@ const menus = [
     ingredients: ['cream'],
     cost: 25,
     category: { _id: '2', name: 'Pasta' },
-    src: 'https://www.ivsky.com/tupian/pasta_v57859/pic_907374.html#al_tit',
+    image: '../services/statics/MushroomPasta.jpg',
     alt: 'Mushroom Pasta',
     note: 'Available after 10:30am at participating restaurants',
     href: '/menu/mushroom-pasta',
@@ -76,7 +73,7 @@ const menus = [
     ingredients: ['garlic'],
     cost: 30,
     category: { _id: '2', name: 'Pasta' },
-    src: 'https://www.ivsky.com/tupian/yimian_v54339/pic_850043.html#al_tit',
+    image: '../services/statics/SeafoodPasta.jpg',
     alt: 'Seafood Pasta',
     note: 'Available after 10:30am at participating restaurants',
     href: '/menu/seafood-pasta',
@@ -88,11 +85,11 @@ export function getMenus() {
 }
 
 export function getMenu(id) {
-  return menus.find(m => m._id == id)
+  return menus.find(m => m._id === id)
 }
 
 export function saveMenu(menu) {
-  let menuInDb = menus.find(m => m._id == menu._id) || {}
+  let menuInDb = menus.find(m => m._id === menu._id) || {}
   menuInDb.name = menu.name
   menuInDb.category = categoryAPI.categories.find(
     g => g._id === menu.categoryId
