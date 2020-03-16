@@ -1,0 +1,37 @@
+.layout-position {
+  margin-left: 200px;
+}
+.sider {
+  overflow: auto;
+  height: 100vh;
+  position: fixed;
+}
+
+.category {
+  left: 0;
+}
+
+.category-bar {
+  width: 20px;
+}
+
+/* .cart {
+  right: 0;
+} */
+
+.header {
+  padding: 0;
+  background-color: white;
+  text-align: center;
+  font-size: large;
+}
+
+.footer {
+  text-align: center;
+}
+
+.content {
+  margin: '24px 16px';
+  padding: 50px;
+  min-height: 280px;
+}
