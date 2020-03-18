@@ -49,9 +49,9 @@ const requestAccessOnUser = function(action, resource) {
   return async (req, res, next) => {
     try {
       // 1. check pre-cond
-      const userId = req.params
+      const { userId } = req.params
       const { user } = req
-      if (!restaurantId || !user) {
+      if (!userId || !user) {
         return res.status(500).json({
           error: 'Precond not satisfied! userId or req.user not exist!',
         })
@@ -93,7 +93,7 @@ const requestAccessOnRestaurant = function(resource, action) {
   return async (req, res, next) => {
     try {
       // 1. check pre-cond
-      const restaurantId = req.params
+      const { restaurantId } = req.params
       const { user } = req
       if (!restaurantId || !user) {
         return res.status(500).json({
