@@ -1,17 +1,4 @@
 const AccessControl = require('accesscontrol')
-const scopes = Object.freeze({ administration: 1, restaurant: 2 })
-const roles = Object.freeze({
-  // administration
-  admin: 'admin',
-  basic: 'basic',
-
-  // restaurant
-  manager: 'manager',
-  cashier: 'cashier',
-  cook: 'cook',
-  waiter: 'waiter',
-  customer: 'customer',
-})
 
 // website-wide access control policy
 // TODO: decide all the attributes
@@ -71,4 +58,4 @@ const accessGranted = {
 
 const accessControl = new AccessControl(accessGranted)
 
-module.exports = { accessControl, scopes, roles }
+module.exports = { accessControl }

@@ -1,5 +1,19 @@
-const { accessControl: ac, scopes, roles } = require('./accessControl')
+const { accessControl: ac } = require('./accessControl')
 const Restaurant = require('../models/restaurant')
+
+const scopes = Object.freeze({ administration: 1, restaurant: 2 })
+const roles = Object.freeze({
+  // administration
+  admin: 'admin',
+  basic: 'basic',
+
+  // restaurant
+  manager: 'manager',
+  cashier: 'cashier',
+  cook: 'cook',
+  waiter: 'waiter',
+  customer: 'customer',
+})
 
 const allowIfLoggedin = async (req, res, next) => {
   const user = res.loggedInUser
@@ -126,6 +140,8 @@ const requestAccessOnRestaurant = function(resource, action) {
 }
 
 module.exports = {
+  scopes,
+  roles,
   allowIfLoggedin,
   requestAccessOnRestaurant,
   requestAccess,
