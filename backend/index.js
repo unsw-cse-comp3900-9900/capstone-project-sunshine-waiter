@@ -3,8 +3,9 @@ const config = require('config')
 const express = require('express')
 const connectDb = require('./src/connection')
 const api = require('./src/api')
+const { signup } = require('./controllers/userController')
+const { login } = require('./auth/authentication')
 const users = require('./routes/users')
-const auth = require('./routes/auth')
 
 // const
 const app = express()
@@ -20,8 +21,8 @@ if (!config.get('JWT_SECRET')) {
 
 app.use(express.json())
 app.use('/api', api)
-app.use('/api/users', users)
-app.use('/api/auth', auth)
+
+app.use('/users', users)
 
 app.listen(PORT, () => {
   console.log('Listening at ' + PORT)
