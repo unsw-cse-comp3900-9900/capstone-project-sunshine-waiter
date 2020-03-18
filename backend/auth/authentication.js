@@ -66,7 +66,14 @@ const verifyAuthToken = async (req, res, next) => {
     }
 
     // 2. token valid
-    res.loggedInUser = await User.findById(userId)
+    const user = await User.findById(userId)
+    if (!user) {
+      return res.status(404).json({
+        error: 'User of current token not exist. Please login again!',
+      })
+    } else {
+      res.loggedInUser = user
+    }
 
     next()
   } catch (error) {
