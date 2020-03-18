@@ -1,16 +1,8 @@
 const Joi = require('joi')
 const bcrypt = require('bcrypt')
 const { User } = require('../models/user')
-const jwt = require('jsonwebtoken')
-const config = require('config')
+const { generateAuthToken } = require('../auth/authentication')
 const _ = require('lodash')
-
-const generateAuthToken = user => {
-  const token = jwt.sign({ _id: user._id }, config.get('JWT_SECRET'), {
-    expiresIn: '1d',
-  })
-  return token
-}
 
 // create user,
 const createUser = async (req, res, next) => {

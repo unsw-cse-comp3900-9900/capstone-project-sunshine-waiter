@@ -5,7 +5,13 @@ const jwt = require('jsonwebtoken')
 const config = require('config')
 
 const { User } = require('../models/user')
-const { generateAuthToken } = require('../controllers/userController')
+
+const generateAuthToken = user => {
+  const token = jwt.sign({ _id: user._id }, config.get('JWT_SECRET'), {
+    expiresIn: '1d',
+  })
+  return token
+}
 
 const login = async (req, res) => {
   // validate input format
@@ -44,7 +50,7 @@ async function validatePassword(plainPassword, hashedPassword) {
   return await bcrypt.compare(plainPassword, hashedPassword)
 }
 
-const tokenVerification = async (req, res, next) => {
+const verifyAuthToken = async (req, res, next) => {
   // 1. if no token: next
   const token = req.header('x-auth-token')
   if (!token) next()
@@ -69,4 +75,4 @@ const tokenVerification = async (req, res, next) => {
   }
 }
 
-module.exports = { login, tokenVerification }
+module.exports = { login, verifyAuthToken, generateAuthToken }
