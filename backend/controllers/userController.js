@@ -77,8 +77,72 @@ readUser = async (req, res, next) => {
   }
 }
 
+updateUser = async (req, res, next) => {
+  try {
+    const userId = req.params.userId
+    const user = await User.findById(userId)
+    if (!user) return next(new Error('User does not exist'))
+
+    const { name, email, password } = req.body
+    const { error } = validateUpdateDataFormat({ name, email, password })
+    if (error) return res.status(400).send(error.details[0].message)
+    // validateSignUpDataFormat
+    user.name = name || user.name
+    user.email = email || user.email
+    user.password = password ? await hashPassword(password) : user.password
+
+    await user.save()
+
+    return res.json({
+      success: true,
+      data: _.pick(user, ['_id', 'name', 'email']),
+      msg: 'User updated.',
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+deleteUser = async (req, res, next) => {
+  try {
+    const userId = req.params.userId
+    const user = await User.findById(userId)
+    if (!user)
+      return res.send('User has been deleted or does not exist at all.')
+
+    await User.findByIdAndDelete(userId)
+
+    return res.json({
+      success: true,
+      data: _.pick(user, ['_id', 'name', 'email']),
+      msg: 'User deleted.',
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+function validateUpdateDataFormat(user) {
+  const schema = {
+    name: Joi.string()
+      .min(5)
+      .max(50),
+    email: Joi.string()
+      .min(5)
+      .max(255)
+      .email(),
+    password: Joi.string()
+      .min(10)
+      .max(255), // unhashed password, the one user inputs
+  }
+
+  return Joi.validate(user, schema)
+}
+
 module.exports = {
   generateAuthToken,
   createUser, // aka signup
   readUser,
+  updateUser,
+  deleteUser,
 }
