@@ -2,9 +2,6 @@
 const config = require('config')
 const express = require('express')
 const connectDb = require('./src/connection')
-const api = require('./src/api')
-const { signup } = require('./controllers/userController')
-const { login } = require('./auth/authentication')
 const users = require('./routes/users')
 
 // const
@@ -20,7 +17,6 @@ if (!config.get('JWT_SECRET')) {
 }
 
 app.use(express.json())
-app.use('/api', api)
 
 app.use('/users', users)
 

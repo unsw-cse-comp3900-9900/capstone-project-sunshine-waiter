@@ -17,6 +17,7 @@ const accessGranted = {
     profile: {
       'read:own': ['*'],
       'update:own': ['*'],
+      'delete:own': ['*'],
     },
     restaurant_management: {
       'create:own': ['*'],
