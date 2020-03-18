@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 
-const { tokenVerification, login } = require('../auth/authentication')
+const { verifyAuthToken, login } = require('../auth/authentication')
 const {
   scopes,
   allowIfLoggedin,
@@ -21,7 +21,7 @@ router.post('/', createUser)
 
 router.get(
   '/:userId',
-  tokenVerification,
+  verifyAuthToken,
   allowIfLoggedin,
   requestAccess(scopes.administration, 'read', 'profile'),
   readUser
@@ -29,7 +29,7 @@ router.get(
 
 router.put(
   '/:userId',
-  tokenVerification,
+  verifyAuthToken,
   allowIfLoggedin,
   requestAccess(scopes.administration, 'update', 'profile'),
   updateUser
@@ -37,7 +37,7 @@ router.put(
 
 router.delete(
   '/:userId',
-  tokenVerification,
+  verifyAuthToken,
   allowIfLoggedin,
   requestAccess(scopes.administration, 'delete', 'profile'),
   deleteUser
