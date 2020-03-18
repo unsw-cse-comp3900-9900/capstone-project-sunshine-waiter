@@ -1,5 +1,11 @@
 # SunshineWaiter
 
+## Setting up your environmental variables
+In directory `/backend/`, copy `.env_file_template` to `.env_file`, keep your secret string in it. 
+You can generate a secret string by running this code in node.js:
+`require('crypto').randomBytes(48, function(err, buffer) { var token = buffer.toString('hex'); console.log(token); });`
+
+
 ## How to Run with Docker
 
 ### First time SetUp
