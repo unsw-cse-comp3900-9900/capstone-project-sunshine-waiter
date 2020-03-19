@@ -1,7 +1,7 @@
 // lib dependency
 const config = require('config')
 const express = require('express')
-const connectDb = require('./src/connection')
+const connectDb = require('./db/connection')
 const users = require('./routes/users')
 
 // const
