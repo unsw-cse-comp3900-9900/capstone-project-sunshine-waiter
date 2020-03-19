@@ -2,14 +2,12 @@ version: "3"
 services:
   mongo:
     image: "mongo:4.2"
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example
-      MONGO_INITDB_DATABASE: waiter
+    env_file:
+      - ./backend/.env_file
     ports:
       - 27017:27017
     volumes:
-      - ./backend/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+      - ./backend/db/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
   backend:
     depends_on:
       - mongo
