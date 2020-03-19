@@ -33,5 +33,6 @@
 .content {
   margin: '24px 16px';
   padding: 50px;
+  height: 100vh;
   min-height: 280px;
 }
