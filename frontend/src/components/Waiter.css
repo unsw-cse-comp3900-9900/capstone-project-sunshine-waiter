@@ -1,14 +1,28 @@
 .box {
   background-color: white;
-  text-align: center;
   padding: 2%;
   width: 44%;
   height: 100%;
   margin: 0%;
   overflow: auto;
-  font-size: 100px;
   border-radius: 20px;
   box-shadow: 0 0 30px rgba(0, 0, 0, 0.151);
+}
+.box .tableBox {
+  display: flex;
+  flex-direction: column;
+  justify-content: left;
+  border-radius: 10px;
+  padding: 5%;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.151);
+  margin-bottom: 5%;
+}
+.box .tableBox .dishBox {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr) 0.3fr;
+  margin-bottom: 3%;
+  align-items: center;
+  justify-items: left;
 }
 #welcome-message {
   text-align: center;
