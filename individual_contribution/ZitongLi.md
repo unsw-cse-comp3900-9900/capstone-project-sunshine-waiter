@@ -56,3 +56,12 @@ Learnt applied visual design and Redux.
 
 Built a waiter serving demo using socket.io.
 
+## Week5
+
+#### Tue, 2020/3/17
+
+Finished Waiter page layout design.
+
+#### Sat, 2020/3/21
+
+Finished several major functions of waiter page, like SW-49, SW-50, SW-51. Details of these tasks are on Jira.
