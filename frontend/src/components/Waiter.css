@@ -1,14 +1,25 @@
-.box {
-  background-color: white;
-  padding: 2%;
+button {
+  margin: 0 3%;
+  width: 50px;
+  border: 0;
+  background-color: transparent;
+}
+.half {
   width: 44%;
+}
+.half h2 {
+  text-align: center;
+}
+.box {
+  background-color: #fff;
+  padding: 5%;
   height: 100%;
   margin: 0%;
   overflow: auto;
-  border-radius: 20px;
-  box-shadow: 0 0 30px rgba(0, 0, 0, 0.151);
+  border-radius: 10px;
 }
 .box .tableBox {
+  background-color: rgba(255, 255, 255, 0.8);
   display: flex;
   flex-direction: column;
   justify-content: left;
@@ -19,18 +30,55 @@
 }
 .box .tableBox .dishBox {
   display: grid;
-  grid-template-columns: repeat(3, 1fr) 0.3fr;
+  grid-template-columns: 1fr 1fr 1fr;
   margin-bottom: 3%;
   align-items: center;
   justify-items: left;
 }
+.box .tableBox .dishBox .dishName {
+  font-weight: bold;
+}
+.box .buttonBox {
+  display: flex;
+  margin: 0 0 0 auto;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.box .requestBox {
+  background-color: rgba(255, 255, 255, 0.8);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  align-items: center;
+  justify-items: center;
+  border-radius: 10px;
+  padding: 5%;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.151);
+  margin-bottom: 5%;
+}
+.box .requestBox .table {
+  font-weight: bold;
+}
+div * {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+div * ::-webkit-scrollbar-track {
+  display: none;
+}
+div * ::-webkit-scrollbar {
+  display: none;
+}
+div * ::-webkit-scrollbar-thumb {
+  display: none;
+}
 #welcome-message {
+  margin: 4% 8%;
   text-align: center;
-  padding: 4%;
+  font-size: xx-large;
 }
 #box-container {
   display: flex;
   width: 100%;
-  height: 600px;
+  height: 530px;
   justify-content: space-evenly;
 }
