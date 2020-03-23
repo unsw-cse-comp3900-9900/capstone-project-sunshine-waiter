@@ -1,9 +1,3 @@
-button {
-  margin: 0 3%;
-  width: 50px;
-  border: 0;
-  background-color: transparent;
-}
 .half {
   width: 44%;
 }
@@ -17,6 +11,17 @@ button {
   margin: 0%;
   overflow: auto;
   border-radius: 10px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.box ::-webkit-scrollbar-track {
+  display: none;
+}
+.box ::-webkit-scrollbar {
+  display: none;
+}
+.box ::-webkit-scrollbar-thumb {
+  display: none;
 }
 .box .tableBox {
   background-color: rgba(255, 255, 255, 0.8);
@@ -44,6 +49,12 @@ button {
   flex-direction: row;
   justify-content: space-between;
 }
+.box .buttonBox button {
+  margin: 0 3%;
+  width: 50px;
+  border: 0;
+  background-color: transparent;
+}
 .box .requestBox {
   background-color: rgba(255, 255, 255, 0.8);
   display: grid;
@@ -57,19 +68,6 @@ button {
 }
 .box .requestBox .table {
   font-weight: bold;
-}
-div * {
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-div * ::-webkit-scrollbar-track {
-  display: none;
-}
-div * ::-webkit-scrollbar {
-  display: none;
-}
-div * ::-webkit-scrollbar-thumb {
-  display: none;
 }
 #welcome-message {
   margin: 4% 8%;
