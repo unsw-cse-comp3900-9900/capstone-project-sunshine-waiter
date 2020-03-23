@@ -1,9 +1,12 @@
 import React from 'react'
 import './Waiter.css'
+import io from 'socket.io-client'
 
 const READY = 'READY'
 const SERVED = 'SERVED'
 const FAILED = 'FAILED'
+
+const URL = 'http://localhost'
 
 const fakeDishes = [
   {
@@ -355,7 +358,6 @@ class Dishes extends React.Component {
     super(props)
     this.state = {
       dishList: arrayToObj(fakeDishes),
-      // dishQue: groupBy(fakeDishes, 'tableId'), // Currently use a fake dish list to test
       finished: {},
       failed: {},
     }
@@ -380,6 +382,7 @@ class Dishes extends React.Component {
           dishList: newDishList,
           finished: newFinished,
         })
+        this.props.handleDishChange(newDishList)
         break
       case 'failed':
         targetDish.state = FAILED
@@ -392,6 +395,7 @@ class Dishes extends React.Component {
           dishList: newDishList,
           failed: newFailed,
         })
+        this.props.handleDishChange(newDishList)
         break
       case 'reset':
         targetDish = newFinished[dish_id] || newFailed[dish_id]
@@ -406,6 +410,8 @@ class Dishes extends React.Component {
           dishList: newDishList,
           finished: newFinished,
         })
+        this.props.handleDishChange(newDishList)
+        break
       default:
         return
     }
@@ -542,6 +548,7 @@ class Request extends React.Component {
           requestQue: newRequestQue,
           finished: newFinished,
         })
+        this.props.handleRequestChange(newRequestQue)
         break
       default:
         return // do nothing
@@ -594,17 +601,74 @@ class RenderRequests extends React.Component {
   }
 }
 
-const Waiter = () => (
-  <div>
-    <header>
-      <h1 id="welcome-message">Welcome to the Waiter Page.</h1>
-    </header>
+class Waiter extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      dishQue: {},
+      requestQue: {},
+    }
+    this.handleDishChange = this.handleDishChange.bind(this)
+    this.handleRequestChange = this.handleRequestChange.bind(this)
+  }
 
-    <div id="box-container">
-      <Dishes />
-      <Request />
-    </div>
-  </div>
-)
+  newDish = msg => {
+    const dish = msg
+    const newDishQue = { ...this.state.dishQue }
+    newDishQue[dish._id] = dish
+    this.setState({
+      dishQue: newDishQue,
+    })
+  }
+
+  newRequest = msg => {
+    const request = msg
+    const newRequestQue = { ...this.state.requestQue }
+    newRequestQue[request._id] = request
+    this.setState({
+      requestQue: newRequestQue,
+    })
+  }
+
+  handleDishChange(newDishQue) {
+    this.setState({
+      dishQue: newDishQue,
+    })
+  }
+
+  handleRequestChange(newRequestQue) {
+    this.setState({
+      requestQue: newRequestQue,
+    })
+  }
+
+  componentDidMount() {
+    // Start connection
+    const socket = io.connect(URL)
+    socket.on('connect', function() {
+      socket.emit('authentication', { userId: 'John', password: 'secret' })
+      socket.on('authenticated', function() {
+        // use the socket as usual
+        socket.on('new dish', this.newDish)
+        socket.on('new request', this.newRequest)
+      })
+    })
+  }
+
+  render() {
+    console.log(this.state.dishQue)
+    return (
+      <div>
+        <header>
+          <h1 id="welcome-message">Welcome to the Waiter Page.</h1>
+        </header>
+        <div id="box-container">
+          <Dishes handleDishChange={this.handleDishChange} />
+          <Request handleRequestChange={this.handleRequestChange} />
+        </div>
+      </div>
+    )
+  }
+}
 
 export default Waiter
