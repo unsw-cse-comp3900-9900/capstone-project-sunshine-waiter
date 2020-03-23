@@ -4,7 +4,7 @@ import { Route, Redirect, Switch } from 'react-router-dom'
 import Customer from './components/Customer'
 import Resturant from './components/Resturant'
 import Kitchen from './components/Kitchen'
-import Waiter from './components/Waiter'
+import Waiter from './components/Waiter/Waiter'
 import Manager from './components/Manager'
 import NotFound from './components/NotFound'
 
