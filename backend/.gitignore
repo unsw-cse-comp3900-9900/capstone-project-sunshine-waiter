@@ -1,5 +1,12 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
+# dev
+dev_*
+tmp_*
+
+# env
+.env_file
+
 # upload
 /upload
 

@@ -41,3 +41,42 @@ BackEnd framework Setup **week2** `Jason`
 >   Credit to Yaoye Lu and Zitong Li for brainstroming on design.
 >
 >   Yaoye Lu provides an solution on multiple-order-placement: when network is slow, user might click the "confirm my order" button multiple times and might place redundant orders. He suggested disabling the button untill time-out or getting response from the server.
+
+
+
+### Week 4
+
+1.  Build user authentication
+
+    >   Design `model`,` controller` and `router` of `User`.
+    >
+    >   Implemented API:
+    >
+    >   `Register: POST /api/users {name, email. password}`
+    >
+    >   `Login: POST /api/logins`
+
+2.  ~~Integrate OAuth~~
+
+    >   I decide that this integration should be done after RBAC be implemented
+
+
+
+### Week 5
+
+>   RBAC: Role-based-access-control
+
+1.  Design the structure of RBAC base on lib [accesscontrol](https://github.com/onury/accesscontrol)
+
+    >   Design the logic of `checkOwn` operation. It's the tricky part of setting RBAC.
+    >
+    >   Implement RBAC on two major scope: `Administration` and `Restaurant`
+
+2.  Implement the **authorization middleware**.
+
+3.  Write a `readUser` as route example for "how to protect a route by RBAC".
+
+3.  Design `model` for  `restaurant`, `order`, `orderItem`, `menu`, `menuItem`.
+
+
+
