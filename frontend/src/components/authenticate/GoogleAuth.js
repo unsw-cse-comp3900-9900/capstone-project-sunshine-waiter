@@ -1,7 +1,5 @@
 import React from 'react'
 
-import Nivagation from '../Navigation'
-
 class GoogleAuth extends React.Component {
   state = { isSignedIn: null }
 
@@ -40,16 +38,23 @@ class GoogleAuth extends React.Component {
       return null
     } else if (!isSignedIn) {
       return (
-        <button className="ui primary google button" onClick={this.onSignIn}>
+        <button
+          className="ui primary google button"
+          onClick={this.onSignIn}
+          style={{ width: '210px' }}
+        >
           <i className="google icon" />
-          Sign In with Google
+          Sign Up with Google
         </button>
       )
     } else {
       return (
         <div>
-          <Nivagation />
-          <button className="ui basic button" onClick={this.onSignOut}>
+          <button
+            className="ui basic big button"
+            onClick={this.onSignOut}
+            style={{ width: '210px', fontSize: '15px' }}
+          >
             <i className="google icon" />
             Sign out
           </button>
