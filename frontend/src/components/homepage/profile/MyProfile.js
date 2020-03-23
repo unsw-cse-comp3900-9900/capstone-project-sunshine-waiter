@@ -13,7 +13,7 @@ class MyProfile extends React.Component {
             my Restaurant
             <NavigationButtonCard
               linkActiveItem="active item"
-              linkTo="/restaurant/1"
+              linkTo="/restaurants/1"
               linkName="Restaurant 1"
               linkOnClick={this.handleItemClick}
             ></NavigationButtonCard>
