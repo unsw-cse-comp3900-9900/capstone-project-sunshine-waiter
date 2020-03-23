@@ -18,7 +18,7 @@ const App = () => {
         <Route exact path="/waiter">
           <Waiter />
         </Route>
-        <Route exact path="/kitchen">
+        <Route exact path="/cook">
           <Kitchen />
         </Route>
         <Route exact path="/manager">

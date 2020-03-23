@@ -19,15 +19,15 @@ export default class Navigation extends React.Component {
         <NavigationButtonCard
           linkActiveItem={activeItem}
           linkTo="/waiter"
-          linkName="waiter"
+          linkName="Waiter"
           linkOnClick={this.handleItemClick}
         >
           <i className="user icon"></i>
         </NavigationButtonCard>
         <NavigationButtonCard
           linkActiveItem={activeItem}
-          linkTo="/kitchen"
-          linkName="kitchen"
+          linkTo="/cook"
+          linkName="Cook"
           linkOnClick={this.handleItemClick}
         >
           <i className="food icon"></i>
@@ -35,7 +35,7 @@ export default class Navigation extends React.Component {
         <NavigationButtonCard
           linkActiveItem={activeItem}
           linkTo="/manager"
-          linkName="manager"
+          linkName="Manager"
           linkOnClick={this.handleItemClick}
         >
           <i className="spy icon"></i>

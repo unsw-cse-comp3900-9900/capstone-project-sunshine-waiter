@@ -7,6 +7,10 @@ import { ContentType } from '../services/Constant'
 const { Header, Content, Sider } = Layout
 const { DASHBOARD, STAFFS, MENUS, ORDERS } = ContentType
 
+//dashboard:
+//1. data representaion
+//2. update restaurant info(background img, name, description)
+
 class Manager extends React.Component {
   state = {
     displayIndex: DASHBOARD,
