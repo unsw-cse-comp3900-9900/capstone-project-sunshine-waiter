@@ -3,6 +3,7 @@ const config = require('config')
 const express = require('express')
 const connectDb = require('./db/connection')
 const users = require('./routes/users')
+const cors = require('cors')
 
 // const
 const app = express()
@@ -17,6 +18,8 @@ if (!config.get('JWT_SECRET')) {
 }
 
 app.use(express.json())
+
+app.use(cors())
 
 app.use('/users', users)
 
