@@ -14,15 +14,6 @@
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
-.box ::-webkit-scrollbar-track {
-  display: none;
-}
-.box ::-webkit-scrollbar {
-  display: none;
-}
-.box ::-webkit-scrollbar-thumb {
-  display: none;
-}
 .box .tableBox {
   background-color: rgba(255, 255, 255, 0.8);
   display: flex;
@@ -68,6 +59,9 @@
 }
 .box .requestBox .table {
   font-weight: bold;
+}
+.box::-webkit-scrollbar {
+  display: none;
 }
 #welcome-message {
   margin: 4% 8%;
