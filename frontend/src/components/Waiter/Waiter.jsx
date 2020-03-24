@@ -314,16 +314,6 @@ const fakeRequests = [
   },
 ]
 
-const fakeNewDish = {
-  _id: 'djieq34q569r',
-  name: 'egg',
-  readyTime: new Date(),
-  tableId: 't28',
-  orderId: 'fdafr89891ruq',
-  state: READY, //canbe SERVED or FAIL
-  serveTime: null,
-}
-
 const objToArray = obj => {
   var result = []
   for (var key in obj) {
@@ -375,7 +365,8 @@ class Dishes extends React.Component {
         targetDish.serveTime = new Date()
         newFinished[dish_id] = targetDish
 
-        // TODO: send finished dish to server
+        // send finished dish to server
+        this.props.socket.emit('update dish', targetDish)
 
         this.setState({
           finished: newFinished,
@@ -387,7 +378,8 @@ class Dishes extends React.Component {
         targetDish.serveTime = new Date()
         newFailed[dish_id] = targetDish
 
-        // TODO: send failed dish to server
+        // send failed dish to server
+        this.props.socket.emit('update dish', targetDish)
 
         this.setState({
           failed: newFailed,
@@ -401,7 +393,8 @@ class Dishes extends React.Component {
         newDishQue[dish_id] = targetDish
         delete newFinished[dish_id]
 
-        // TODO: send reset to server
+        // send reset to server
+        this.props.socket.emit('update dish', targetDish)
 
         this.setState({
           finished: newFinished,
@@ -537,7 +530,8 @@ class Request extends React.Component {
         targetRequest.finishTime = new Date() // record the finish time
         newFinished[request_id] = targetRequest
 
-        // TODO: send finished request to the server
+        // send finished request to the server
+        this.props.socket.emit('update request', targetRequest)
 
         this.setState({
           finished: newFinished,
@@ -599,15 +593,15 @@ class Waiter extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
+      socket: null,
       dishQue: {},
-      requestQue: fakeRequests,
+      requestQue: arrayToObj(fakeRequests),
     }
     this.handleDishChange = this.handleDishChange.bind(this)
     this.handleRequestChange = this.handleRequestChange.bind(this)
   }
 
   newDish = dish => {
-    console.log(dish)
     const newDishQue = { ...this.state.dishQue }
     newDishQue[dish._id] = dish
     this.setState({
@@ -650,6 +644,10 @@ class Waiter extends React.Component {
       const safeConnect = io.connect(URL + namespace)
       alert('connect established')
       safeConnect.on('new dish', this.newDish)
+      safeConnect.on('new request', this.newRequest)
+      this.setState({
+        socket: safeConnect,
+      })
     })
   }
 
@@ -663,10 +661,12 @@ class Waiter extends React.Component {
           <Dishes
             handleDishChange={this.handleDishChange}
             dishQue={this.state.dishQue}
+            socket={this.state.socket}
           />
           <Request
             handleRequestChange={this.handleRequestChange}
             requestQue={this.state.requestQue}
+            socket={this.state.socket}
           />
         </div>
       </div>

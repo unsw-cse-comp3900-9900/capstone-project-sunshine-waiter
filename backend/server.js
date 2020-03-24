@@ -43,9 +43,11 @@ const onConnection = (client) => {
         socket.on('update dish', (dish) => {
           // dish served or fail send from waiter, server need to update the db
           // update db
+          console.log(dish)
         })
         socket.on('update request', (request) => {
           // update db
+          console.log(request)
         })
         socket.on('disconnect', () => {
           console.log(
