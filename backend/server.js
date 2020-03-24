@@ -15,10 +15,10 @@ const fakeNewDish = {
 
 var nsps = {}
 
-const onConnection = (client) => {
-  console.log('Unknow User ' + client.id + ' connected!')
+const onConnection = (anonymousClient) => {
+  console.log('Unknow User ' + anonymousClient.id + ' connected!')
 
-  client.on('authenticate', (data) => {
+  anonymousClient.on('authenticate', (data) => {
     const { restaurantId, userId, userType, password } = data
 
     //skip authenticate
@@ -27,7 +27,7 @@ const onConnection = (client) => {
     if (auth) {
       console.log(userType + ' ' + userId + ' authenticated!')
       const nsp = io.of('/' + restaurantId) // create safe connect
-      client.emit('authenticate success', nsp.name)
+      anonymousClient.emit('authenticate success', nsp.name) // send nsp to authenticated client
       nsp.on('connect', (socket) => {
         console.log(userType + ' ' + userId + ' connect to ' + restaurantId)
         socket.join(userType) // put user into rooms according to their type
@@ -61,8 +61,8 @@ const onConnection = (client) => {
       nsps[restaurantId] = nsp
     }
   })
-  client.on('disconnect', () => {
-    console.log('User ' + client.id + ' disconnected!')
+  anonymousClient.on('disconnect', () => {
+    console.log('User ' + anonymousClient.id + ' disconnected!')
   })
 }
 

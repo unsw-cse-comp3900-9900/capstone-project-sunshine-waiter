@@ -1,13 +1,24 @@
 .half {
-  width: 44%;
+  width: 50%;
 }
-.half h2 {
+.half .title {
+  position: relative;
+  z-index: 1;
+  padding: 10% 0 5% 0;
+  background-color: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(15px);
+  box-shadow: 0 10px 10px -10px rgba(0, 0, 0, 0.151);
+}
+.half .title h2 {
   text-align: center;
 }
 .box {
   background-color: #fff;
   padding: 5%;
-  height: 100%;
+  padding-top: 25%;
+  position: relative;
+  top: -15%;
+  height: 120%;
   margin: 0%;
   overflow: auto;
   border-radius: 10px;
@@ -21,7 +32,7 @@
   justify-content: left;
   border-radius: 10px;
   padding: 5%;
-  box-shadow: 0 0 30px rgba(0, 0, 0, 0.151);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.151);
   margin-bottom: 5%;
 }
 .box .tableBox .dishBox {
@@ -54,7 +65,7 @@
   justify-items: center;
   border-radius: 10px;
   padding: 5%;
-  box-shadow: 0 0 30px rgba(0, 0, 0, 0.151);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.151);
   margin-bottom: 5%;
 }
 .box .requestBox .table {
@@ -64,13 +75,16 @@
   display: none;
 }
 #welcome-message {
-  margin: 4% 8%;
+  position: relative;
+  z-index: 1;
+  padding: 4% 0 0 0;
   text-align: center;
   font-size: xx-large;
 }
 #box-container {
   display: flex;
-  width: 100%;
+  margin: 5%;
+  margin-top: 0;
   height: 530px;
   justify-content: space-evenly;
 }

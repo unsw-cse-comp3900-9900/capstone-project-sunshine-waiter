@@ -409,7 +409,10 @@ class Dishes extends React.Component {
   render() {
     return (
       <div className="half">
-        <h2>Dishes</h2>
+        <div className="title">
+          <h2>Dishes</h2>
+        </div>
+
         <div className="box">
           <RenderDishes
             dishList={this.props.dishQue}
@@ -546,7 +549,9 @@ class Request extends React.Component {
   render() {
     return (
       <div className="half">
-        <h2>Requests</h2>
+        <div className="title">
+          <h2>Requests</h2>
+        </div>
         <div className="box">
           <RenderRequests
             requestQue={this.props.requestQue}
@@ -594,7 +599,7 @@ class Waiter extends React.Component {
     super(props)
     this.state = {
       socket: null,
-      dishQue: {},
+      dishQue: arrayToObj(fakeDishes),
       requestQue: arrayToObj(fakeRequests),
     }
     this.handleDishChange = this.handleDishChange.bind(this)
