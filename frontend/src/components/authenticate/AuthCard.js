@@ -18,6 +18,7 @@ const renderSignUp = (username, setUsername) => {
         />
         <i className="user icon" />
       </div>
+      <small>Username has to be as least 5 letters</small>
     </div>
   )
 }
@@ -35,12 +36,25 @@ const onAuth = ([param, onAuthenticated, showSignUp]) => event => {
   event.preventDefault()
   const URL = showSignUp ? '/users' : '/users/login'
 
-  BaseProvider.post(URL, param)
-    .then(res => {
-      console.log(res)
-      onAuthenticated(true)
-    })
-    .catch(res => console.log(res.message))
+  const emailValidator = email => {
+    return email.includes('@') && email.includes('.com')
+  }
+
+  if (!param.password || !param.email || (showSignUp && !param.name)) {
+    alert('Information is incomplete!')
+  } else if (showSignUp && param.name.length < 5) {
+    alert('Username is less than 5 letters!')
+  } else if (!emailValidator(param.email)) {
+    alert('Email is invalid!')
+  } else if (param.password.length < 10) {
+    alert('Password is less than 10 letters!')
+  } else {
+    BaseProvider.post(URL, param)
+      .then(() => {
+        onAuthenticated(true)
+      })
+      .catch(({ response }) => alert(response.data))
+  }
 }
 
 const AuthCard = ({ onAuthenticated }) => {
@@ -83,6 +97,7 @@ const AuthCard = ({ onAuthenticated }) => {
                 />
                 <i className="envelope icon" />
               </div>
+              <small>Email has to be valid</small>
             </div>
             <div className="field">
               <label htmlFor="password">Password</label>
@@ -96,6 +111,7 @@ const AuthCard = ({ onAuthenticated }) => {
                 />
                 <i className="lock icon" />
               </div>
+              <small>Password has to be as least 10 letters</small>
             </div>
             <button
               className="ui blue submit button"
