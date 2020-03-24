@@ -1,6 +1,7 @@
 import React from 'react'
 import { Route, Redirect, Switch } from 'react-router-dom'
 
+import Homepage from './components/homepage/Homepage'
 import Customer from './components/Customer'
 import Resturant from './components/Resturant'
 import Kitchen from './components/Kitchen'
@@ -13,18 +14,24 @@ const App = () => {
     <div className="ui contanier">
       <Switch>
         <Route exact path="/">
+          <Homepage />
+        </Route>
+        <Route exact path="/restaurants/1">
           <Resturant />
         </Route>
-        <Route exact path="/waiter">
+        <Route exact path="/restaurants/1/waiter">
           <Waiter />
         </Route>
-        <Route exact path="/kitchen">
+        <Route exact path="/restaurants/1/cook">
           <Kitchen />
         </Route>
-        <Route exact path="/manager">
+        <Route exact path="/restaurants/1/manager">
           <Manager />
         </Route>
-        <Route exact path="/customer">
+        <Route exact path="/restaurants/1/cashier">
+          <div>cashier</div>
+        </Route>
+        <Route exact path="/restaurants/1/customer">
           <Customer />
         </Route>
 
