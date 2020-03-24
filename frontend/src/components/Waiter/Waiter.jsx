@@ -8,7 +8,7 @@ const FAILED = 'FAILED'
 
 const URL = 'http://localhost:8000'
 
-const fakeDishes = [
+var fakeDishes = [
   {
     _id: '5e7757ad436ac0921c752df6',
     name: 'chicken',
@@ -190,8 +190,8 @@ const fakeDishes = [
     serveTime: null,
   },
 ]
-
-const fakeRequests = [
+fakeDishes.sort((a, b) => parseFloat(a.readyTime) - parseFloat(b.readyTime))
+var fakeRequests = [
   {
     _id: '5e775922fd9ab22bbc697f55',
     receiveTime: '08:14:29',
@@ -313,6 +313,9 @@ const fakeRequests = [
     finishTime: null,
   },
 ]
+fakeRequests.sort(
+  (a, b) => parseFloat(a.receiveTime) - parseFloat(b.receiveTime)
+)
 
 const objToArray = obj => {
   var result = []
@@ -679,6 +682,7 @@ class Waiter extends React.Component {
   }
 
   render() {
+    console.log(fakeRequests)
     return (
       <div>
         <header>
