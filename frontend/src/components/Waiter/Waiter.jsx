@@ -599,24 +599,22 @@ class Waiter extends React.Component {
     super(props)
     this.state = {
       socket: null,
-      dishQue: arrayToObj(fakeDishes),
-      requestQue: arrayToObj(fakeRequests),
+      dishQue: fakeDishes,
+      requestQue: fakeRequests,
     }
     this.handleDishChange = this.handleDishChange.bind(this)
     this.handleRequestChange = this.handleRequestChange.bind(this)
   }
 
   newDish = dish => {
-    const newDishQue = { ...this.state.dishQue }
-    newDishQue[dish._id] = dish
+    const newDishQue = [...this.state.dishQue, dish]
     this.setState({
       dishQue: newDishQue,
     })
   }
 
   newRequest = request => {
-    const newRequests = { ...this.props.requests }
-    newRequests[request._id] = request
+    const newRequests = [...this.props.requests, request]
     this.setState({
       requestQue: newRequests,
     })
@@ -665,12 +663,12 @@ class Waiter extends React.Component {
         <div id="box-container">
           <Dishes
             handleDishChange={this.handleDishChange}
-            dishQue={this.state.dishQue}
+            dishQue={arrayToObj(this.state.dishQue)}
             socket={this.state.socket}
           />
           <Request
             handleRequestChange={this.handleRequestChange}
-            requestQue={this.state.requestQue}
+            requestQue={arrayToObj(this.state.requestQue)}
             socket={this.state.socket}
           />
         </div>

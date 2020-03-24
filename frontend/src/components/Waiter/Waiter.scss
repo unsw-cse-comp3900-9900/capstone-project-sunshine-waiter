@@ -18,9 +18,9 @@ $theme-color2: rgb(255, 255, 255);
 .box {
   background-color: $theme-color1;
   padding: 5%;
-  padding-top: 25%;
+  padding-top: 15%;
   position: relative;
-  top: -15%;
+  top: -10%;
   height: 120%;
   margin: 0%;
   overflow: auto;
@@ -87,6 +87,7 @@ $theme-color2: rgb(255, 255, 255);
   padding: 4% 0 0 0;
   text-align: center;
   font-size: xx-large;
+  font-weight: bolder;
 }
 #box-container {
   display: flex;
