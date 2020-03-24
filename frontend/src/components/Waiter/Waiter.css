@@ -57,6 +57,31 @@
   border: 0;
   background-color: transparent;
 }
+.box .buttonBox .fail:hover {
+  animation-name: fail;
+  animation-fill-mode: forwards;
+}
+@keyframes fail {
+  100% {
+    cursor: pointer;
+    color: #ec7355;
+    transform: scale(1.5);
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.151);
+  }
+}
+.box .buttonBox .finish:hover {
+  animation-name: finish;
+  animation-fill-mode: forwards;
+  animation-duration: 200ms;
+}
+@keyframes finish {
+  100% {
+    cursor: pointer;
+    color: #569de0;
+    transform: scale(1.5);
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.151);
+  }
+}
 .box .requestBox {
   background-color: rgba(255, 255, 255, 0.8);
   display: grid;

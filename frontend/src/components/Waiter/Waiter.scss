@@ -60,6 +60,31 @@ $theme-color2: rgb(255, 255, 255);
       border: 0;
       background-color: transparent;
     }
+    .fail:hover {
+      animation-name: fail;
+      animation-fill-mode: forwards;
+    }
+    @keyframes fail {
+      100% {
+        cursor: pointer;
+        color: rgb(236, 115, 85);
+        transform: scale(1.5);
+        text-shadow: 0 0 5px rgba(0, 0, 0, 0.151);
+      }
+    }
+    .finish:hover {
+      animation-name: finish;
+      animation-fill-mode: forwards;
+      animation-duration: 200ms;
+    }
+    @keyframes finish {
+      100% {
+        cursor: pointer;
+        color: rgb(86, 157, 224);
+        transform: scale(1.5);
+        text-shadow: 0 0 5px rgba(0, 0, 0, 0.151);
+      }
+    }
   }
   .requestBox {
     background-color: rgba($color: $theme-color2, $alpha: 0.8);

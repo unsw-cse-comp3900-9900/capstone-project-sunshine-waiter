@@ -366,25 +366,33 @@ class Dishes extends React.Component {
         newFinished[dish_id] = targetDish
 
         // send finished dish to server
-        this.props.socket.emit('update dish', targetDish)
-
-        this.setState({
-          finished: newFinished,
-        })
-        this.props.handleDishChange(newDishQue)
+        if (this.props.socket) {
+          this.props.socket.emit('update dish', targetDish)
+          this.setState({
+            finished: newFinished,
+          })
+          this.props.handleDishChange(objToArray(newDishQue))
+        } else {
+          alert('Not connect to server!')
+        }
         break
+
       case 'failed':
         targetDish.state = FAILED
         targetDish.serveTime = new Date()
         newFailed[dish_id] = targetDish
 
         // send failed dish to server
-        this.props.socket.emit('update dish', targetDish)
+        if (this.props.socket) {
+          this.props.socket.emit('update dish', targetDish)
+          this.setState({
+            failed: newFailed,
+          })
+          this.props.handleDishChange(objToArray(newDishQue))
+        } else {
+          alert('Not connect to server!')
+        }
 
-        this.setState({
-          failed: newFailed,
-        })
-        this.props.handleDishChange(newDishQue)
         break
       case 'reset':
         targetDish = newFinished[dish_id] || newFailed[dish_id]
@@ -394,12 +402,16 @@ class Dishes extends React.Component {
         delete newFinished[dish_id]
 
         // send reset to server
-        this.props.socket.emit('update dish', targetDish)
+        if (this.props.socket) {
+          this.props.socket.emit('update dish', targetDish)
+          this.setState({
+            finished: newFinished,
+          })
+          this.props.handleDishChange(objToArray(newDishQue))
+        } else {
+          alert('Not connect to server!')
+        }
 
-        this.setState({
-          finished: newFinished,
-        })
-        this.props.handleDishChange(newDishQue)
         break
       default:
         return
@@ -442,10 +454,16 @@ class RenderDishes extends React.Component {
         <div className="dishName">{dish.name}</div>
         <div>{dish.readyTime}</div>
         <div className="buttonBox">
-          <button onClick={e => this.props.handleClick(dish._id, 'finish', e)}>
+          <button
+            className="finish"
+            onClick={e => this.props.handleClick(dish._id, 'finish', e)}
+          >
             <i className="fas fa-check"></i>
           </button>
-          <button onClick={e => this.props.handleClick(dish._id, 'failed', e)}>
+          <button
+            className="fail"
+            onClick={e => this.props.handleClick(dish._id, 'failed', e)}
+          >
             <i className="fas fa-times"></i>
           </button>
         </div>
@@ -485,7 +503,10 @@ class RenderFinished extends React.Component {
         <div className="dishName">{dish.name}</div>
         <div>{dish.serveTime.toLocaleTimeString()}</div>
         <div className="buttonBox">
-          <button onClick={e => this.props.handleClick(dish._id, 'reset', e)}>
+          <button
+            className="reset"
+            onClick={e => this.props.handleClick(dish._id, 'reset', e)}
+          >
             <i className="fas fa-undo-alt"></i>
           </button>
         </div>
@@ -534,12 +555,16 @@ class Request extends React.Component {
         newFinished[request_id] = targetRequest
 
         // send finished request to the server
-        this.props.socket.emit('update request', targetRequest)
+        if (this.props.socket) {
+          this.props.socket.emit('update request', targetRequest)
+          this.setState({
+            finished: newFinished,
+          })
+          this.props.handleRequestChange(objToArray(newRequestQue))
+        } else {
+          alert('Not connect to server!')
+        }
 
-        this.setState({
-          finished: newFinished,
-        })
-        this.props.handleRequestChange(newRequestQue)
         break
       default:
         return // do nothing
@@ -575,6 +600,7 @@ class RenderRequests extends React.Component {
         <div>{request.receiveTime}</div>
         <div className="buttonBox">
           <button
+            className="finish"
             onClick={e => this.props.handleClick(request._id, 'finish', e)}
           >
             <i className="fas fa-check"></i>
@@ -631,8 +657,6 @@ class Waiter extends React.Component {
       requestQue: newRequests,
     })
   }
-
-  // TODO: handleServe, handleFail
 
   componentDidMount() {
     // Start connection
