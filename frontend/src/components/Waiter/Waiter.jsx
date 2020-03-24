@@ -1,9 +1,12 @@
 import React from 'react'
 import './Waiter.css'
+import io from 'socket.io-client'
 
 const READY = 'READY'
 const SERVED = 'SERVED'
 const FAILED = 'FAILED'
+
+const URL = 'http://localhost:8000'
 
 const fakeDishes = [
   {
@@ -354,8 +357,6 @@ class Dishes extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      dishList: arrayToObj(fakeDishes),
-      // dishQue: groupBy(fakeDishes, 'tableId'), // Currently use a fake dish list to test
       finished: {},
       failed: {},
     }
@@ -363,11 +364,11 @@ class Dishes extends React.Component {
   }
 
   handleClick(dish_id, action, e) {
-    var newDishList = { ...this.state.dishList }
+    var newDishQue = { ...this.props.dishQue }
     var newFinished = { ...this.state.finished }
     var newFailed = { ...this.state.failed }
-    var targetDish = { ...newDishList[dish_id] }
-    delete newDishList[dish_id]
+    var targetDish = { ...newDishQue[dish_id] }
+    delete newDishQue[dish_id]
     switch (action) {
       case 'finish':
         targetDish.state = SERVED
@@ -377,9 +378,9 @@ class Dishes extends React.Component {
         // TODO: send finished dish to server
 
         this.setState({
-          dishList: newDishList,
           finished: newFinished,
         })
+        this.props.handleDishChange(newDishQue)
         break
       case 'failed':
         targetDish.state = FAILED
@@ -389,23 +390,24 @@ class Dishes extends React.Component {
         // TODO: send failed dish to server
 
         this.setState({
-          dishList: newDishList,
           failed: newFailed,
         })
+        this.props.handleDishChange(newDishQue)
         break
       case 'reset':
         targetDish = newFinished[dish_id] || newFailed[dish_id]
         targetDish.state = READY
         targetDish.serveTime = null
-        newDishList[dish_id] = targetDish
+        newDishQue[dish_id] = targetDish
         delete newFinished[dish_id]
 
         // TODO: send reset to server
 
         this.setState({
-          dishList: newDishList,
           finished: newFinished,
         })
+        this.props.handleDishChange(newDishQue)
+        break
       default:
         return
     }
@@ -417,7 +419,7 @@ class Dishes extends React.Component {
         <h2>Dishes</h2>
         <div className="box">
           <RenderDishes
-            dishList={this.state.dishList}
+            dishList={this.props.dishQue}
             handleClick={this.handleClick}
           />
 
@@ -519,14 +521,13 @@ class Request extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      requestQue: arrayToObj(fakeRequests),
       finished: {},
     }
     this.handleClick = this.handleClick.bind(this)
   }
 
   handleClick(request_id, action, e) {
-    var newRequestQue = { ...this.state.requestQue }
+    var newRequestQue = { ...this.props.requestQue }
     var newFinished = { ...this.state.finished }
     var targetRequest = newRequestQue[request_id]
     delete newRequestQue[request_id]
@@ -539,9 +540,9 @@ class Request extends React.Component {
         // TODO: send finished request to the server
 
         this.setState({
-          requestQue: newRequestQue,
           finished: newFinished,
         })
+        this.props.handleRequestChange(newRequestQue)
         break
       default:
         return // do nothing
@@ -554,7 +555,7 @@ class Request extends React.Component {
         <h2>Requests</h2>
         <div className="box">
           <RenderRequests
-            requestQue={this.state.requestQue}
+            requestQue={this.props.requestQue}
             handleClick={this.handleClick}
           />
         </div>
@@ -594,17 +595,83 @@ class RenderRequests extends React.Component {
   }
 }
 
-const Waiter = () => (
-  <div>
-    <header>
-      <h1 id="welcome-message">Welcome to the Waiter Page.</h1>
-    </header>
+class Waiter extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      dishQue: {},
+      requestQue: fakeRequests,
+    }
+    this.handleDishChange = this.handleDishChange.bind(this)
+    this.handleRequestChange = this.handleRequestChange.bind(this)
+  }
 
-    <div id="box-container">
-      <Dishes />
-      <Request />
-    </div>
-  </div>
-)
+  newDish = dish => {
+    console.log(dish)
+    const newDishQue = { ...this.state.dishQue }
+    newDishQue[dish._id] = dish
+    this.setState({
+      dishQue: newDishQue,
+    })
+  }
+
+  newRequest = request => {
+    const newRequests = { ...this.props.requests }
+    newRequests[request._id] = request
+    this.setState({
+      requestQue: newRequests,
+    })
+  }
+
+  handleDishChange(newDishQue) {
+    this.setState({
+      dishQue: newDishQue,
+    })
+  }
+
+  handleRequestChange(newRequests) {
+    this.setState({
+      requestQue: newRequests,
+    })
+  }
+
+  // TODO: handleServe, handleFail
+
+  componentDidMount() {
+    // Start connection
+    const socket = io.connect(URL)
+    socket.emit('authenticate', {
+      restaurantId: 'restaurant1',
+      userId: 'user1',
+      userType: 'waiter',
+      password: 'password',
+    })
+    socket.on('authenticate success', namespace => {
+      const safeConnect = io.connect(URL + namespace)
+      alert('connect established')
+      safeConnect.on('new dish', this.newDish)
+    })
+  }
+
+  render() {
+    return (
+      <div>
+        <header>
+          <h1 id="welcome-message">Welcome to the Waiter Page.</h1>
+        </header>
+        <div id="box-container">
+          <Dishes
+            handleDishChange={this.handleDishChange}
+            dishQue={this.state.dishQue}
+          />
+          <Request
+            handleRequestChange={this.handleRequestChange}
+            requestQue={this.state.requestQue}
+          />
+        </div>
+      </div>
+    )
+  }
+}
 
 export default Waiter
