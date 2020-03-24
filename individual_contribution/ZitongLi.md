@@ -69,3 +69,7 @@ Finished several major functions of waiter page, like SW-49, SW-50, SW-51. Detai
 #### Sun, 2020/3/22
 
 Finished request box of waiter page, UI improved.
+
+#### Tue, 2020/3/24
+
+Finished web-socket functions. Now the waiter can recieve new ready dishes and send finished or failed dishes to the server.
