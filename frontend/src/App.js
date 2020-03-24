@@ -11,34 +11,32 @@ import NotFound from './components/NotFound'
 
 const App = () => {
   return (
-    <div className="ui contanier">
-      <Switch>
-        <Route exact path="/">
-          <Homepage />
-        </Route>
-        <Route exact path="/restaurants/1">
-          <Resturant />
-        </Route>
-        <Route exact path="/restaurants/1/waiter">
-          <Waiter />
-        </Route>
-        <Route exact path="/restaurants/1/cook">
-          <Kitchen />
-        </Route>
-        <Route exact path="/restaurants/1/manager">
-          <Manager />
-        </Route>
-        <Route exact path="/restaurants/1/cashier">
-          <div>cashier</div>
-        </Route>
-        <Route exact path="/restaurants/1/customer">
-          <Customer />
-        </Route>
+    <Switch>
+      <Route exact path="/">
+        <Homepage />
+      </Route>
+      <Route exact path="/restaurants/1">
+        <Resturant />
+      </Route>
+      <Route exact path="/restaurants/1/waiter">
+        <Waiter />
+      </Route>
+      <Route exact path="/restaurants/1/cook">
+        <Kitchen />
+      </Route>
+      <Route exact path="/restaurants/1/manager">
+        <Manager />
+      </Route>
+      <Route exact path="/restaurants/1/cashier">
+        <div>cashier</div>
+      </Route>
+      <Route exact path="/restaurants/1/customer">
+        <Customer />
+      </Route>
 
-        <Route path="/not-found" component={NotFound} />
-        <Redirect to="/not-found"></Redirect>
-      </Switch>
-    </div>
+      <Route path="/not-found" component={NotFound} />
+      <Redirect to="/not-found"></Redirect>
+    </Switch>
   )
 }
 

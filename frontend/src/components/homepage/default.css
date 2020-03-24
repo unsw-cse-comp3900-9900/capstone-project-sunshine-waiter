@@ -1,0 +1,44 @@
+.pusher {
+  width: 100vw;
+  height: 40px;
+}
+
+.pusher .ui.container.sticky {
+  background-color: #1b1c1d;
+  width: 100vw;
+  position: fixed;
+  top: 0;
+}
+
+.ui.text.container h1.ui.inverted.header {
+  background-color: #1b1c1d;
+  padding-top: 100px;
+  font-size: 50px;
+}
+
+.ui.text.container h2 {
+  color: grey;
+  padding-bottom: 150px;
+}
+
+.ui.vertical.stripe.segment h1 {
+  font-size: 30px;
+  padding-top: 30px;
+  padding-bottom: 10px;
+  font-weight: bold;
+}
+
+.ui.vertical.stripe.segment p {
+  font-size: 15px;
+  width: 800px;
+  font-style: italic;
+  padding-bottom: 30px;
+}
+
+.ui.inverted.vertical.footer.segment .ui.container h4 {
+  color: grey;
+  width: 300px;
+
+  position: relative;
+  margin-left: 30vw;
+}
