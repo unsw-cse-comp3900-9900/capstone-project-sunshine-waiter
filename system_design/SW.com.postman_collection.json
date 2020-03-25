@@ -1,0 +1,706 @@
+{
+	"info": {
+		"_postman_id": "c05a664d-8354-4486-8b6f-2d6b1b75a733",
+		"name": "SW.com",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "/users",
+			"item": [
+				{
+					"name": "user register",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\":\"new user\",\n\t\"email\":\"newemail2@new.com\",\n\t\"password\":\"new-password\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/users/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user register - invalid data",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\":\"hbxzknight\",\n\t\"email\":\"hbxzkni\",\n\t\"password\":\"hbxzknight_password\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/users/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\":\"new user\",\n\t\"email\":\"new4@new.com\",\n\t\"password\":\"new-password\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/users/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user login - user not exist",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\":\"non-exist@mail.com\",\n\t\"password\":\"pwoasfdfdfsdf\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/users/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user login - wrong password",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\":\"asdfsasdfdfe@acom\",\n\t\"password\":\"wrong-password\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/users/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "200",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTZmMjk4NTQ3MjBjYzAwYjg2NDZhYzEiLCJpYXQiOjE1ODQ1MTEzMDUsImV4cCI6MTU4NDU5NzcwNX0.XMEgmSkSBJ1BjRezcfYeNt7jLbFVZJhTZRjCVfZgGUQ",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8000/users/5e6f29854720cc00b8646ac1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"users",
+								"5e6f29854720cc00b8646ac1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "401 read: basic user - another user",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTZmMjk4NTQ3MjBjYzAwYjg2NDZhYzEiLCJpYXQiOjE1ODQ1MTEzMDUsImV4cCI6MTU4NDU5NzcwNX0.XMEgmSkSBJ1BjRezcfYeNt7jLbFVZJhTZRjCVfZgGUQ",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8000/users/5e6f29854720cc00b8646ac1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"users",
+								"5e6f29854720cc00b8646ac1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "200 read: admin user - another user",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTZmMjk4NTQ3MjBjYzAwYjg2NDZhYzEiLCJpYXQiOjE1ODQ1MTEzMDUsImV4cCI6MTU4NDU5NzcwNX0.XMEgmSkSBJ1BjRezcfYeNt7jLbFVZJhTZRjCVfZgGUQ",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8000/users/5e6f29854720cc00b8646ac1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"users",
+								"5e6f29854720cc00b8646ac1"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "read profile - 200 admin user access another user",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "x-auth-token",
+										"type": "text",
+										"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTZmMjk4NTQ3MjBjYzAwYjg2NDZhYzEiLCJpYXQiOjE1ODQ1MTEzMDUsImV4cCI6MTU4NDU5NzcwNX0.XMEgmSkSBJ1BjRezcfYeNt7jLbFVZJhTZRjCVfZgGUQ"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:8000/users/5e6f29854720cc00b8646ac1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"users",
+										"5e6f29854720cc00b8646ac1"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						}
+					]
+				},
+				{
+					"name": "update profile - 200 user update own",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTZmMjk4NTQ3MjBjYzAwYjg2NDZhYzEiLCJpYXQiOjE1ODQ1MTEzMDUsImV4cCI6MTU4NDU5NzcwNX0.XMEgmSkSBJ1BjRezcfYeNt7jLbFVZJhTZRjCVfZgGUQ",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\":\"new mew user name\",\n\t\"email\":\"new-email-12@gmail.com\",\n\t\"password\":\"pwodfdfsdfasfsff\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/users/5e6f29854720cc00b8646ac1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"users",
+								"5e6f29854720cc00b8646ac1"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "read profile - 200 admin user access another user",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "x-auth-token",
+										"type": "text",
+										"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTZmMjk4NTQ3MjBjYzAwYjg2NDZhYzEiLCJpYXQiOjE1ODQ1MTEzMDUsImV4cCI6MTU4NDU5NzcwNX0.XMEgmSkSBJ1BjRezcfYeNt7jLbFVZJhTZRjCVfZgGUQ"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:8000/users/5e6f29854720cc00b8646ac1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"users",
+										"5e6f29854720cc00b8646ac1"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						}
+					]
+				},
+				{
+					"name": "update profile - 401 user update other's",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTZmMjk4NTQ3MjBjYzAwYjg2NDZhYzEiLCJpYXQiOjE1ODQ1MTEzMDUsImV4cCI6MTU4NDU5NzcwNX0.XMEgmSkSBJ1BjRezcfYeNt7jLbFVZJhTZRjCVfZgGUQ",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8000/users/5e6f29854720cc00b8646ac1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"users",
+								"5e6f29854720cc00b8646ac1"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "read profile - 200 admin user access another user",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "x-auth-token",
+										"type": "text",
+										"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTZmMjk4NTQ3MjBjYzAwYjg2NDZhYzEiLCJpYXQiOjE1ODQ1MTEzMDUsImV4cCI6MTU4NDU5NzcwNX0.XMEgmSkSBJ1BjRezcfYeNt7jLbFVZJhTZRjCVfZgGUQ"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:8000/users/5e6f29854720cc00b8646ac1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"users",
+										"5e6f29854720cc00b8646ac1"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						}
+					]
+				},
+				{
+					"name": "update profile - 200 admin user update others",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTZmMjk4NTQ3MjBjYzAwYjg2NDZhYzEiLCJpYXQiOjE1ODQ1MTEzMDUsImV4cCI6MTU4NDU5NzcwNX0.XMEgmSkSBJ1BjRezcfYeNt7jLbFVZJhTZRjCVfZgGUQ",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8000/users/5e6f29854720cc00b8646ac1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"users",
+								"5e6f29854720cc00b8646ac1"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "read profile - 200 admin user access another user",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "x-auth-token",
+										"type": "text",
+										"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTZmMjk4NTQ3MjBjYzAwYjg2NDZhYzEiLCJpYXQiOjE1ODQ1MTEzMDUsImV4cCI6MTU4NDU5NzcwNX0.XMEgmSkSBJ1BjRezcfYeNt7jLbFVZJhTZRjCVfZgGUQ"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:8000/users/5e6f29854720cc00b8646ac1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"users",
+										"5e6f29854720cc00b8646ac1"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						}
+					]
+				},
+				{
+					"name": "delete profile - 200 user del own",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTZmMjk4NTQ3MjBjYzAwYjg2NDZhYzEiLCJpYXQiOjE1ODQ1MTEzMDUsImV4cCI6MTU4NDU5NzcwNX0.XMEgmSkSBJ1BjRezcfYeNt7jLbFVZJhTZRjCVfZgGUQ",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8000/users/5e6f29854720cc00b8646ac1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"users",
+								"5e6f29854720cc00b8646ac1"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "read profile - 200 admin user access another user",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "x-auth-token",
+										"type": "text",
+										"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTZmMjk4NTQ3MjBjYzAwYjg2NDZhYzEiLCJpYXQiOjE1ODQ1MTEzMDUsImV4cCI6MTU4NDU5NzcwNX0.XMEgmSkSBJ1BjRezcfYeNt7jLbFVZJhTZRjCVfZgGUQ"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:8000/users/5e6f29854720cc00b8646ac1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"users",
+										"5e6f29854720cc00b8646ac1"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						}
+					]
+				},
+				{
+					"name": "delete profile - 401 user del others",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTZmMjk4NTQ3MjBjYzAwYjg2NDZhYzEiLCJpYXQiOjE1ODQ1MTEzMDUsImV4cCI6MTU4NDU5NzcwNX0.XMEgmSkSBJ1BjRezcfYeNt7jLbFVZJhTZRjCVfZgGUQ",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8000/users/5e6f29854720cc00b8646ac1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"users",
+								"5e6f29854720cc00b8646ac1"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "read profile - 200 admin user access another user",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "x-auth-token",
+										"type": "text",
+										"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTZmMjk4NTQ3MjBjYzAwYjg2NDZhYzEiLCJpYXQiOjE1ODQ1MTEzMDUsImV4cCI6MTU4NDU5NzcwNX0.XMEgmSkSBJ1BjRezcfYeNt7jLbFVZJhTZRjCVfZgGUQ"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:8000/users/5e6f29854720cc00b8646ac1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"users",
+										"5e6f29854720cc00b8646ac1"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						}
+					]
+				},
+				{
+					"name": "delete profile - 200 admin user del others",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "{{admin-token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8000/users/5e6f29854720cc00b8646ac1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"users",
+								"5e6f29854720cc00b8646ac1"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "read profile - 200 admin user access another user",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "x-auth-token",
+										"type": "text",
+										"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTZmMjk4NTQ3MjBjYzAwYjg2NDZhYzEiLCJpYXQiOjE1ODQ1MTEzMDUsImV4cCI6MTU4NDU5NzcwNX0.XMEgmSkSBJ1BjRezcfYeNt7jLbFVZJhTZRjCVfZgGUQ"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:8000/users/5e6f29854720cc00b8646ac1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8000",
+									"path": [
+										"users",
+										"5e6f29854720cc00b8646ac1"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						}
+					]
+				}
+			],
+			"description": "Make sure, for api that run as \"admin user\", you set an admin user token to it's header. \nIf you don't have an admin user, generate a new user then set it's isAdmin in your DB.",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "50479605-3942-4496-8b34-2aad8c0e871b",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "b789b05f-48c0-481f-a11a-3f48a0323b23",
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "/restaurants",
+			"item": [
+				{
+					"name": "Get restaurants/restaurantId/",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTY5YzFkMzAyNmI4MjAxMWJlMDcxZjIiLCJpYXQiOjE1ODQwMDgxNzF9.UZbOPxlJbAtg4g3YmIOJShhOBq1lQsl6kH25apnMMpw",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8000/api/restaurants/1234/home",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"restaurants",
+								"1234",
+								"home"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"protocolProfileBehavior": {}
+}
