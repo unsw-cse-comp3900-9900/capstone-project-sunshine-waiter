@@ -343,6 +343,18 @@ GET 'sw.com/api/restaurants/567813/categories/'
 
 
 
+
+## Design Disccusion
+
+1.Why restaurant.name is `unique`?
+
+It's a temporary solution for scam prevention. 
+In a more enriched version of this software, a restaurant will be verified by website admin on whether this restaurant is real, whether this user have the concent from the owner of the restaurant. 
+
+In that case, it's ok that sevearl restaurant have exactly same name (they might want to add address information to distinguish from eachother). 
+
+
+
 ## TODO
 
 1.  user cannot update email address

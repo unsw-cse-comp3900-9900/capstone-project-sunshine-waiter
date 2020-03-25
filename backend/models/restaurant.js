@@ -6,6 +6,13 @@ const restaurantSchema = new mongoose.Schema({
     required: true,
     minlength: 5,
     maxlength: 50,
+    unique: true,
+  },
+  description: {
+    type: String,
+    required: true,
+    minlength: 5,
+    maxlength: 2047,
   },
   pic: {
     type: String,
