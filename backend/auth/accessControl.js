@@ -3,7 +3,25 @@ const AccessControl = require('accesscontrol')
 // website-wide access control policy
 // TODO: decide all the attributes
 const accessGranted = {
-  // roles in administration
+  // Every user has this role
+  basic: {
+    profile: {
+      'read:own': ['*'],
+      'update:own': ['*'],
+      'delete:own': ['*'],
+    },
+
+    restaurant_management: {
+      // here, "own" means: restaurant.createdBy == user._id
+      // that is, current user is the creator&owner of the restaurant
+      'create:own': ['*'],
+      'read:own': ['*'],
+      'update:own': ['*'],
+      'delete:own': ['*'],
+    },
+  },
+
+  // website admin
   admin: {
     profile: {
       'create:any': ['*'],
@@ -13,21 +31,9 @@ const accessGranted = {
     },
   },
 
-  basic: {
-    profile: {
-      'read:own': ['*'],
-      'update:own': ['*'],
-      'delete:own': ['*'],
-    },
-    restaurant_management: {
-      'create:own': ['*'],
-      'delete:own': ['*'],
-    },
-  },
-
   // roles in restaurant
-  customer: {},
-
+  // here, "own" means: restaurant.userGroups[role].includes(user._id)
+  // that is, current user is in the role-group of restaurant
   manager: {
     restaurant_management: {
       // including restaurant history data, staff management, menu, etc
@@ -42,6 +48,14 @@ const accessGranted = {
       'read:own': ['*'],
       'update:own': ['*'],
     },
+    order: {
+      'read:own': ['*'],
+      'update:own': ['*'],
+    },
+    dashboard: {
+      'read:own': ['*'],
+      'update:own': ['*'],
+    },
   },
   cook: {
     cooking_queue: {
@@ -51,6 +65,12 @@ const accessGranted = {
   },
   waiter: {
     serving_queue: {
+      'read:own': ['*'],
+      'update:own': ['*'],
+    },
+  },
+  cashier: {
+    order: {
       'read:own': ['*'],
       'update:own': ['*'],
     },
