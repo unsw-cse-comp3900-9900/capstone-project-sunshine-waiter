@@ -26,9 +26,12 @@ const login = async (req, res) => {
   const isPswValid = await validatePassword(password, user.password)
   if (!isPswValid)
     return res.status(400).json({ error: 'Invalid email or password' })
-  const token = generateAuthToken(user)
+  const authToken = generateAuthToken(user)
 
-  res.send(token)
+  res.status(200).json({
+    data: _.pick(user, ['_id', 'name', 'email']),
+    authToken,
+  })
 }
 
 function validateLoginDataFormat(data) {
