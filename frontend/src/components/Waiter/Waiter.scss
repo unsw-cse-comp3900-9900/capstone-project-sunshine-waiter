@@ -65,6 +65,11 @@ $theme-color2: rgb(255, 255, 255);
       animation-fill-mode: forwards;
       animation-duration: 200ms;
     }
+    .reset:hover {
+      animation-name: fail;
+      animation-fill-mode: forwards;
+      animation-duration: 200ms;
+    }
     @keyframes fail {
       100% {
         cursor: pointer;

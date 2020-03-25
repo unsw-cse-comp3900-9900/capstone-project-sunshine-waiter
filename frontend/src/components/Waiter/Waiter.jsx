@@ -2,14 +2,14 @@ import React from 'react'
 import Dishes from './Dishes'
 import Request from './Request'
 import './Waiter.css'
-import io from 'socket.io-client'
+import { connect } from '../apis/socketClient'
 import { dishes, requests } from './fakeData'
 
 const URL = 'http://localhost:8000'
 
 const arrayToObj = array => {
-  var result = {}
-  for (var item of array) {
+  let result = {}
+  for (let item of array) {
     result[item._id] = item
   }
   return result
@@ -55,24 +55,21 @@ class Waiter extends React.Component {
     })
   }
 
-  async componentDidMount() {
-    // Start connection
-    const socket = io.connect(URL)
-    socket.emit('authenticate', {
+  componentDidMount() {
+    const userData = {
       restaurantId: 'restaurant1',
       userId: 'user1',
       userType: 'waiter',
       password: 'password',
-    })
-    socket.on('authenticate success', namespace => {
-      const safeConnect = io.connect(URL + namespace)
-      alert('connect established')
-      safeConnect.on('new dish', this.newDish)
-      safeConnect.on('new request', this.newRequest)
-      this.setState({
-        socket: safeConnect,
-      })
-    })
+    }
+
+    // configure includs the event and response you defined for the socket
+    const configure = {
+      'new dish': this.newDish,
+      'new request': this.newRequest,
+    }
+
+    connect(this, URL, userData, configure)
   }
 
   render() {
