@@ -23,7 +23,7 @@ router.get(
   '/:userId',
   verifyAuthToken,
   allowIfLoggedin,
-  requestAccess(scopes.administration, 'read', 'profile'),
+  requestAccess(scopes.website_admin, 'read', 'profile'),
   readUser
 )
 
@@ -31,7 +31,7 @@ router.put(
   '/:userId',
   verifyAuthToken,
   allowIfLoggedin,
-  requestAccess(scopes.administration, 'update', 'profile'),
+  requestAccess(scopes.website_admin, 'update', 'profile'),
   updateUser
 )
 
@@ -39,7 +39,7 @@ router.delete(
   '/:userId',
   verifyAuthToken,
   allowIfLoggedin,
-  requestAccess(scopes.administration, 'delete', 'profile'),
+  requestAccess(scopes.website_admin, 'delete', 'profile'),
   deleteUser
 )
 

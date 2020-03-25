@@ -6,6 +6,7 @@ const accessGranted = {
   // Every user has this role
   basic: {
     profile: {
+      // here, "own" means: targetUser._id == user._id
       'read:own': ['*'],
       'update:own': ['*'],
       'delete:own': ['*'],
@@ -19,15 +20,10 @@ const accessGranted = {
       'update:own': ['*'],
       'delete:own': ['*'],
     },
-  },
-
-  // website admin
-  admin: {
-    profile: {
-      'create:any': ['*'],
-      'read:any': ['*'],
-      'update:any': ['*'],
-      'delete:any': ['*'],
+    order: {
+      // here, "own" means: order.placedBy == user._id
+      'create:own': ['*'],
+      'read:own': ['*'],
     },
   },
 
@@ -49,10 +45,12 @@ const accessGranted = {
       'update:own': ['*'],
     },
     order: {
+      // active order; majorly for cashier page
       'read:own': ['*'],
       'update:own': ['*'],
     },
     dashboard: {
+      // including stuff management; order history; menu update
       'read:own': ['*'],
       'update:own': ['*'],
     },
@@ -73,6 +71,16 @@ const accessGranted = {
     order: {
       'read:own': ['*'],
       'update:own': ['*'],
+    },
+  },
+
+  // website admin
+  admin: {
+    profile: {
+      'create:any': ['*'],
+      'read:any': ['*'],
+      'update:any': ['*'],
+      'delete:any': ['*'],
     },
   },
 }
