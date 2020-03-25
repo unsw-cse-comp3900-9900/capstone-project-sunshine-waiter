@@ -88,7 +88,7 @@ updateUser = async (req, res, next) => {
     return res.json({
       success: true,
       data: _.pick(user, ['_id', 'name', 'email']),
-      msg: 'User updated.',
+      message: 'User updated.',
     })
   } catch (error) {
     next(error)
@@ -107,7 +107,7 @@ deleteUser = async (req, res, next) => {
     return res.json({
       success: true,
       data: _.pick(user, ['_id', 'name', 'email']),
-      msg: 'User deleted.',
+      message: 'User deleted.',
     })
   } catch (error) {
     next(error)
@@ -132,7 +132,6 @@ function validateUpdateDataFormat(user) {
 }
 
 module.exports = {
-  generateAuthToken,
   createUser, // aka signup
   readUser,
   updateUser,
