@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import './default.css'
 import GoogleAuth from './GoogleAuth'
 import BaseProvider from '../apis/BaseProvider'
+import { setCookie } from './Cookies'
 
 const renderSignUp = (username, setUsername) => {
   return (
@@ -50,7 +51,9 @@ const onAuth = ([param, onAuthenticated, showSignUp]) => event => {
     alert('Password is less than 10 letters!')
   } else {
     BaseProvider.post(URL, param)
-      .then(() => {
+      .then(res => {
+        const token = showSignUp ? res.data.accessToken : res.data
+        setCookie('token', token)
         onAuthenticated(true)
       })
       .catch(({ response }) => alert(response.data))
