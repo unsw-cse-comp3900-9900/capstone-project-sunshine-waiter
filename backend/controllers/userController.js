@@ -1,6 +1,6 @@
 const Joi = require('joi')
 const bcrypt = require('bcrypt')
-const { User } = require('../models/user')
+const User = require('../models/user')
 const { generateAuthToken } = require('../auth/authentication')
 const _ = require('lodash')
 
