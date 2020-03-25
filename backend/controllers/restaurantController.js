@@ -1,5 +1,6 @@
 const Joi = require('joi')
 const Restaurant = require('../models/restaurant')
+const Menu = require('../models/menu')
 const _ = require('lodash')
 
 // create restaurant,
@@ -17,8 +18,17 @@ const createRestaurant = async (req, res, next) => {
         .send('Restaurant with current name already registered.')
 
     // create
-    restaurant = new Restaurant(_.pick(req.body, ['name', 'description']))
-    restaurant.createdBy = req.user._id
+    restaurant = new Restaurant({
+      ..._.pick(req.body, ['name', 'description']),
+      createdBy: req.user._id,
+      userGroups: { manager: [], cook: [], waiter: [], cashier: [] },
+    })
+    restaurant.menu = new Menu({
+      name: 'menu',
+      menuItems: [],
+      categories: [],
+      restaurant,
+    })
     await restaurant.save()
 
     // res
