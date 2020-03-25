@@ -14,7 +14,7 @@ const restaurantSchema = new mongoose.Schema({
   ],
   amount: {
     type: Number,
-    default: 1, // 0 means no restriction
+    default: 1,
     required: true,
     validate: {
       validator: Number.isInteger,
@@ -30,6 +30,14 @@ const restaurantSchema = new mongoose.Schema({
     type: String, // ownership reference ID. e.g table number;
     required: true,
   },
+  status: {
+    // Shall be one of enum(PLASED, COOKING, READY, SERVING, SERVED, FAIL)
+    type: String,
+    required: true,
+    default: 'PLASED',
+  },
+  readyTime: { type: Date },
+  serveTime: { type: Date },
 
   order: {
     type: mongoose.Schema.Types.ObjectId,
