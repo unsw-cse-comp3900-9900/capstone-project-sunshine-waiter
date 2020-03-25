@@ -3,25 +3,28 @@ const config = require('config')
 const express = require('express')
 const connectDb = require('./db/connection')
 const users = require('./routes/users')
+const restaurants = require('./routes/restaurants')
 const cors = require('cors')
 
-// const
-const app = express()
-const PORT = 8000
-
-// environment variables
+// check environment variables
 if (!config.get('JWT_SECRET')) {
   console.error(
-    'FATAL ERROR: environment variable "jwtPrivatKey" is not defined.'
+    'FATAL ERROR: environment variable "jwtPrivatKey" is not defined. Go check README.md on .env_file'
   )
   process.exit(1)
 }
 
-app.use(express.json())
+// const
+const PORT = 8000
+const app = express()
 
+app.set('json spaces', 2)
+app.use(express.json())
 app.use(cors())
 
+// routes
 app.use('/users', users)
+app.use('/restaurants', restaurants)
 
 app.listen(PORT, () => {
   console.log('Listening at ' + PORT)
