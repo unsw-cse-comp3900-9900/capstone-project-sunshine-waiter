@@ -32,15 +32,11 @@ class Homepage extends React.Component {
         .then(res => {
           this.setState({
             isAuthenticated: true,
-            user: res.data,
+            user: res.data.data,
           })
         })
         .catch(err => console.log({ err }))
     }
-  }
-
-  onCloseProfile = state => {
-    this.setState({ showProfile: state })
   }
 
   onAuthenticated = state => {
@@ -101,7 +97,11 @@ class Homepage extends React.Component {
           onMouseEnter={() => this.onMouseEnter('myprofile')}
           onMouseLeave={this.onMouseLeave}
         >
-          <span onClick={() => this.setState({ showProfile: true })}>
+          <span
+            onClick={() =>
+              this.setState({ showProfile: !this.state.showProfile })
+            }
+          >
             Myprofile
           </span>
         </a>
@@ -234,7 +234,7 @@ class Homepage extends React.Component {
           {this.state.showProfile && (
             <SiderBar
               visible={this.state.showProfile}
-              onCloseProfile={this.onCloseProfile}
+              userDetail={this.state.user}
             />
           )}
         </div>
