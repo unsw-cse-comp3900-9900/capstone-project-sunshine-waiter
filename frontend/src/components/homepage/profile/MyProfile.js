@@ -1,25 +1,28 @@
 import React from 'react'
 
-import NavigationButtonCard from '../../NavigationButtonCard'
+import '../default.css'
 
 class MyProfile extends React.Component {
   render() {
-    const { onCloseProfile } = this.props
+    const { onCloseProfile, userDetail } = this.props
+    const { _id, name, avatar } = userDetail
     return (
       <div>
-        <div>basic info</div>
         <div>
           <div>
-            my Restaurant
-            <NavigationButtonCard
-              linkActiveItem="active item"
-              linkTo="/restaurants/1"
-              linkName="Restaurant 1"
-              linkOnClick={this.handleItemClick}
-            ></NavigationButtonCard>
+            <div>
+              <img src="" alt="" />
+              <div className="header">{name}</div>
+              <div className="meta">{_id}</div>
+            </div>
           </div>
         </div>
-        <div onClick={() => onCloseProfile(false)}>close profile</div>
+        <div>
+          <label>My Restaurants</label>
+          <li>
+            <a href="/restaurants/1">Restaurant 1</a>
+          </li>
+        </div>
       </div>
     )
   }

@@ -42,3 +42,15 @@
   position: relative;
   margin-left: 30vw;
 }
+
+.sidebar {
+  background-color: whitesmoke;
+  padding-top: 50px;
+}
+
+/* .sidebar .profile {
+  height: 100vh;
+}
+
+.sidebar .profile .basic-info {
+} */
