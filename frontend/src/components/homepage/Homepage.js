@@ -2,7 +2,9 @@ import React from 'react'
 
 import AuthCard from '../authenticate/AuthCard'
 import SiderBar from './profile/SiderBar'
+import { getCookie, deleteCookie } from '../authenticate/Cookies'
 import './default.css'
+import { getUser } from '../apis/actions'
 
 class Homepage extends React.Component {
   state = {
@@ -10,10 +12,30 @@ class Homepage extends React.Component {
     showProfile: false,
     showLoginCard: false,
     headerMouseOver: '',
+    user: null,
   }
 
-  onCloseProfile = state => {
-    this.setState({ showProfile: state })
+  setUserAndState = data => {
+    this.setState({
+      isAuthenticated: true,
+      user: data,
+    })
+  }
+
+  //when there is no cookies, the getUser request will not be sent,
+  //see the definition
+  UNSAFE_componentWillMount = () => {
+    const currentCookie = getCookie('token')
+    getUser(currentCookie, this.setUserAndState)
+  }
+
+  componentDidUpdate = (prevProps, prevState) => {
+    if (
+      prevState.isAuthenticated != this.state.isAuthenticated &&
+      this.state.isAuthenticated
+    ) {
+      getUser(getCookie('token'), this.setUserAndState)
+    }
   }
 
   onAuthenticated = state => {
@@ -21,7 +43,6 @@ class Homepage extends React.Component {
   }
 
   onMouseEnter = header => {
-    console.log(header)
     this.setState({
       headerMouseOver: header,
     })
@@ -33,28 +54,77 @@ class Homepage extends React.Component {
     })
   }
 
+  renderLogout = () => {
+    return (
+      <div className="item">
+        <a
+          className={
+            this.state.headerMouseOver === 'signout'
+              ? 'active right item'
+              : 'right item'
+          }
+          onMouseEnter={() => this.onMouseEnter('signout')}
+          onMouseLeave={this.onMouseLeave}
+        >
+          <span
+            onClick={() => {
+              this.setState({
+                isAuthenticated: false,
+                showProfile: false,
+                showLoginCard: false,
+                user: null,
+              })
+              deleteCookie('token')
+            }}
+          >
+            Log out
+          </span>
+        </a>
+      </div>
+    )
+  }
+
   renderAfterLogin = () => {
     return (
-      <div>
-        <div className="item">
-          <span onClick={() => this.setState({ showProfile: true })}>
+      <div className="item">
+        <a
+          className={
+            this.state.headerMouseOver === 'myprofile'
+              ? 'active right item'
+              : ' right item'
+          }
+          onMouseEnter={() => this.onMouseEnter('myprofile')}
+          onMouseLeave={this.onMouseLeave}
+        >
+          <span
+            onClick={() => {
+              this.setState({ showProfile: !this.state.showProfile })
+            }}
+          >
             Myprofile
           </span>
-        </div>
+        </a>
       </div>
     )
   }
 
   renderBeforeLogin = () => {
     return (
-      <div>
+      <div className="item">
         {this.state.showLoginCard || (
-          <div
-            className="item primary"
-            onClick={() => this.setState({ showLoginCard: true })}
+          <a
+            className={
+              this.state.headerMouseOver === 'signin'
+                ? 'active item primary'
+                : 'item primary'
+            }
+            onMouseEnter={() => this.onMouseEnter('signin')}
+            onMouseLeave={this.onMouseLeave}
           >
-            Sign In
-          </div>
+            <span onClick={() => this.setState({ showLoginCard: true })}>
+              Sign In
+            </span>
+          </a>
         )}
       </div>
     )
@@ -71,21 +141,18 @@ class Homepage extends React.Component {
                   className="ui mini circular image"
                   src={require('./SWLogo.png')}
                 />
-                <span
+                <a
+                  href="/"
+                  className={
+                    this.state.headerMouseOver === 'home'
+                      ? 'active item'
+                      : 'item'
+                  }
                   onMouseEnter={() => this.onMouseEnter('home')}
                   onMouseLeave={this.onMouseLeave}
                 >
-                  <a
-                    href="/"
-                    className={
-                      this.state.headerMouseOver.home === 'home'
-                        ? 'active item'
-                        : 'item'
-                    }
-                  >
-                    Home
-                  </a>
-                </span>
+                  Home
+                </a>
 
                 <a
                   className={
@@ -99,21 +166,10 @@ class Homepage extends React.Component {
                   About
                 </a>
               </div>
-              <div>
-                <a
-                  className={
-                    this.state.headerMouseOver === 'signin'
-                      ? 'active right item'
-                      : 'right item'
-                  }
-                  onMouseEnter={() => this.onMouseEnter('signin')}
-                  onMouseLeave={this.onMouseLeave}
-                >
-                  {this.state.isAuthenticated
-                    ? this.renderAfterLogin()
-                    : this.renderBeforeLogin()}
-                </a>
-              </div>
+              {this.state.isAuthenticated
+                ? this.renderAfterLogin()
+                : this.renderBeforeLogin()}
+              {this.state.isAuthenticated && <div>{this.renderLogout()}</div>}
             </div>
           </div>
           <div className="ui text container">
@@ -177,7 +233,7 @@ class Homepage extends React.Component {
           {this.state.showProfile && (
             <SiderBar
               visible={this.state.showProfile}
-              onCloseProfile={this.onCloseProfile}
+              userDetail={this.state.user}
             />
           )}
         </div>
