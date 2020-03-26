@@ -15,11 +15,19 @@ class Homepage extends React.Component {
     user: null,
   }
 
-  setUserAndState = data => {
-    this.setState({
-      isAuthenticated: true,
-      user: data,
-    })
+  setUserAndState = (data, state = true) => {
+    if (data === null) {
+      this.setState({
+        isAuthenticated: state,
+        showProfile: false,
+        user: data,
+      })
+    } else {
+      this.setState({
+        isAuthenticated: state,
+        user: data,
+      })
+    }
   }
 
   //when there is no cookies, the getUser request will not be sent,
@@ -234,6 +242,7 @@ class Homepage extends React.Component {
             <SiderBar
               visible={this.state.showProfile}
               userDetail={this.state.user}
+              setUserAndState={this.setUserAndState}
             />
           )}
         </div>
