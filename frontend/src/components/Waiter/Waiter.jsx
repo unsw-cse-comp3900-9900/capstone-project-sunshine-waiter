@@ -3,7 +3,9 @@ import Dishes from './Dishes'
 import Request from './Request'
 import './Waiter.css'
 import { connect } from '../apis/socketClient'
-import { dishes, requests } from './fakeData'
+import { fakeData } from './fakeData'
+
+const { dishes, requests } = fakeData
 
 const URL = 'http://localhost:8000'
 
@@ -44,12 +46,16 @@ class Waiter extends React.Component {
   }
 
   handleDishChange(newDishQue) {
+    newDishQue.sort((a, b) => parseFloat(a.readyTime) - parseFloat(b.readyTime))
     this.setState({
       dishQue: newDishQue,
     })
   }
 
   handleRequestChange(newRequests) {
+    newRequests.sort(
+      (a, b) => parseFloat(a.receiveTime) - parseFloat(b.receiveTime)
+    )
     this.setState({
       requestQue: newRequests,
     })

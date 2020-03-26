@@ -1,0 +1,25 @@
+{
+    "dishes": [
+      {{#repeat 20}}
+        {
+          "_id": {{@index}},
+          "name": "{{food}}",
+          "readyTime": "{{time '00:00' '07:00' 'HH:mm:ss'}}",
+          "tableId": {{int 1 10}},
+          "orderId": "o{{@index}}",
+          "state": "READY",
+          "serveTime": null
+        }
+      {{/repeat}}
+    ],
+    "requests": [
+      {{#repeat 20}}
+      {
+        "_id": {{@index}},
+        "receiveTime": "{{time '00:00' '07:00' 'HH:mm:ss'}}",
+        "tableId": {{int 1 10}},
+        "finishTime": null
+      }
+      {{/repeat}}
+    ]
+}
