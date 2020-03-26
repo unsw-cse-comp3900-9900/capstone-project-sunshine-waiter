@@ -42,6 +42,9 @@ updateMenu = async (req, res, next) => {
 }
 
 /*
+returns a menu instance base on req.param.restaurant.
+Note that it's not a req handler. 
+
 precond: 
 1. req.params.restaurantId exist;
 2. any restaurant has menu; 
@@ -78,4 +81,6 @@ function validateUpdateDataFormat(menu) {
 module.exports = {
   readMenu,
   updateMenu,
+
+  findMenu, // Note that it's not a req handler.
 }
