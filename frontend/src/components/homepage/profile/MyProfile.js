@@ -4,7 +4,7 @@ import '../default.css'
 
 class MyProfile extends React.Component {
   render() {
-    const { onCloseProfile, userDetail } = this.props
+    const { userDetail } = this.props
     const { _id, name, avatar } = userDetail
     return (
       <div>

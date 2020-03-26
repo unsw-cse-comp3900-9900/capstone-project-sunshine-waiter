@@ -1,11 +1,10 @@
 import React from 'react'
-import jwtDecode from 'jwt-decode'
 
 import AuthCard from '../authenticate/AuthCard'
 import SiderBar from './profile/SiderBar'
 import { getCookie, deleteCookie } from '../authenticate/Cookies'
 import './default.css'
-import BaseProvider from '../apis/BaseProvider'
+import { getUser } from '../apis/actions'
 
 class Homepage extends React.Component {
   state = {
@@ -16,26 +15,26 @@ class Homepage extends React.Component {
     user: null,
   }
 
+  setUserAndState = data => {
+    this.setState({
+      isAuthenticated: true,
+      user: data,
+    })
+  }
+
+  //when there is no cookies, the getUser request will not be sent,
+  //see the definition
   UNSAFE_componentWillMount = () => {
     const currentCookie = getCookie('token')
-    if (currentCookie === undefined) {
-      console.log('do nothing')
-    } else {
-      const decodedJWT = jwtDecode(currentCookie)
-      const headerConfig = {
-        headers: {
-          'x-auth-token': currentCookie,
-        },
-      }
-      const URL = '/users/' + decodedJWT._id
-      BaseProvider.get(URL, headerConfig)
-        .then(res => {
-          this.setState({
-            isAuthenticated: true,
-            user: res.data.data,
-          })
-        })
-        .catch(err => console.log({ err }))
+    getUser(currentCookie, this.setUserAndState)
+  }
+
+  componentDidUpdate = (prevProps, prevState) => {
+    if (
+      prevState.isAuthenticated != this.state.isAuthenticated &&
+      this.state.isAuthenticated
+    ) {
+      getUser(getCookie('token'), this.setUserAndState)
     }
   }
 
@@ -85,6 +84,19 @@ class Homepage extends React.Component {
     )
   }
 
+  // onClickMyProfile = () => {
+  //   // console.log(this.state.user)
+  //   const promise = new Promise(() =>
+  //     getUser(getCookie('token'), this.setUserAndState)
+  //   )
+  //   promise.then(this.setState({ showProfile: !this.state.showProfile }))
+  //   // if (this.state.user === null) {
+  //   //   console.log(this.state.user)
+  //   //   getUser(getCookie('token'), data => this.setState({ user: data }))
+  //   // }
+  //   // this.setState({ showProfile: !this.state.showProfile })
+  // }
+
   renderAfterLogin = () => {
     return (
       <div className="item">
@@ -98,9 +110,9 @@ class Homepage extends React.Component {
           onMouseLeave={this.onMouseLeave}
         >
           <span
-            onClick={() =>
+            onClick={() => {
               this.setState({ showProfile: !this.state.showProfile })
-            }
+            }}
           >
             Myprofile
           </span>
