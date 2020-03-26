@@ -62,7 +62,6 @@ class Dishes extends React.Component {
         // send finished dish to server
         if (this.props.socket) {
           this.props.socket.emit('update dish', targetDish)
-          this.props.handleDishChange(objToArray(newDishQue))
         } else {
           message.error('Not connect to server!')
         }
@@ -79,7 +78,7 @@ class Dishes extends React.Component {
           this.setState({
             finished: newFinished,
           })
-          this.props.handleDishChange(objToArray(newDishQue))
+
           notification['success']({
             message: dish.name + ' served!',
             description: 'Dish id: ' + dish._id,
@@ -101,7 +100,7 @@ class Dishes extends React.Component {
           this.setState({
             failed: newFailed,
           })
-          this.props.handleDishChange(objToArray(newDishQue))
+
           message.success('Dish removed.')
         } else {
           message.error('Not connect to server!')
@@ -120,7 +119,6 @@ class Dishes extends React.Component {
           this.setState({
             finished: newFinished,
           })
-          this.props.handleDishChange(objToArray(newDishQue))
         } else {
           message.error('Not connect to server!')
         }
@@ -133,7 +131,6 @@ class Dishes extends React.Component {
         // send reset to server
         if (this.props.socket) {
           this.props.socket.emit('update dish', targetDish)
-          this.props.handleDishChange(objToArray(newDishQue))
         } else {
           message.error('Not connect to server!')
         }

@@ -15,7 +15,7 @@
 .box {
   background-color: #fff;
   padding: 5%;
-  padding-top: 15%;
+  padding-top: 70px;
   position: relative;
   top: -10%;
   height: 120%;
@@ -50,13 +50,14 @@
 }
 .box .buttonBox {
   display: flex;
+  align-items: center;
   margin: 0 0 0 auto;
   flex-direction: row;
   justify-content: space-between;
 }
 .box .buttonBox button {
   margin: 0 5px;
-  width: 50px;
+  width: 30px;
   border: 0;
   background-color: transparent;
 }

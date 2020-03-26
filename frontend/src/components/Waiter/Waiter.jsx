@@ -17,6 +17,14 @@ const arrayToObj = array => {
   return result
 }
 
+const objToArray = obj => {
+  let result = []
+  for (let key in obj) {
+    result.push(obj[key])
+  }
+  return result
+}
+
 class Waiter extends React.Component {
   constructor(props) {
     super(props)
@@ -25,40 +33,30 @@ class Waiter extends React.Component {
       dishQue: dishes,
       requestQue: requests,
     }
-    this.handleDishChange = this.handleDishChange.bind(this)
-    this.handleRequestChange = this.handleRequestChange.bind(this)
   }
 
-  // handle incoming new dish
-  newDish = dish => {
-    const newDishQue = [...this.state.dishQue, dish]
-    this.setState({
-      dishQue: newDishQue,
-    })
-  }
-
-  // handle incoming new request
-  newRequest = request => {
-    const newRequests = [...this.props.requests, request]
-    this.setState({
-      requestQue: newRequests,
-    })
-  }
-
-  handleDishChange(newDishQue) {
-    newDishQue.sort((a, b) => parseFloat(a.readyTime) - parseFloat(b.readyTime))
-    this.setState({
-      dishQue: newDishQue,
-    })
-  }
-
-  handleRequestChange(newRequests) {
-    newRequests.sort(
-      (a, b) => parseFloat(a.receiveTime) - parseFloat(b.receiveTime)
-    )
-    this.setState({
-      requestQue: newRequests,
-    })
+  update = queName => {
+    return target => {
+      const newObj = arrayToObj(this.state[queName])
+      newObj[target._id] = target
+      switch (queName) {
+        case 'dishQue':
+          const newDishQue = objToArray(newObj).filter(
+            dish => dish.state == 'READY' || dish.state == 'SERVING'
+          )
+          this.setState({
+            dishQue: newDishQue,
+          })
+          break
+        case 'requestQue':
+          const newRequestQue = objToArray(newObj).filter(
+            request => request.finishTime == null
+          )
+          this.setState({
+            requestQue: newRequestQue,
+          })
+      }
+    }
   }
 
   componentDidMount() {
@@ -71,8 +69,8 @@ class Waiter extends React.Component {
 
     // configure includs the event and response you defined for the socket
     const configure = {
-      'new dish': this.newDish,
-      'new request': this.newRequest,
+      'update dish': this.update('dishQue'),
+      'update request': this.update('requestQue'),
     }
 
     connect(this, URL, userData, configure)
@@ -86,12 +84,10 @@ class Waiter extends React.Component {
         </header>
         <div id="box-container">
           <Dishes
-            handleDishChange={this.handleDishChange}
             dishQue={arrayToObj(this.state.dishQue)}
             socket={this.state.socket}
           />
           <Request
-            handleRequestChange={this.handleRequestChange}
             requestQue={arrayToObj(this.state.requestQue)}
             socket={this.state.socket}
           />

@@ -36,7 +36,7 @@ class Request extends React.Component {
           this.setState({
             finished: newFinished,
           })
-          this.props.handleRequestChange(objToArray(newRequestQue))
+
           notification['success']({
             message: 'Good job!',
             description:
