@@ -5,21 +5,6 @@ const restaurantSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  supportedConfiguration: [
-    {
-      name: { type: String, required: true },
-      options: { type: String, required: true },
-      maximumSelect: {
-        type: Number,
-        default: 0, // 0 means no restriction
-        required: false, // non-exist means no restriction
-        validate: {
-          validator: Number.isInteger,
-          message: '{VALUE} is not an integer value',
-        },
-      },
-    },
-  ],
   title: {
     type: String,
     required: true,
@@ -47,6 +32,22 @@ const restaurantSchema = new mongoose.Schema({
     minlength: 5,
     maxlength: 200,
   },
+
+  supportedConfiguration: [
+    {
+      name: { type: String, required: true },
+      options: { type: String, required: true },
+      maximumSelect: {
+        type: Number,
+        default: 0, // 0 means no restriction
+        required: false, // non-exist means no restriction
+        validate: {
+          validator: Number.isInteger,
+          message: '{VALUE} is not an integer value',
+        },
+      },
+    },
+  ],
 
   menu: {
     type: mongoose.Schema.Types.ObjectId,

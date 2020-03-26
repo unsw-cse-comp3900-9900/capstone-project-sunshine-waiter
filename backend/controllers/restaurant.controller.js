@@ -4,7 +4,7 @@ const Menu = require('../models/menu.model')
 const _ = require('lodash')
 
 // create restaurant,
-const createRestaurant = async (req, res, next) => {
+createRestaurant = async (req, res, next) => {
   try {
     // validate
     const { error } = validateCreateDataFormat(req.body)
