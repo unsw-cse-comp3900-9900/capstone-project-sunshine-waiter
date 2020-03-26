@@ -2,8 +2,8 @@
 const config = require('config')
 const express = require('express')
 const connectDb = require('./db/connection')
-const users = require('./routes/users')
-const restaurants = require('./routes/restaurants')
+const users = require('./routes/user.routes')
+const restaurants = require('./routes/restaurant.routes')
 const cors = require('cors')
 const errorHandler = require('./middleware/errorHandler')
 
