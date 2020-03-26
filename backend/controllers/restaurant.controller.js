@@ -23,12 +23,16 @@ const createRestaurant = async (req, res, next) => {
       createdBy: req.user._id,
       userGroups: { manager: [], cook: [], waiter: [], cashier: [] },
     })
-    restaurant.menu = new Menu({
+
+    const menu = new Menu({
       name: 'menu',
       menuItems: [],
       categories: [],
       restaurant,
     })
+    await menu.save()
+    restaurant.menu = menu._id
+
     await restaurant.save()
 
     // res
@@ -57,13 +61,13 @@ readRestaurant = async (req, res, next) => {
   }
 }
 
+/*
+precond: req.user exists;
+*/
 readMyRestaurants = async (req, res, next) => {
   try {
-    // find restaurant by user._id
-
-    res.json({
-      data: '[restaurants] place holder',
-    })
+    const restaurants = await Restaurant.find({ createdBy: req.user._id })
+    res.json({ data: restaurants })
   } catch (error) {
     next(error)
   }
