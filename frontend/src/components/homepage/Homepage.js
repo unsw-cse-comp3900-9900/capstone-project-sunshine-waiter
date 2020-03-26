@@ -134,7 +134,7 @@ class Homepage extends React.Component {
     return (
       <div className="pusher">
         <div className="ui inverted vertical masthead center aligned segment">
-          <div className="ui container sticky">
+          <div className="ui sticky">
             <div className="ui secondary inverted pointing menu">
               <div className="left item">
                 <img
