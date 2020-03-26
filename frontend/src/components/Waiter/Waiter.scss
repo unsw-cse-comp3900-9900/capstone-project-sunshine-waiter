@@ -28,6 +28,9 @@ $theme-color2: rgb(255, 255, 255);
   // box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.351);
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE 10+ */
+  .finishPanel {
+    background: transparent;
+  }
 
   .tableBox {
     background-color: rgba($color: $theme-color2, $alpha: 0.8);
