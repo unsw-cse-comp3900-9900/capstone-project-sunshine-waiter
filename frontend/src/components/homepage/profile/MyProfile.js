@@ -1,11 +1,17 @@
 import React from 'react'
 
 import '../default.css'
+import { getCookie } from '../../authenticate/Cookies'
+import { deleteUser } from '../../apis/actions'
 
 class MyProfile extends React.Component {
   render() {
-    const { userDetail } = this.props
-    const { _id, name, avatar } = userDetail
+    const { userDetail, setUserAndState } = this.props
+    if (userDetail === null) {
+      return null
+    }
+
+    const { _id, name, email, avatar } = userDetail
     return (
       <div className="profile">
         <div className="basic">
@@ -24,6 +30,7 @@ class MyProfile extends React.Component {
             </span>
           </div>
           <div className="meta">UserID: {_id}</div>
+          <div className="meta">Email: {email}</div>
         </div>
         <h4 className="ui horizontal divider">
           <i className="tag icon"></i>
@@ -42,7 +49,15 @@ class MyProfile extends React.Component {
           </span>
         </div>
         <div className="footer">
-          <div className="ui red button">Delete My Account</div>
+          <div
+            className="ui red button"
+            onClick={() => {
+              const token = getCookie('token')
+              deleteUser(token, setUserAndState)
+            }}
+          >
+            Delete My Account
+          </div>
         </div>
       </div>
     )
