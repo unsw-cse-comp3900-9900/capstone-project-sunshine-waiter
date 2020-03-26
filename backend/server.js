@@ -36,20 +36,22 @@ const onConnection = (anonymousClient) => {
           socket.on('dish cooked', (dish) => {
             // new dish cooked from kitchen, need to send to waiter
             // skip recording to db
-            nsp.to('waiter').emit('new dish', dish)
+            nsp.to('waiter').emit('update dish', dish)
           })
           socket.on('new request', (request) => {
             // new request from customer need to send to waiter
-            nsp.to('waiter').emit('new request', request)
+            nsp.to('waiter').emit('update request', request)
           })
           socket.on('update dish', (dish) => {
             // dish served or fail send from waiter, server need to update the db
             // update db
             console.log(dish)
+            nsp.to('waiter').emit('update dish', dish) // let all other waiter know
           })
           socket.on('update request', (request) => {
             // update db
             console.log(request)
+            nsp.to('waiter').emit('update request', request)
           })
           socket.on('disconnect', () => {
             console.log(
@@ -58,7 +60,7 @@ const onConnection = (anonymousClient) => {
           })
 
           // test
-          nsp.to('waiter').emit('new dish', fakeNewDish)
+          nsp.to('waiter').emit('update dish', fakeNewDish)
         })
         nsps[restaurantId] = nsp
       }
