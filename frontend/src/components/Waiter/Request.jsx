@@ -1,5 +1,6 @@
 import React from 'react'
 import { notification, message, Tooltip } from 'antd'
+import QueueAnim from 'rc-queue-anim'
 
 const objToArray = obj => {
   let result = []
@@ -103,7 +104,7 @@ class RenderRequests extends React.Component {
       this.renderSingleRequest(request)
     )
 
-    return <div>{result}</div>
+    return <QueueAnim>{result}</QueueAnim>
   }
 }
 

@@ -1,5 +1,6 @@
 import React from 'react'
 import { Popconfirm, message, notification, Tooltip } from 'antd'
+import QueueAnim from 'rc-queue-anim'
 
 const READY = 'READY'
 const SERVED = 'SERVED'
@@ -187,12 +188,12 @@ class RenderDishes extends React.Component {
       const tableBox = (
         <div className="tableBox" key={tableId}>
           <h3>Table: {tableId}</h3>
-          {dishes}
+          <QueueAnim type="left">{dishes}</QueueAnim>
         </div>
       )
       result.push(tableBox)
     }
-    return <div>{result}</div>
+    return <QueueAnim type="left">{result}</QueueAnim>
   }
 }
 
@@ -231,12 +232,12 @@ class RenderFinished extends React.Component {
       const tableBox = (
         <div className="tableBox" key={tableId}>
           <h3>Table: {tableId}</h3>
-          {dishes}
+          <QueueAnim type="left">{dishes}</QueueAnim>
         </div>
       )
       result.push(tableBox)
     }
-    return <div>{result}</div>
+    return <QueueAnim type="left">{result}</QueueAnim>
   }
 }
 
