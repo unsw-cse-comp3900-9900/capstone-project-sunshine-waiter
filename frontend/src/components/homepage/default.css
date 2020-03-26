@@ -61,7 +61,7 @@
 
 .sidebar .profile .basic {
   width: 256px;
-  height: 100px;
+  height: 140px;
   background-color: whitesmoke;
   border: 0.5px solid grey;
   border-radius: 5px;
@@ -76,6 +76,7 @@
 }
 
 .sidebar .profile .basic .meta {
+  margin-top: 10px;
   margin-left: 10px;
   font-style: italic;
 }
