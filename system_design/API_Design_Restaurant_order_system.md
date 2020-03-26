@@ -363,15 +363,15 @@ Skip 3rd party service.
 
 ## TODO
 
-1.  user shall not be able to update email address
-
 2.  Follow HTTP protocol on [401 response for jwt](https://stackoverflow.com/questions/33265812/best-http-authorization-header-type-for-jwt  ) 
 
 3.  `405` Method Not Allowed 
 
     The method specified in the Request-Line is not allowed for the resource identified by the Request-URI. The response MUST include an Allow header containing a list of valid methods for the requested resource.
     
-4.  add `helmet` to protect HTTP request. 
+3.  add `helmet` to protect HTTP request. 
+
+4.  Add response data filter by `AccessControl`.
 
 
 
