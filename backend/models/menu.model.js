@@ -4,8 +4,12 @@ const restaurantSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
-    minlength: 5,
     maxlength: 50,
+  },
+  description: {
+    type: String,
+    required: false,
+    maxlength: 2047,
   },
   pic: {
     type: String,

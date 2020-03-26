@@ -373,6 +373,8 @@ Skip 3rd party service.
 
 4.  Add response data filter by `AccessControl`.
 
+5.  Change `menu` in `restaurant` to be `required: true`. This requires transactional creation of `restaurant`. Need some research.
+
 
 
 ## TODESIGN
