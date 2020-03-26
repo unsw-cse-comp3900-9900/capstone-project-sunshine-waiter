@@ -20,6 +20,13 @@ const userSchema = new mongoose.Schema({
     minlength: 10,
     maxlength: 1023, // **hashed** password
   },
+  avatar: {
+    type: String, // picture url
+    required: false,
+    minlength: 10,
+    maxlength: 1023,
+  },
+  // website admin; not restaurant
   isAdmin: {
     type: Boolean,
     default: false,
@@ -28,4 +35,4 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model('User', userSchema)
 
-exports.User = User
+module.exports = User
