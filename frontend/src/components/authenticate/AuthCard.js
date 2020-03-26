@@ -52,11 +52,11 @@ const onAuth = ([param, onAuthenticated, showSignUp]) => event => {
   } else {
     BaseProvider.post(URL, param)
       .then(res => {
-        const token = showSignUp ? res.data.accessToken : res.data
+        const token = showSignUp ? res.data.accessToken : res.data.authToken
         setCookie('token', token)
+        getCookie('token') !== undefined && onAuthenticated(true)
       })
-      .then(getCookie('token') != undefined && onAuthenticated(true))
-      .catch(({ response }) => alert(response.data))
+      .catch(({ response }) => alert(response.data.error))
   }
 }
 

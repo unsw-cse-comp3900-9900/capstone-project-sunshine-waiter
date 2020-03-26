@@ -3,8 +3,7 @@ import jwtDecode from 'jwt-decode'
 import BaseProvider from './BaseProvider'
 
 export const getUser = (token, callback = () => {}) => {
-  if (token != undefined) {
-    console.log('did run')
+  if (token !== undefined) {
     const decodedJWT = jwtDecode(token)
     const headerConfig = {
       headers: {
@@ -14,9 +13,8 @@ export const getUser = (token, callback = () => {}) => {
     const URL = '/users/' + decodedJWT._id
     BaseProvider.get(URL, headerConfig)
       .then(res => {
-        // console.log({ res })
         callback(res.data.data)
       })
-      .catch(err => console.log({ err }))
+      .catch(({ response }) => alert(response.data.error))
   }
 }
