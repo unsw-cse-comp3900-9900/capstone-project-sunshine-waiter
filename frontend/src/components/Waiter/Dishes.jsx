@@ -1,6 +1,8 @@
 import React from 'react'
-import { Popconfirm, message, notification, Tooltip } from 'antd'
+import { Popconfirm, message, notification, Tooltip, Collapse } from 'antd'
 import QueueAnim from 'rc-queue-anim'
+
+const { Panel } = Collapse
 
 const READY = 'READY'
 const SERVED = 'SERVED'
@@ -120,12 +122,20 @@ class Dishes extends React.Component {
             handleClick={this.handleClick}
           />
 
-          {Object.keys(this.state.finished).length > 0 && <h2>Finished</h2>}
-
-          <RenderFinished
-            dishList={this.state.finished}
-            handleClick={this.handleClick}
-          />
+          {Object.keys(this.state.finished).length > 0 && (
+            <Collapse
+              bordered={false}
+              defaultActiveKey={['1']}
+              className="finishPanel"
+            >
+              <Panel key={1} header={<h2>Finished</h2>}>
+                <RenderFinished
+                  dishList={this.state.finished}
+                  handleClick={this.handleClick}
+                />
+              </Panel>
+            </Collapse>
+          )}
         </div>
       </div>
     )
