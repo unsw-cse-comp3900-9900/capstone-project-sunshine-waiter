@@ -23,12 +23,16 @@ const createRestaurant = async (req, res, next) => {
       createdBy: req.user._id,
       userGroups: { manager: [], cook: [], waiter: [], cashier: [] },
     })
-    restaurant.menu = new Menu({
+
+    const menu = new Menu({
       name: 'menu',
       menuItems: [],
       categories: [],
       restaurant,
     })
+    await menu.save()
+    restaurant.menu = menu._id
+
     await restaurant.save()
 
     // res
