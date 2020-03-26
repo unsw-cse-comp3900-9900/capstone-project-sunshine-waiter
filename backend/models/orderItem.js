@@ -48,4 +48,4 @@ const restaurantSchema = new mongoose.Schema({
 
 const OrderItem = mongoose.model('OrderItem', restaurantSchema)
 
-exports.OrderItem = OrderItem
+module.exports = OrderItem

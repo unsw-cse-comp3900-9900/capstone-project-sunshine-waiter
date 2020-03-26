@@ -33,4 +33,4 @@ const restaurantSchema = new mongoose.Schema({
 
 const Order = mongoose.model('Order', restaurantSchema)
 
-exports.Order = Order
+module.exports = Order

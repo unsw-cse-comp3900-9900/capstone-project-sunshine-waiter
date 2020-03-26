@@ -26,6 +26,7 @@ const restaurantSchema = new mongoose.Schema({
     ref: 'Menu',
     require: false,
   },
+
   userGroups: {
     manager: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     cook: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
