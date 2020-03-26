@@ -1,8 +1,10 @@
 import React from 'react'
+import { notification, message, Tooltip } from 'antd'
+import QueueAnim from 'rc-queue-anim'
 
 const objToArray = obj => {
-  var result = []
-  for (var key in obj) {
+  let result = []
+  for (let key in obj) {
     result.push(obj[key])
   }
   return result
@@ -17,16 +19,16 @@ class Request extends React.Component {
     this.handleClick = this.handleClick.bind(this)
   }
 
-  handleClick(request_id, action, e) {
-    var newRequestQue = { ...this.props.requestQue }
-    var newFinished = { ...this.state.finished }
-    var targetRequest = newRequestQue[request_id]
-    delete newRequestQue[request_id]
+  handleClick(request, action, e) {
+    let newRequestQue = { ...this.props.requestQue }
+    let newFinished = { ...this.state.finished }
+    let targetRequest = request
+    delete newRequestQue[request._id]
 
     switch (action) {
       case 'finish':
         targetRequest.finishTime = new Date() // record the finish time
-        newFinished[request_id] = targetRequest
+        newFinished[request._id] = targetRequest
 
         // send finished request to the server
         if (this.props.socket) {
@@ -35,8 +37,18 @@ class Request extends React.Component {
             finished: newFinished,
           })
           this.props.handleRequestChange(objToArray(newRequestQue))
+          notification['success']({
+            message: 'Good job!',
+            description:
+              'Request fulfilled.\n' +
+              'Table id: ' +
+              request.tableId +
+              '\rRequest id: ' +
+              request._id,
+            duration: 3,
+          })
         } else {
-          alert('Not connect to server!')
+          message.error('Not connect to server!')
         }
 
         break
@@ -73,12 +85,14 @@ class RenderRequests extends React.Component {
         <div className="table">Table: {request.tableId}</div>
         <div>{request.receiveTime}</div>
         <div className="buttonBox">
-          <button
-            className="finish"
-            onClick={e => this.props.handleClick(request._id, 'finish', e)}
-          >
-            <i className="fas fa-check"></i>
-          </button>
+          <Tooltip title="finish">
+            <button
+              className="finish"
+              onClick={e => this.props.handleClick(request, 'finish', e)}
+            >
+              <i className="fas fa-check"></i>
+            </button>
+          </Tooltip>
         </div>
       </div>
     )
@@ -86,11 +100,11 @@ class RenderRequests extends React.Component {
 
   render() {
     const requestQue = this.props.requestQue
-    var result = objToArray(requestQue).map(request =>
+    let result = objToArray(requestQue).map(request =>
       this.renderSingleRequest(request)
     )
 
-    return <div>{result}</div>
+    return <QueueAnim>{result}</QueueAnim>
   }
 }
 
