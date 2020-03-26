@@ -5,6 +5,7 @@ const connectDb = require('./db/connection')
 const users = require('./routes/users')
 const restaurants = require('./routes/restaurants')
 const cors = require('cors')
+const errorHandler = require('./middleware/errorHandler')
 
 // check environment variables
 if (!config.get('JWT_SECRET')) {
@@ -25,6 +26,8 @@ app.use(cors())
 // routes
 app.use('/users', users)
 app.use('/restaurants', restaurants)
+
+app.use(errorHandler)
 
 app.listen(PORT, () => {
   console.log('Listening at ' + PORT)
