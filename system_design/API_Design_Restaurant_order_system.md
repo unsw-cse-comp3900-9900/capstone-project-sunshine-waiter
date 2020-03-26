@@ -343,19 +343,76 @@ GET 'sw.com/api/restaurants/567813/categories/'
 
 
 
+
+## Design Disccusion
+
+1.Why restaurant.name is `unique`?
+
+It's a temporary solution for scam prevention. 
+In a more enriched version of this software, a restaurant will be verified by website admin on whether this restaurant is real, whether this user have the concent from the owner of the restaurant. 
+
+In that case, it's ok that sevearl restaurant have exactly same name (they might want to add address information to distinguish from eachother). 
+
+2.  Where to store our images. 
+
+Currently decide to store images on serverside. Use `multer` to handle image upload. 
+
+Skip 3rd party service.
+
+
+
 ## TODO
 
-1.  user cannot update email address
+1.  user shall not be able to update email address
 
-2.  follow HTTP protocol on [401 response for jwt](https://stackoverflow.com/questions/33265812/best-http-authorization-header-type-for-jwt  )
+2.  Follow HTTP protocol on [401 response for jwt](https://stackoverflow.com/questions/33265812/best-http-authorization-header-type-for-jwt  ) 
 
-3.  405 Method Not Allowed
+3.  `405` Method Not Allowed 
 
     The method specified in the Request-Line is not allowed for the resource identified by the Request-URI. The response MUST include an Allow header containing a list of valid methods for the requested resource.
+    
+4.  add `helmet` to protect HTTP request. 
 
 
 
 ## TODESIGN
 
-1.  Where to store our images. 
-2.  
+
+
+## Bug record
+
+1.  When compare mongoose id
+
+    -   Use `results.userId.equals(AnotherMongoDocument._id) `. 
+    -   Don't use `results.userId == AnotherMongoDocument._id `. It will never be `true`. They are not string comparison, even one of them maybe string.  `==` doesn't help at this case.
+
+    In my case, it's  `restaurant.createdBy.equals(user._id)`.
+
+2.  Moogoose model `findById` (or `findOne({_id:theID})`) throw an `mongoose.CastError` when the `id `  is invalid ( format ). 
+
+    >   I expect it just return a `undefined`. This is unexpected by me, but it's an expected performance by `mongoose`. 
+
+    So I catch it globally by a `errorHandler `middleware in `index.js`.
+
+3.  `MoongoDB` `E11000` duplicated key error.
+
+    -   My `restaurant` schema has a key `name` set as unique.
+    -   I updated  `restaurantB.name` to `foo`, which is occupied by a `restaurantA`. So even though `foo` went through the `joi` validation, it trigered this error.
+
+    Solution: globally catch this `error`  and `res` `400`
+
+    ```
+     if (err.name === 'MongoError') {
+        if (err.code == 11000) {
+    
+    	......
+    	res.status(400).json({
+            err: `${JSON.stringify(
+              err.keyValue
+            )} is occupied. Please chose another value.`,
+          })
+          
+    	......
+    ```
+
+    

@@ -1,6 +1,6 @@
 const Joi = require('joi')
 const bcrypt = require('bcrypt')
-const { User } = require('../models/user')
+const User = require('../models/user.model')
 const { generateAuthToken } = require('../auth/authentication')
 const _ = require('lodash')
 
@@ -9,10 +9,10 @@ const createUser = async (req, res, next) => {
   try {
     const { error } = validateSignUpDataFormat(req.body)
     if (error) {
-      return res.status(400).send(error.details[0].message)
+      return res.status(400).json({ error: error.details[0].message })
     }
     let user = await User.findOne({ email: req.body.email })
-    if (user) return res.status(400).send('User already registered.')
+    if (user) return res.status(400).json({ error: 'User already registered.' })
 
     user = new User(_.pick(req.body, ['name', 'email', 'password']))
     user.password = await hashPassword(user.password)
@@ -21,7 +21,7 @@ const createUser = async (req, res, next) => {
 
     const accessToken = generateAuthToken(user)
 
-    res.json({
+    res.status(201).json({
       data: _.pick(user, ['_id', 'name', 'email']),
       accessToken,
     })
@@ -59,7 +59,7 @@ readUser = async (req, res, next) => {
   try {
     const userId = req.params.userId
     const user = await User.findById(userId)
-    if (!user) return next(new Error('User does not exist'))
+    if (!user) return res.status(404).json({ error: 'User does not exist' })
 
     res.json({
       data: _.pick(user, ['_id', 'name', 'email']),
@@ -71,24 +71,27 @@ readUser = async (req, res, next) => {
 
 updateUser = async (req, res, next) => {
   try {
+    // find
     const userId = req.params.userId
     const user = await User.findById(userId)
-    if (!user) return next(new Error('User does not exist'))
+    if (!user) return res.status(404).json({ error: 'User does not exist' })
 
+    // validate new data
     const { name, email, password } = req.body
     const { error } = validateUpdateDataFormat({ name, email, password })
-    if (error) return res.status(400).send(error.details[0].message)
-    // validateSignUpDataFormat
+    if (error) return res.status(400).json({ error: error.details[0].message })
+
+    // update
     user.name = name || user.name
     user.email = email || user.email
     user.password = password ? await hashPassword(password) : user.password
-
     await user.save()
 
+    // res
     return res.json({
       success: true,
       data: _.pick(user, ['_id', 'name', 'email']),
-      msg: 'User updated.',
+      message: 'User updated.',
     })
   } catch (error) {
     next(error)
@@ -100,14 +103,16 @@ deleteUser = async (req, res, next) => {
     const userId = req.params.userId
     const user = await User.findById(userId)
     if (!user)
-      return res.send('User has been deleted or does not exist at all.')
+      return res
+        .status(204)
+        .send('User has been deleted or does not exist at all.')
 
     await User.findByIdAndDelete(userId)
 
     return res.json({
       success: true,
       data: _.pick(user, ['_id', 'name', 'email']),
-      msg: 'User deleted.',
+      message: 'User deleted.',
     })
   } catch (error) {
     next(error)
@@ -132,7 +137,6 @@ function validateUpdateDataFormat(user) {
 }
 
 module.exports = {
-  generateAuthToken,
   createUser, // aka signup
   readUser,
   updateUser,

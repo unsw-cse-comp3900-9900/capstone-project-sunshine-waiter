@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const config = require('config')
 
-const { User } = require('../models/user')
+const User = require('../models/user.model')
 
 const generateAuthToken = user => {
   const token = jwt.sign({ _id: user._id }, config.get('JWT_SECRET'), {
@@ -17,17 +17,21 @@ const login = async (req, res) => {
   // validate input format
   const { email, password } = req.body
   const { error } = validateLoginDataFormat({ email, password })
-  if (error) return res.status(400).send(error.details[0].message)
+  if (error) return res.status(400).json({ error: error.details[0].message })
 
   // validate user existence
   let user = await User.findOne({ email: email })
-  if (!user) return res.status(400).send('User not exist!')
+  if (!user) return res.status(400).json({ error: 'User not exist!' })
   // validate password
   const isPswValid = await validatePassword(password, user.password)
-  if (!isPswValid) return res.status(400).send('Invalid email or password')
-  const token = generateAuthToken(user)
+  if (!isPswValid)
+    return res.status(400).json({ error: 'Invalid email or password' })
+  const authToken = generateAuthToken(user)
 
-  res.send(token)
+  res.status(200).json({
+    data: _.pick(user, ['_id', 'name', 'email']),
+    authToken,
+  })
 }
 
 function validateLoginDataFormat(data) {
@@ -78,7 +82,7 @@ const verifyAuthToken = async (req, res, next) => {
     next()
   } catch (error) {
     // 3.2 token invalid
-    res.status(400).send('Invalid token.')
+    res.status(400).json({ error: 'Invalid token.' })
   }
 }
 
