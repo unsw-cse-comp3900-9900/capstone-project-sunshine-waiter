@@ -26,39 +26,42 @@ const onConnection = (anonymousClient) => {
 
     if (auth) {
       console.log(userType + ' ' + userId + ' authenticated!')
-      const nsp = io.of('/' + restaurantId) // create safe connect
-      anonymousClient.emit('authenticate success', nsp.name) // send nsp to authenticated client
-      nsp.on('connect', (socket) => {
-        console.log(userType + ' ' + userId + ' connect to ' + restaurantId)
-        socket.join(userType) // put user into rooms according to their type
-        socket.on('dish cooked', (dish) => {
-          // new dish cooked from kitchen, need to send to waiter
-          // skip recording to db
-          nsp.to('waiter').emit('new dish', dish)
-        })
-        socket.on('new request', (request) => {
-          // new request from customer need to send to waiter
-          nsp.to('waiter').emit('new request', request)
-        })
-        socket.on('update dish', (dish) => {
-          // dish served or fail send from waiter, server need to update the db
-          // update db
-          console.log(dish)
-        })
-        socket.on('update request', (request) => {
-          // update db
-          console.log(request)
-        })
-        socket.on('disconnect', () => {
-          console.log(
-            userType + ' ' + userId + ' disconnect to ' + restaurantId
-          )
-        })
+      const nspName = '/' + restaurantId
+      anonymousClient.emit('authenticate success', nspName) // send nsp to authenticated client
+      if (!nsps[restaurantId]) {
+        const nsp = io.of(nspName) // create safe connect
+        nsp.on('connect', (socket) => {
+          console.log(userType + ' ' + userId + ' connect to ' + restaurantId)
+          socket.join(userType) // put user into rooms according to their type
+          socket.on('dish cooked', (dish) => {
+            // new dish cooked from kitchen, need to send to waiter
+            // skip recording to db
+            nsp.to('waiter').emit('new dish', dish)
+          })
+          socket.on('new request', (request) => {
+            // new request from customer need to send to waiter
+            nsp.to('waiter').emit('new request', request)
+          })
+          socket.on('update dish', (dish) => {
+            // dish served or fail send from waiter, server need to update the db
+            // update db
+            console.log(dish)
+          })
+          socket.on('update request', (request) => {
+            // update db
+            console.log(request)
+          })
+          socket.on('disconnect', () => {
+            console.log(
+              userType + ' ' + userId + ' disconnect to ' + restaurantId
+            )
+          })
 
-        // test
-        nsp.to('waiter').emit('new dish', fakeNewDish)
-      })
-      nsps[restaurantId] = nsp
+          // test
+          nsp.to('waiter').emit('new dish', fakeNewDish)
+        })
+        nsps[restaurantId] = nsp
+      }
     }
   })
   anonymousClient.on('disconnect', () => {

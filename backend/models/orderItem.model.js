@@ -31,10 +31,10 @@ const restaurantSchema = new mongoose.Schema({
     required: true,
   },
   status: {
-    // Shall be one of enum(PLASED, COOKING, READY, SERVING, SERVED, FAIL)
+    // Shall be one of enum(PLACED, COOKING, READY, SERVING, SERVED, FAIL)
     type: String,
     required: true,
-    default: 'PLASED',
+    default: 'PLACED',
   },
   readyTime: { type: Date },
   serveTime: { type: Date },

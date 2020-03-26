@@ -1,42 +1,25 @@
-// copy the following code (without const name) to https://www.json-generator.com/
-const fakeDishes = [
-  '{{repeat(20, 20)}}',
-  {
-    _id: '{{objectId()}}',
-    name: function(tags) {
-      var fruits = [
-        'apple',
-        'banana',
-        'strawberry',
-        'egg',
-        'burger',
-        'beef',
-        'lamb',
-        'chicken',
-      ]
-      return fruits[tags.integer(0, fruits.length - 1)]
-    },
-    readyTime:
-      '{{date(new Date(2014, 0, 1), new Date(), "YYYY-MM-ddThh:mm:ss")}}',
-    tableId: function(tags) {
-      var fruits = ['t01', 't02', 't03', 't04', 't05', 't06', 't07', 't08']
-      return fruits[tags.integer(0, fruits.length - 1)]
-    },
-    orderId: 'o'.concat('{{objectId()}}'),
-    state: 'READY',
-    serveTime: null,
-  },
-]
+const dummyjson = require('dummy-json')
+const { date } = require('dummy-json/lib/helpers')
 
-const fakeRequests = [
-  '{{repeat(20, 20)}}',
-  {
-    _id: '{{objectId()}}',
-    receiveTime: '{{date(new Date(2014, 0, 1), new Date(), "hh:mm:ss")}}',
-    tableId: function(tags) {
-      var fruits = ['t01', 't02', 't03', 't04', 't05', 't06', 't07', 't08']
-      return fruits[tags.integer(0, fruits.length - 1)]
-    },
-    finishTime: null,
-  },
-]
+const myHelpers = {
+  food: () =>
+    dummyjson.utils.randomArrayItem([
+      'Beef',
+      'Lamb',
+      'Egg',
+      'Burger',
+      'Coffee',
+      'Apple',
+      'Coke',
+      'Chicken',
+    ]),
+}
+
+var fs = require('fs')
+var template = fs.readFileSync('frontend/src/components/fakeDataTemplate.hbs', {
+  encoding: 'utf8',
+})
+var result = dummyjson.parse(template, { helpers: myHelpers })
+var fakeData = JSON.parse(result)
+
+console.log(fakeData)

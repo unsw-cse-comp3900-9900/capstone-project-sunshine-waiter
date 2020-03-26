@@ -1,9 +1,17 @@
 import React from 'react'
-import { Popconfirm, message, notification, Tooltip, Collapse } from 'antd'
+import {
+  Popconfirm,
+  message,
+  notification,
+  Tooltip,
+  Collapse,
+  Spin,
+} from 'antd'
 import QueueAnim from 'rc-queue-anim'
 
 const { Panel } = Collapse
 
+const PLACED = 'PLACED'
 const READY = 'READY'
 const SERVED = 'SERVED'
 const FAILED = 'FAILED'
@@ -47,6 +55,19 @@ class Dishes extends React.Component {
     let targetDish = dish
     delete newDishQue[dish._id]
     switch (action) {
+      case 'serving':
+        targetDish.state = SERVING
+        newDishQue[dish._id] = targetDish
+
+        // send finished dish to server
+        if (this.props.socket) {
+          this.props.socket.emit('update dish', targetDish)
+          this.props.handleDishChange(objToArray(newDishQue))
+        } else {
+          message.error('Not connect to server!')
+        }
+        break
+
       case 'finish':
         targetDish.state = SERVED
         targetDish.serveTime = new Date()
@@ -85,8 +106,8 @@ class Dishes extends React.Component {
         } else {
           message.error('Not connect to server!')
         }
-
         break
+
       case 'reset':
         targetDish.state = READY
         targetDish.serveTime = null
@@ -103,8 +124,21 @@ class Dishes extends React.Component {
         } else {
           message.error('Not connect to server!')
         }
-
         break
+
+      case 'not-see':
+        targetDish.state = PLACED
+        delete newDishQue[dish._id]
+
+        // send reset to server
+        if (this.props.socket) {
+          this.props.socket.emit('update dish', targetDish)
+          this.props.handleDishChange(objToArray(newDishQue))
+        } else {
+          message.error('Not connect to server!')
+        }
+        break
+
       default:
         return
     }
@@ -148,8 +182,12 @@ class RenderDishes extends React.Component {
     super(props)
   }
 
-  confirm(dish, e) {
+  confirmFail(dish, e) {
     this.props.handleClick(dish, 'failed', e)
+  }
+
+  confirmNotSee(dish, e) {
+    this.props.handleClick(dish, 'not-see', e)
   }
 
   renderSingleDish(dish) {
@@ -158,25 +196,54 @@ class RenderDishes extends React.Component {
         <div className="dishName">{dish.name}</div>
         <div>{dish.readyTime}</div>
         <div className="buttonBox">
-          <Tooltip title="finish">
-            <button
-              className="finish"
-              onClick={e => this.props.handleClick(dish, 'finish', e)}
-            >
-              <i className="fas fa-check"></i>
-            </button>
-          </Tooltip>
+          {dish.state == SERVING && <div>Serving...</div>}
+          {dish.state == READY && (
+            <Tooltip title="serving">
+              <button
+                className="finish"
+                onClick={e => this.props.handleClick(dish, 'serving', e)}
+              >
+                <i class="fas fa-running"></i>
+              </button>
+            </Tooltip>
+          )}
 
-          <Popconfirm
-            title="Failed to serve?"
-            onConfirm={e => this.confirm(dish, e)}
-            okText="Yes"
-            cancelText="No"
-          >
-            <button className="fail">
-              <i className="fas fa-times"></i>
-            </button>
-          </Popconfirm>
+          {dish.state == SERVING && (
+            <Tooltip title="finish">
+              <button
+                className="finish"
+                onClick={e => this.props.handleClick(dish, 'finish', e)}
+              >
+                <i className="fas fa-check"></i>
+              </button>
+            </Tooltip>
+          )}
+
+          {dish.state == SERVING && (
+            <Popconfirm
+              title="Failed to serve?"
+              onConfirm={e => this.confirmFail(dish, e)}
+              okText="Yes"
+              cancelText="No"
+            >
+              <button className="fail">
+                <i className="fas fa-times"></i>
+              </button>
+            </Popconfirm>
+          )}
+
+          {dish.state == READY && (
+            <Popconfirm
+              title="Cannot see the dish?"
+              onConfirm={e => this.confirmNotSee(dish, e)}
+              okText="Yes"
+              cancelText="No"
+            >
+              <button className="fail">
+                <i class="fas fa-question"></i>
+              </button>
+            </Popconfirm>
+          )}
         </div>
       </div>
     )
