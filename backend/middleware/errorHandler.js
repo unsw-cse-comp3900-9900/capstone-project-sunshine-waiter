@@ -13,14 +13,16 @@ const dbErrorHandler = (err, req, res, next) => {
   if (err.name === 'MongoError') {
     if (err.code == 11000) {
       const { keyValue } = err
-      console.log({ err })
 
       res.status(400).json({
         error: `${JSON.stringify(
           keyValue
         )} is occupied. Please chose another value.`,
       })
-    } else res.status(500).json({ err })
+    } else {
+      console.log({ dev_msg: 'catch a new MongoError!', err })
+      return res.status(500).json({ err })
+    }
   } else return next(err)
 }
 
