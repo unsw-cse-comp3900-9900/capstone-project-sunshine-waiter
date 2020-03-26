@@ -1,6 +1,6 @@
 const Joi = require('joi')
-const Restaurant = require('../models/restaurant')
-const Menu = require('../models/menu')
+const Restaurant = require('../models/restaurant.model')
+const Menu = require('../models/menu.model')
 const _ = require('lodash')
 
 // create restaurant,

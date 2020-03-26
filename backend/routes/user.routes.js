@@ -13,7 +13,7 @@ const {
   readUser,
   updateUser,
   deleteUser,
-} = require('../controllers/userController')
+} = require('../controllers/user.controller')
 
 router.post('/login', login)
 

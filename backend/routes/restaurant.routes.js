@@ -14,7 +14,7 @@ const {
   readMyRestaurants, // read all restaurants created by current user
   updateRestaurant,
   deleteRestaurant,
-} = require('../controllers/restaurantController')
+} = require('../controllers/restaurant.controller')
 
 // restaurant CRUD
 router.post(

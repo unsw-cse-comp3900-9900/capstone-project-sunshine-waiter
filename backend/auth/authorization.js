@@ -1,5 +1,5 @@
 const { accessControl: ac } = require('./accessControl')
-const Restaurant = require('../models/restaurant')
+const Restaurant = require('../models/restaurant.model')
 
 const scopes = Object.freeze({ website_admin: 1, restaurant: 2 })
 const roles = Object.freeze({
