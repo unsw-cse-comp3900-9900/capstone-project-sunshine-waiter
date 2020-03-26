@@ -84,19 +84,6 @@ class Homepage extends React.Component {
     )
   }
 
-  // onClickMyProfile = () => {
-  //   // console.log(this.state.user)
-  //   const promise = new Promise(() =>
-  //     getUser(getCookie('token'), this.setUserAndState)
-  //   )
-  //   promise.then(this.setState({ showProfile: !this.state.showProfile }))
-  //   // if (this.state.user === null) {
-  //   //   console.log(this.state.user)
-  //   //   getUser(getCookie('token'), data => this.setState({ user: data }))
-  //   // }
-  //   // this.setState({ showProfile: !this.state.showProfile })
-  // }
-
   renderAfterLogin = () => {
     return (
       <div className="item">
