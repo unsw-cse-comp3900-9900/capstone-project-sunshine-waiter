@@ -81,6 +81,7 @@ class Dishes extends React.Component {
             failed: newFailed,
           })
           this.props.handleDishChange(objToArray(newDishQue))
+          message.success('Dish removed.')
         } else {
           message.error('Not connect to server!')
         }
@@ -148,12 +149,7 @@ class RenderDishes extends React.Component {
   }
 
   confirm(dish, e) {
-    message.success('Dish removed.')
     this.props.handleClick(dish, 'failed', e)
-  }
-
-  cancel(e) {
-    message.error('Click on No')
   }
 
   renderSingleDish(dish) {
