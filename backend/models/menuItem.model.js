@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 const restaurantSchema = new mongoose.Schema({
-  price: {
+  cost: {
     type: Number,
     required: true,
   },
@@ -20,16 +20,19 @@ const restaurantSchema = new mongoose.Schema({
       },
     },
   ],
-  name: {
+  title: {
     type: String,
     required: true,
-    minlength: 5,
     maxlength: 50,
   },
   description: {
     type: String,
     required: false,
-    minlength: 5,
+    maxlength: 1023,
+  },
+  note: {
+    type: String,
+    required: false,
     maxlength: 1023,
   },
   pic: {
