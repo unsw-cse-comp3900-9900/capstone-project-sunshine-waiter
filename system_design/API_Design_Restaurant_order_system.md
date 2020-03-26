@@ -377,3 +377,42 @@ Skip 3rd party service.
 
 ## TODESIGN
 
+
+
+## Bug record
+
+1.  When compare mongoose id
+
+    -   Use `results.userId.equals(AnotherMongoDocument._id) `. 
+    -   Don't use `results.userId == AnotherMongoDocument._id `. It will never be `true`. They are not string comparison, even one of them maybe string.  `==` doesn't help at this case.
+
+    In my case, it's  `restaurant.createdBy.equals(user._id)`.
+
+2.  Moogoose model `findById` (or `findOne({_id:theID})`) throw an `mongoose.CastError` when the `id `  is invalid ( format ). 
+
+    >   I expect it just return a `undefined`. This is unexpected by me, but it's an expected performance by `mongoose`. 
+
+    So I catch it globally by a `errorHandler `middleware in `index.js`.
+
+3.  `MoongoDB` `E11000` duplicated key error.
+
+    -   My `restaurant` schema has a key `name` set as unique.
+    -   I updated  `restaurantB.name` to `foo`, which is occupied by a `restaurantA`. So even though `foo` went through the `joi` validation, it trigered this error.
+
+    Solution: globally catch this `error`  and `res` `400`
+
+    ```
+     if (err.name === 'MongoError') {
+        if (err.code == 11000) {
+    
+    	......
+    	res.status(400).json({
+            err: `${JSON.stringify(
+              err.keyValue
+            )} is occupied. Please chose another value.`,
+          })
+          
+    	......
+    ```
+
+    
