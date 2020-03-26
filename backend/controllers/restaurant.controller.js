@@ -57,13 +57,13 @@ readRestaurant = async (req, res, next) => {
   }
 }
 
+/*
+precond: req.user exists;
+*/
 readMyRestaurants = async (req, res, next) => {
   try {
-    // find restaurant by user._id
-
-    res.json({
-      data: '[restaurants] place holder',
-    })
+    const restaurants = await Restaurant.find({ createdBy: req.user._id })
+    res.json({ data: restaurants })
   } catch (error) {
     next(error)
   }
