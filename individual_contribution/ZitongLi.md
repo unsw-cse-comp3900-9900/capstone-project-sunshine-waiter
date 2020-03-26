@@ -73,3 +73,10 @@ Finished request box of waiter page, UI improved.
 #### Tue, 2020/3/24
 
 Finished web-socket functions. Now the waiter can recieve new ready dishes and send finished or failed dishes to the server.
+
+#### Thursday, 26 March 2020
+
+Perfect the waiter page, now different waiters of a same restaurant can share the common information and get real-time update when any events happened.
+
+
+
