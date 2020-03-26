@@ -85,13 +85,13 @@ updateRestaurant = async (req, res, next) => {
 
     // update
     restaurant.name = name || restaurant.name
-    restaurant.email = description || restaurant.description
+    restaurant.description = description || restaurant.description
     await restaurant.save()
 
     // res
     return res.json({
       success: true,
-      data: _.pick(restaurant, ['_id', 'name', 'email']),
+      data: _.pick(restaurant, ['_id', 'name', 'description']),
       message: 'Restaurant updated.',
     })
   } catch (error) {

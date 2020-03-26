@@ -16,7 +16,7 @@ const dbErrorHandler = (err, req, res, next) => {
       console.log({ err })
 
       res.status(400).json({
-        err: `${JSON.stringify(
+        error: `${JSON.stringify(
           keyValue
         )} is occupied. Please chose another value.`,
       })
