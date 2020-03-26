@@ -1,4 +1,5 @@
 import React from 'react'
+import { Popconfirm, message, notification, Tooltip } from 'antd'
 
 const READY = 'READY'
 const SERVED = 'SERVED'
@@ -6,15 +7,15 @@ const FAILED = 'FAILED'
 const SERVING = 'SERVING'
 
 const objToArray = obj => {
-  var result = []
-  for (var key in obj) {
+  let result = []
+  for (let key in obj) {
     result.push(obj[key])
   }
   return result
 }
 
 const groupBy = (obj, key) => {
-  var array = objToArray(obj)
+  let array = objToArray(obj)
   // Return the end result
   return array.reduce((result, currentValue) => {
     // If an array already present for key, push it to the array. Else create an array and push the object
@@ -36,17 +37,17 @@ class Dishes extends React.Component {
     this.handleClick = this.handleClick.bind(this)
   }
 
-  handleClick(dish_id, action, e) {
-    var newDishQue = { ...this.props.dishQue }
-    var newFinished = { ...this.state.finished }
-    var newFailed = { ...this.state.failed }
-    var targetDish = { ...newDishQue[dish_id] }
-    delete newDishQue[dish_id]
+  handleClick(dish, action, e) {
+    let newDishQue = { ...this.props.dishQue }
+    let newFinished = { ...this.state.finished }
+    let newFailed = { ...this.state.failed }
+    let targetDish = dish
+    delete newDishQue[dish._id]
     switch (action) {
       case 'finish':
         targetDish.state = SERVED
         targetDish.serveTime = new Date()
-        newFinished[dish_id] = targetDish
+        newFinished[dish._id] = targetDish
 
         // send finished dish to server
         if (this.props.socket) {
@@ -55,15 +56,20 @@ class Dishes extends React.Component {
             finished: newFinished,
           })
           this.props.handleDishChange(objToArray(newDishQue))
+          notification['success']({
+            message: dish.name + ' served!',
+            description: 'Dish id: ' + dish._id,
+            duration: 3,
+          })
         } else {
-          alert('Not connect to server!')
+          message.error('Not connect to server!')
         }
         break
 
       case 'failed':
         targetDish.state = FAILED
         targetDish.serveTime = new Date()
-        newFailed[dish_id] = targetDish
+        newFailed[dish._id] = targetDish
 
         // send failed dish to server
         if (this.props.socket) {
@@ -73,16 +79,15 @@ class Dishes extends React.Component {
           })
           this.props.handleDishChange(objToArray(newDishQue))
         } else {
-          alert('Not connect to server!')
+          message.error('Not connect to server!')
         }
 
         break
       case 'reset':
-        targetDish = newFinished[dish_id] || newFailed[dish_id]
         targetDish.state = READY
         targetDish.serveTime = null
-        newDishQue[dish_id] = targetDish
-        delete newFinished[dish_id]
+        newDishQue[dish._id] = targetDish
+        delete newFinished[dish._id]
 
         // send reset to server
         if (this.props.socket) {
@@ -92,7 +97,7 @@ class Dishes extends React.Component {
           })
           this.props.handleDishChange(objToArray(newDishQue))
         } else {
-          alert('Not connect to server!')
+          message.error('Not connect to server!')
         }
 
         break
@@ -131,24 +136,40 @@ class RenderDishes extends React.Component {
     super(props)
   }
 
+  confirm(dish, e) {
+    message.success('Dish removed.')
+    this.props.handleClick(dish, 'failed', e)
+  }
+
+  cancel(e) {
+    message.error('Click on No')
+  }
+
   renderSingleDish(dish) {
     const renderedDish = (
       <div className="dishBox" key={dish._id}>
         <div className="dishName">{dish.name}</div>
         <div>{dish.readyTime}</div>
         <div className="buttonBox">
-          <button
-            className="finish"
-            onClick={e => this.props.handleClick(dish._id, 'finish', e)}
+          <Tooltip title="finish">
+            <button
+              className="finish"
+              onClick={e => this.props.handleClick(dish, 'finish', e)}
+            >
+              <i className="fas fa-check"></i>
+            </button>
+          </Tooltip>
+
+          <Popconfirm
+            title="Failed to serve?"
+            onConfirm={e => this.confirm(dish, e)}
+            okText="Yes"
+            cancelText="No"
           >
-            <i className="fas fa-check"></i>
-          </button>
-          <button
-            className="fail"
-            onClick={e => this.props.handleClick(dish._id, 'failed', e)}
-          >
-            <i className="fas fa-times"></i>
-          </button>
+            <button className="fail">
+              <i className="fas fa-times"></i>
+            </button>
+          </Popconfirm>
         </div>
       </div>
     )
@@ -158,8 +179,8 @@ class RenderDishes extends React.Component {
   render() {
     const dishList = this.props.dishList
     const dishListGroupedByTableId = groupBy(dishList, 'tableId')
-    var result = []
-    for (var tableId in dishListGroupedByTableId) {
+    let result = []
+    for (let tableId in dishListGroupedByTableId) {
       const dishes = dishListGroupedByTableId[tableId].map(dish =>
         this.renderSingleDish(dish)
       )
@@ -186,12 +207,14 @@ class RenderFinished extends React.Component {
         <div className="dishName">{dish.name}</div>
         <div>{dish.serveTime.toLocaleTimeString()}</div>
         <div className="buttonBox">
-          <button
-            className="reset"
-            onClick={e => this.props.handleClick(dish._id, 'reset', e)}
-          >
-            <i className="fas fa-undo-alt"></i>
-          </button>
+          <Tooltip title="reset">
+            <button
+              className="reset"
+              onClick={e => this.props.handleClick(dish, 'reset', e)}
+            >
+              <i className="fas fa-undo-alt"></i>
+            </button>
+          </Tooltip>
         </div>
       </div>
     )
@@ -200,8 +223,8 @@ class RenderFinished extends React.Component {
   render() {
     const dishList = this.props.dishList
     const dishListGroupedByTableId = groupBy(dishList, 'tableId')
-    var result = []
-    for (var tableId in dishListGroupedByTableId) {
+    let result = []
+    for (let tableId in dishListGroupedByTableId) {
       const dishes = dishListGroupedByTableId[tableId].map(dish =>
         this.renderSingleDish(dish)
       )

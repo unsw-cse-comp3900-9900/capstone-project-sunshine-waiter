@@ -1,4 +1,5 @@
 import io from 'socket.io-client'
+import { message } from 'antd'
 
 // userData is a json object that used to verify the user (authentication)
 // configure is the event and its according responce
@@ -8,7 +9,7 @@ const connect = (component, URL, userData, configure) => {
   socket.emit('authenticate', userData)
   socket.on('authenticate success', namespace => {
     const safeConnect = io.connect(URL + namespace)
-    alert('connect established')
+    message.success('Connection established!')
     for (let [event, response] of Object.entries(configure)) {
       safeConnect.on(event, response)
     }
