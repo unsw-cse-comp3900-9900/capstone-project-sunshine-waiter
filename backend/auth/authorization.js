@@ -82,7 +82,7 @@ const requestAccessOnUser = function(action, resource) {
   }
 }
 
-const requestAccessOnCreateRestaurant = (action, resource) => {
+const requestAccessOnCreateRestaurant = function(action, resource) {
   return async (req, res, next) => {
     try {
       const isGranted = ac.can(roles.basic)[action + 'Own'](resource).granted
@@ -109,7 +109,7 @@ post-cond
   1. if user has (the role that has) permission on [target restaurant : target resource]: pass to next() 
   2. else: 403 forbidden
 */
-const requestAccessInRestaurant = function(resource, action) {
+const requestAccessInRestaurant = function(action, resource) {
   return async (req, res, next) => {
     try {
       // 1. check pre-cond
@@ -120,6 +120,7 @@ const requestAccessInRestaurant = function(resource, action) {
           error: 'Precond not satisfied! restaurantId or req.user not exist!',
         })
       }
+      // verify restaurantId
 
       const restaurant = await Restaurant.findById(restaurantId)
       if (!restaurant) {
@@ -129,28 +130,34 @@ const requestAccessInRestaurant = function(resource, action) {
       }
 
       // 2. calculate isGranted
-      // Assumption -- restaurant.userGroups - { role: [userId] }
       const isGrantedAsOwner =
-        restaurant.createdBy === user._id &&
+        restaurant.createdBy.equals(user._id) &&
         ac.can(roles.basic)[action + 'Own'](resource).granted
 
-      var isGrantedAsStuff = false // default
-      const userGroups = restaurant.userGroups
-      for (const role in userGroups) {
-        if (userGroups.hasOwnProperty(role)) {
-          const userIds = userGroups[role]
-          if (
-            userIds.includes(user._id) &&
-            ac.can(roles[role])[action + 'Own'](resource).granted
-          ) {
-            isGrantedAsStuff = true
-            break
+      // TODO: test this part
+      // Assumption -- restaurant.userGroups - { role: [userId] }
+      const isGrantedAsStuff = (user, restaurant, action, resource) => {
+        const userGroups = restaurant.userGroups
+        for (const role in Object.keys(userGroups)) {
+          if (userGroups.hasOwnProperty(role)) {
+            const userIds = userGroups[role]
+            if (
+              userIds.includes(user._id) &&
+              ac.can(roles[role])[action + 'Own'](resource).granted
+            ) {
+              return true
+            }
           }
         }
+
+        return false
       }
 
       // 3. pass or reject based on isGranted
-      if (isGrantedAsOwner || isGrantedAsStuff) {
+      if (
+        isGrantedAsOwner ||
+        isGrantedAsStuff(user, restaurant, action, resource)
+      ) {
         next()
       } else {
         return res.status(403).json({
