@@ -26,6 +26,15 @@ const objToArray = obj => {
   return result
 }
 
+const WelcomeMessage = props => {
+  return (
+    <h1 id="welcome-message">
+      Hello {props.userName}! <br />
+      Welcome to the Waiter Page.
+    </h1>
+  )
+}
+
 class Waiter extends React.Component {
   constructor(props) {
     super(props)
@@ -129,7 +138,7 @@ class Waiter extends React.Component {
     return (
       <div>
         <header>
-          <h1 id="welcome-message">Welcome to the Waiter Page.</h1>
+          <WelcomeMessage userName={this.user.userName} />
         </header>
         <div id="box-container">
           <Dishes
