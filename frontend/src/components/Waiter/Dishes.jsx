@@ -53,7 +53,7 @@ class Dishes extends React.Component {
     switch (action) {
       case 'serving':
         targetDish.state = SERVING
-        targetDish.servingBy = this.props.user
+        targetDish.servedBy = this.props.user
 
         // send finished dish to server
         try {
@@ -65,7 +65,6 @@ class Dishes extends React.Component {
 
       case 'finish':
         targetDish.state = SERVED
-        targetDish.servedBy = this.props.user
         targetDish.serveTime = new Date()
         newFinished[dish._id] = targetDish
 
@@ -192,17 +191,16 @@ class RenderDishes extends React.Component {
             </Tooltip>
           )}
 
-          {dish.state === SERVING &&
-            this.props.user._id === dish.servingBy._id && (
-              <Tooltip title="finish">
-                <button
-                  className="finish"
-                  onClick={e => this.props.handleClick(dish, 'finish', e)}
-                >
-                  <i className="fas fa-check"></i>
-                </button>
-              </Tooltip>
-            )}
+          {dish.state === SERVING && this.props.user._id === dish.servedBy._id && (
+            <Tooltip title="finish">
+              <button
+                className="finish"
+                onClick={e => this.props.handleClick(dish, 'finish', e)}
+              >
+                <i className="fas fa-check"></i>
+              </button>
+            </Tooltip>
+          )}
 
           {dish.state === SERVING && (
             <Popconfirm
