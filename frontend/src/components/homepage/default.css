@@ -76,9 +76,16 @@
 }
 
 .sidebar .profile .basic .meta {
-  margin-top: 10px;
+  margin-top: 5px;
   margin-left: 10px;
   font-style: italic;
+  font-size: 12px;
+  color: grey;
+}
+
+.sidebar .profile .basic .name .input {
+  width: 80px;
+  height: 27px;
 }
 
 .sidebar .profile .my-restaurant {
