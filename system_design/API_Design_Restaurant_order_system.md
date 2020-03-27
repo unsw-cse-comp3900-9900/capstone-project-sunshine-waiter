@@ -88,7 +88,10 @@ If you want to get error message, you can perform normal (single resource) reque
     body: {
     	name: 'menu name',
     	description: 'description string',
-    	pic: 'http://example.com/url-for-a-picutre.jpg'
+    	// following properties are only provided when menu has them.
+    	pic: 'http://example.com/url-for-a-picutre.jpg',
+    	...
+    	...
     }
     ```
     
@@ -190,8 +193,9 @@ GET 'sw.com/api/restaurants/567813/categories/'
     }
     
     body: {
-    	name: 'foo',
-    	description: '	description	description'
+    	title: 'foo',
+    	description: '	description	description',
+    	cost: 20,
     	categories: ['67tyguhjf897y80up', '67tyguhjf897yuig9p8ouyg'],
     	// A list of category _id; This is optional
     }
@@ -201,10 +205,10 @@ GET 'sw.com/api/restaurants/567813/categories/'
 
 -   `Update`
 
--   `Delete`  many
+-   `Delete`  
 
     ```
-    DELETE 'sw.com/api/restaurants/567813/menuItems/'
+    DELETE 'sw.com/api/restaurants/567813/menuItems/:id'
     header: {
     	x-auth-token: 'edftguyhjnklmd468f79gy8h0ujid5rctvygibhunjif6g978h0u'
     }
@@ -363,17 +367,23 @@ Skip 3rd party service.
 
 ## TODO
 
-2.  Follow HTTP protocol on [401 response for jwt](https://stackoverflow.com/questions/33265812/best-http-authorization-header-type-for-jwt  ) 
+*   [ ] Follow HTTP protocol on [401 response for jwt](https://stackoverflow.com/questions/33265812/best-http-authorization-header-type-for-jwt  ) 
 
-3.  `405` Method Not Allowed 
+*   [ ] `405` Method Not Allowed 
 
     The method specified in the Request-Line is not allowed for the resource identified by the Request-URI. The response MUST include an Allow header containing a list of valid methods for the requested resource.
-    
-3.  add `helmet` to protect HTTP request. 
 
-4.  Add response data filter by `AccessControl`.
+*   [ ] add `helmet` to protect HTTP request. 
 
-5.  Change `menu` in `restaurant` to be `required: true`. This requires transactional creation of `restaurant`. Need some research.
+*   [ ] Add response data filter by `AccessControl`.
+
+*   [ ] Change `menu` in `restaurant` to be `required: true`. This requires transactional creation of `restaurant`. Need some research.
+
+*   [ ] `readMenu`: after `menuItem` `category` implemented, should return the lists of  `menuItem` and `category`.
+
+*   [ ] think through the process of "waiter-serve-dish". finish the DB operation of waiter request. 
+
+*   [ ] add `updated_keys` to update routes. It looks like `updated_keys: ["name"]`
 
 
 
