@@ -1,5 +1,5 @@
 import React from 'react'
-import { notification, message, Tooltip } from 'antd'
+import { message, Tooltip } from 'antd'
 import QueueAnim from 'rc-queue-anim'
 
 const objToArray = obj => {
@@ -20,13 +20,12 @@ class Request extends React.Component {
   }
 
   handleClick(request, action, e) {
-    let newRequestQue = { ...this.props.requestQue }
     let newFinished = { ...this.state.finished }
     let targetRequest = request
-    delete newRequestQue[request._id]
 
     switch (action) {
       case 'finish':
+        targetRequest.handleBy = this.props.user
         targetRequest.finishTime = new Date() // record the finish time
         newFinished[request._id] = targetRequest
 
@@ -35,17 +34,6 @@ class Request extends React.Component {
           this.props.socket.emit('update request', targetRequest)
           this.setState({
             finished: newFinished,
-          })
-
-          notification['success']({
-            message: 'Good job!',
-            description:
-              'Request fulfilled.\n' +
-              'Table id: ' +
-              request.tableId +
-              '\rRequest id: ' +
-              request._id,
-            duration: 3,
           })
         } else {
           message.error('Not connect to server!')
@@ -75,10 +63,6 @@ class Request extends React.Component {
 }
 
 class RenderRequests extends React.Component {
-  constructor(props) {
-    super(props)
-  }
-
   renderSingleRequest(request) {
     return (
       <div className="requestBox" key={request._id}>

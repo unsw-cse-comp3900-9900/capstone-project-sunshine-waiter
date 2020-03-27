@@ -60,7 +60,7 @@ const onConnection = (anonymousClient) => {
           })
 
           // test
-          nsp.to('waiter').emit('update dish', fakeNewDish)
+          // nsp.to('waiter').emit('update dish', fakeNewDish)
         })
         nsps[restaurantId] = nsp
       }

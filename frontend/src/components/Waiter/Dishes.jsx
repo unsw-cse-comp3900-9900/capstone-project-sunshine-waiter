@@ -1,12 +1,5 @@
 import React from 'react'
-import {
-  Popconfirm,
-  message,
-  notification,
-  Tooltip,
-  Collapse,
-  Spin,
-} from 'antd'
+import { Popconfirm, message, Tooltip, Collapse } from 'antd'
 import QueueAnim from 'rc-queue-anim'
 
 const { Panel } = Collapse
@@ -49,21 +42,24 @@ class Dishes extends React.Component {
   }
 
   handleClick(dish, action, e) {
-    let newDishQue = { ...this.props.dishQue }
+    if (this.props.socket === null || this.props.socket.disconnected) {
+      message.error('Not connect to server!')
+      return
+    }
     let newFinished = { ...this.state.finished }
     let newFailed = { ...this.state.failed }
     let targetDish = dish
-    delete newDishQue[dish._id]
+
     switch (action) {
       case 'serving':
         targetDish.state = SERVING
-        newDishQue[dish._id] = targetDish
+        targetDish.servedBy = this.props.user
 
         // send finished dish to server
-        if (this.props.socket) {
+        try {
           this.props.socket.emit('update dish', targetDish)
-        } else {
-          message.error('Not connect to server!')
+        } catch (error) {
+          console.log(error)
         }
         break
 
@@ -73,66 +69,59 @@ class Dishes extends React.Component {
         newFinished[dish._id] = targetDish
 
         // send finished dish to server
-        if (this.props.socket) {
+        try {
           this.props.socket.emit('update dish', targetDish)
           this.setState({
             finished: newFinished,
           })
-
-          notification['success']({
-            message: dish.name + ' served!',
-            description: 'Dish id: ' + dish._id,
-            duration: 3,
-          })
-        } else {
-          message.error('Not connect to server!')
+        } catch (error) {
+          console.log(error)
         }
         break
 
       case 'failed':
         targetDish.state = FAILED
+        targetDish.servedBy = this.props.user
         targetDish.serveTime = new Date()
         newFailed[dish._id] = targetDish
 
         // send failed dish to server
-        if (this.props.socket) {
+        try {
           this.props.socket.emit('update dish', targetDish)
           this.setState({
             failed: newFailed,
           })
 
           message.success('Dish removed.')
-        } else {
-          message.error('Not connect to server!')
+        } catch (error) {
+          console.log(error)
         }
         break
 
       case 'reset':
         targetDish.state = READY
         targetDish.serveTime = null
-        newDishQue[dish._id] = targetDish
         delete newFinished[dish._id]
 
         // send reset to server
-        if (this.props.socket) {
+        try {
           this.props.socket.emit('update dish', targetDish)
           this.setState({
             finished: newFinished,
           })
-        } else {
-          message.error('Not connect to server!')
+        } catch (error) {
+          console.log(error)
         }
         break
 
       case 'not-see':
         targetDish.state = PLACED
-        delete newDishQue[dish._id]
 
         // send reset to server
-        if (this.props.socket) {
+        try {
           this.props.socket.emit('update dish', targetDish)
-        } else {
-          message.error('Not connect to server!')
+        } catch (error) {
+          console.log(error)
         }
         break
 
@@ -152,6 +141,7 @@ class Dishes extends React.Component {
           <RenderDishes
             dishList={this.props.dishQue}
             handleClick={this.handleClick}
+            user={this.props.user}
           />
 
           {Object.keys(this.state.finished).length > 0 && (
@@ -175,10 +165,6 @@ class Dishes extends React.Component {
 }
 
 class RenderDishes extends React.Component {
-  constructor(props) {
-    super(props)
-  }
-
   confirmFail(dish, e) {
     this.props.handleClick(dish, 'failed', e)
   }
@@ -193,19 +179,19 @@ class RenderDishes extends React.Component {
         <div className="dishName">{dish.name}</div>
         <div>{dish.readyTime}</div>
         <div className="buttonBox">
-          {dish.state == SERVING && <div>Serving...</div>}
-          {dish.state == READY && (
+          {dish.state === SERVING && <div>Serving...</div>}
+          {dish.state === READY && (
             <Tooltip title="serving">
               <button
                 className="finish"
                 onClick={e => this.props.handleClick(dish, 'serving', e)}
               >
-                <i class="fas fa-running"></i>
+                <i className="fas fa-running"></i>
               </button>
             </Tooltip>
           )}
 
-          {dish.state == SERVING && (
+          {dish.state === SERVING && this.props.user._id === dish.servedBy._id && (
             <Tooltip title="finish">
               <button
                 className="finish"
@@ -216,7 +202,7 @@ class RenderDishes extends React.Component {
             </Tooltip>
           )}
 
-          {dish.state == SERVING && (
+          {dish.state === SERVING && (
             <Popconfirm
               title="Failed to serve?"
               onConfirm={e => this.confirmFail(dish, e)}
@@ -229,7 +215,7 @@ class RenderDishes extends React.Component {
             </Popconfirm>
           )}
 
-          {dish.state == READY && (
+          {dish.state === READY && (
             <Popconfirm
               title="Cannot see the dish?"
               onConfirm={e => this.confirmNotSee(dish, e)}
@@ -237,7 +223,7 @@ class RenderDishes extends React.Component {
               cancelText="No"
             >
               <button className="fail">
-                <i class="fas fa-question"></i>
+                <i className="fas fa-question"></i>
               </button>
             </Popconfirm>
           )}
@@ -268,10 +254,6 @@ class RenderDishes extends React.Component {
 }
 
 class RenderFinished extends React.Component {
-  constructor(props) {
-    super(props)
-  }
-
   renderSingleDish(dish) {
     return (
       <div className="dishBox" key={dish._id}>
