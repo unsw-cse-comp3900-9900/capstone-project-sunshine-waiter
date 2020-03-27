@@ -191,16 +191,17 @@ class RenderDishes extends React.Component {
             </Tooltip>
           )}
 
-          {dish.state === SERVING && this.props.user._id === dish.servedBy._id && (
-            <Tooltip title="finish">
-              <button
-                className="finish"
-                onClick={e => this.props.handleClick(dish, 'finish', e)}
-              >
-                <i className="fas fa-check"></i>
-              </button>
-            </Tooltip>
-          )}
+          {dish.state === SERVING &&
+            this.props.user.userId === dish.servedBy.userId && (
+              <Tooltip title="finish">
+                <button
+                  className="finish"
+                  onClick={e => this.props.handleClick(dish, 'finish', e)}
+                >
+                  <i className="fas fa-check"></i>
+                </button>
+              </Tooltip>
+            )}
 
           {dish.state === SERVING && (
             <Popconfirm

@@ -29,17 +29,23 @@ const objToArray = obj => {
 class Waiter extends React.Component {
   constructor(props) {
     super(props)
-    this.user = {
-      restaurantId: 'restaurant1',
-      userId: 'user1',
-      userType: 'waiter',
-      userName: 'Steve',
-      password: 'password',
-    }
+    this.user = this.getRandomUser()
     this.state = {
       socket: null,
       dishQue: dishes,
       requestQue: requests,
+    }
+  }
+
+  getRandomUser = () => {
+    let names = ['Steve', 'Jason', 'Jeren', 'Annie']
+    let randomInt = Math.floor(Math.random() * names.length)
+    return {
+      restaurantId: 'restaurant1',
+      userId: 'user' + randomInt.toString(),
+      userType: 'waiter',
+      userName: names[randomInt],
+      password: 'password',
     }
   }
 
@@ -63,7 +69,11 @@ class Waiter extends React.Component {
             case 'SERVED':
               notification['success']({
                 message: target.name + ' served!',
-                description: 'Dish id: ' + target._id + ' By waiter: ', // TODO: get the user from message
+                description:
+                  'Dish id: ' +
+                  target._id +
+                  ' By waiter: ' +
+                  target.servedBy.userName,
                 duration: 3,
               })
               break
@@ -91,7 +101,7 @@ class Waiter extends React.Component {
           if (target.finishTime !== null) {
             notification['success']({
               message: 'Request from table ' + target.tableId + ' fulfilled',
-              description: 'Handled by waiter: ', //TODO: get the user from message
+              description: 'Handled by waiter: ' + target.handleBy.userName,
               duration: 3,
             })
           }
@@ -115,6 +125,7 @@ class Waiter extends React.Component {
   }
 
   render() {
+    console.log(this.user)
     return (
       <div>
         <header>
