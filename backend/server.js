@@ -66,12 +66,7 @@ const onConnection = (anonymousClient) => {
           })
 
           // initiate data
-          for (let dish_id in dishes) {
-            socket.emit('update dish', dishes[dish_id])
-          }
-          for (let request_id in requests) {
-            socket.emit('update request', requests[request_id])
-          }
+          socket.emit('initiate data', dishes, requests)
         })
         nsps[restaurantId] = nsp
       }

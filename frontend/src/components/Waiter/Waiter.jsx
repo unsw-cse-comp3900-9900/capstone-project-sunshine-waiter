@@ -54,6 +54,24 @@ class Waiter extends React.Component {
     }
   }
 
+  initiate = (dishes, requests) => {
+    this.setState({
+      dishQue: objToArray(dishes)
+        .filter(dish => dish.state === 'READY' || dish.state === 'SERVING')
+        .sort(
+          (a, b) =>
+            new Date(a.readyTime).getTime() - new Date(b.readyTime).getTime()
+        ),
+      requestQue: objToArray(requests)
+        .filter(request => request.finishTime == null)
+        .sort(
+          (a, b) =>
+            new Date(a.receiveTime).getTime() -
+            new Date(b.receiveTime).getTime()
+        ),
+    })
+  }
+
   update = queName => {
     return target => {
       const newObj = arrayToObj(this.state[queName])
@@ -122,6 +140,7 @@ class Waiter extends React.Component {
 
     // configure includs the event and response you defined for the socket
     const configure = {
+      'initiate data': this.initiate,
       'update dish': this.update('dishQue'),
       'update request': this.update('requestQue'),
     }
