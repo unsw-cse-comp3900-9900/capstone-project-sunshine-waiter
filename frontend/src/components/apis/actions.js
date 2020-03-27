@@ -20,6 +20,23 @@ export const getUser = (token, callback = () => {}) => {
   }
 }
 
+export const updateUser = (token, param) => {
+  if (token !== undefined) {
+    const decodedJWT = jwtDecode(token)
+    const headerConfig = {
+      headers: {
+        'x-auth-token': token,
+      },
+    }
+    const URL = '/users/' + decodedJWT._id
+    BaseProvider.put(URL, param, headerConfig)
+      .then(res => {
+        console.log(res)
+      })
+      .catch(({ response }) => alert(response.data.error))
+  }
+}
+
 //if a user delete himself, then the page should go to unsigned in
 export const deleteUser = (token, callback = () => {}) => {
   if (token !== undefined) {
