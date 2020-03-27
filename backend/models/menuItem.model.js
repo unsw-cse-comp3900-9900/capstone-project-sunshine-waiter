@@ -52,7 +52,7 @@ const restaurantSchema = new mongoose.Schema({
   menu: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Menu',
-    require: false,
+    require: true,
   },
 })
 
