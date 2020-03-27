@@ -42,6 +42,10 @@ class Dishes extends React.Component {
   }
 
   handleClick(dish, action, e) {
+    if (this.props.socket === null || this.props.socket.disconnected) {
+      message.error('Not connect to server!')
+      return
+    }
     let newFinished = { ...this.state.finished }
     let newFailed = { ...this.state.failed }
     let targetDish = dish
@@ -52,44 +56,46 @@ class Dishes extends React.Component {
         targetDish.servingBy = this.props.user
 
         // send finished dish to server
-        if (this.props.socket) {
+        try {
           this.props.socket.emit('update dish', targetDish)
-        } else {
-          message.error('Not connect to server!')
+        } catch (error) {
+          console.log(error)
         }
         break
 
       case 'finish':
         targetDish.state = SERVED
+        targetDish.servedBy = this.props.user
         targetDish.serveTime = new Date()
         newFinished[dish._id] = targetDish
 
         // send finished dish to server
-        if (this.props.socket) {
+        try {
           this.props.socket.emit('update dish', targetDish)
           this.setState({
             finished: newFinished,
           })
-        } else {
-          message.error('Not connect to server!')
+        } catch (error) {
+          console.log(error)
         }
         break
 
       case 'failed':
         targetDish.state = FAILED
+        targetDish.servedBy = this.props.user
         targetDish.serveTime = new Date()
         newFailed[dish._id] = targetDish
 
         // send failed dish to server
-        if (this.props.socket) {
+        try {
           this.props.socket.emit('update dish', targetDish)
           this.setState({
             failed: newFailed,
           })
 
           message.success('Dish removed.')
-        } else {
-          message.error('Not connect to server!')
+        } catch (error) {
+          console.log(error)
         }
         break
 
@@ -99,13 +105,13 @@ class Dishes extends React.Component {
         delete newFinished[dish._id]
 
         // send reset to server
-        if (this.props.socket) {
+        try {
           this.props.socket.emit('update dish', targetDish)
           this.setState({
             finished: newFinished,
           })
-        } else {
-          message.error('Not connect to server!')
+        } catch (error) {
+          console.log(error)
         }
         break
 
@@ -113,10 +119,10 @@ class Dishes extends React.Component {
         targetDish.state = PLACED
 
         // send reset to server
-        if (this.props.socket) {
+        try {
           this.props.socket.emit('update dish', targetDish)
-        } else {
-          message.error('Not connect to server!')
+        } catch (error) {
+          console.log(error)
         }
         break
 
