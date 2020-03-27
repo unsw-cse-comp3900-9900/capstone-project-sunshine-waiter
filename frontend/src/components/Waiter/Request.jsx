@@ -20,6 +20,10 @@ class Request extends React.Component {
   }
 
   handleClick(request, action, e) {
+    if (this.props.socket === null || this.props.socket.disconnected) {
+      message.error('Not connect to server!')
+      return
+    }
     let newFinished = { ...this.state.finished }
     let targetRequest = request
 
