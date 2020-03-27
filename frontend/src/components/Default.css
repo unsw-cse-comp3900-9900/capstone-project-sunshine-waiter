@@ -1,9 +1,9 @@
 .layout-position {
-  margin-left: 200px;
+  margin-left: 13%;
 }
 .sider {
   overflow: auto;
-  height: 100vh;
+  height: 150%;
   position: fixed;
 }
 
@@ -12,7 +12,8 @@
 }
 
 .category-bar {
-  width: 20px;
+  float: left;
+  width: 25%;
 }
 
 /* .cart {
