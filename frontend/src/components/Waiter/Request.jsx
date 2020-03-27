@@ -25,6 +25,7 @@ class Request extends React.Component {
 
     switch (action) {
       case 'finish':
+        targetRequest.handleBy = this.props.user
         targetRequest.finishTime = new Date() // record the finish time
         newFinished[request._id] = targetRequest
 
