@@ -38,7 +38,7 @@ const WelcomeMessage = props => {
 class Waiter extends React.Component {
   constructor(props) {
     super(props)
-    this.user = this.getRandomUser()
+    this.user = this.getRandomUserFrom(['Steve', 'Jason', 'Jeren', 'Annie'])
     this.state = {
       socket: null,
       dishQue: dishes,
@@ -46,8 +46,7 @@ class Waiter extends React.Component {
     }
   }
 
-  getRandomUser = () => {
-    let names = ['Steve', 'Jason', 'Jeren', 'Annie']
+  getRandomUserFrom = names => {
     let randomInt = Math.floor(Math.random() * names.length)
     return {
       restaurantId: 'restaurant1',
