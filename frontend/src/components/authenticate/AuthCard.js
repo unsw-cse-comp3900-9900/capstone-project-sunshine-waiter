@@ -127,6 +127,7 @@ const AuthCard = ({ onAuthenticated }) => {
         </div>
         {showSignUp || (
           <span
+            className="clickable"
             onClick={() => setShowSignUp(true)}
             style={{
               fontSize: '10px',
