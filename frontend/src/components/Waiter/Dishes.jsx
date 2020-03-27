@@ -1,5 +1,5 @@
 import React from 'react'
-import { Popconfirm, message, notification, Tooltip, Collapse } from 'antd'
+import { Popconfirm, message, Tooltip, Collapse } from 'antd'
 import QueueAnim from 'rc-queue-anim'
 
 const { Panel } = Collapse
