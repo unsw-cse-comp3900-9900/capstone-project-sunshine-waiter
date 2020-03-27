@@ -101,7 +101,7 @@ deleteMenuItem = async (req, res, next) => {
 
     return res.json({
       success: true,
-      data: _.pick(menuItem, ['_id', 'title', 'description']),
+      data: present(menuItem),
       message: 'MenuItem deleted.',
     })
   } catch (error) {
