@@ -3,17 +3,21 @@ const http = require('http').Server(app)
 const io = require('socket.io')(http)
 const port = process.env.PORT || 8000
 
-const fakeNewDish = {
-  _id: 'djieq34q569r',
-  name: 'egg',
-  readyTime: new Date(),
-  tableId: 't28',
-  orderId: 'fdafr89891ruq',
-  state: 'READY', //canbe SERVED or FAIL
-  serveTime: null,
-}
+let { fakeData } = require('../frontend/src/components/Waiter/fakeData.js')
+let { dishes, requests } = fakeData
 
 var nsps = {}
+
+const arrayToObj = (array) => {
+  let result = {}
+  for (let item of array) {
+    result[item._id] = item
+  }
+  return result
+}
+
+dishes = arrayToObj(dishes)
+requests = arrayToObj(requests)
 
 const onConnection = (anonymousClient) => {
   console.log('Unknow User ' + anonymousClient.id + ' connected!')
@@ -46,11 +50,13 @@ const onConnection = (anonymousClient) => {
             // dish served or fail send from waiter, server need to update the db
             // update db
             console.log(dish)
+            dishes[dish._id] = dish
             nsp.to('waiter').emit('update dish', dish) // let all other waiter know
           })
           socket.on('update request', (request) => {
             // update db
             console.log(request)
+            requests[request._id] = request
             nsp.to('waiter').emit('update request', request)
           })
           socket.on('disconnect', () => {
@@ -59,8 +65,13 @@ const onConnection = (anonymousClient) => {
             )
           })
 
-          // test
-          // nsp.to('waiter').emit('update dish', fakeNewDish)
+          // initiate data
+          for (let dish_id in dishes) {
+            socket.emit('update dish', dishes[dish_id])
+          }
+          for (let request_id in requests) {
+            socket.emit('update request', requests[request_id])
+          }
         })
         nsps[restaurantId] = nsp
       }

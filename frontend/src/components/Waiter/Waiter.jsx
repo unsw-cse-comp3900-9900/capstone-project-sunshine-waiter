@@ -4,9 +4,6 @@ import Request from './Request'
 import './Waiter.css'
 import { notification } from 'antd'
 import { connect } from '../apis/socketClient'
-import { fakeData } from './fakeData'
-
-const { dishes, requests } = fakeData
 
 const URL = 'http://localhost:8000'
 
@@ -41,8 +38,8 @@ class Waiter extends React.Component {
     this.user = this.getRandomUserFrom(['Steve', 'Jason', 'Jeren', 'Annie'])
     this.state = {
       socket: null,
-      dishQue: dishes,
-      requestQue: requests,
+      dishQue: [],
+      requestQue: [],
     }
   }
 
