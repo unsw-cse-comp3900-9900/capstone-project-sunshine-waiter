@@ -16,6 +16,7 @@ const accessGranted = {
       // here, "own" means: restaurant.createdBy == user._id
       // that is, current user is the creator&owner of the restaurant
       'create:own': ['*'],
+      'read:own': ['*'],
     },
     order: {
       // here, "own" means: order.placedBy == user._id
