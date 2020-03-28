@@ -4,7 +4,8 @@ import AuthCard from '../authenticate/AuthCard'
 import SiderBar from './profile/SiderBar'
 import { getCookie, deleteCookie } from '../authenticate/Cookies'
 import './default.css'
-import { getUser } from '../apis/actions'
+import { getUser } from '../apis/actions/users'
+import { getRestaurants } from '../apis/actions/restaurants'
 
 class Homepage extends React.Component {
   state = {
@@ -12,38 +13,58 @@ class Homepage extends React.Component {
     showProfile: false,
     showLoginCard: false,
     headerMouseOver: '',
-    user: null,
+    profile: {
+      user: null,
+      restaurants: [],
+    },
   }
 
-  setUserAndState = (data, state = true) => {
-    if (data === null) {
+  updateState = (userData, authState = true, restaurants = []) => {
+    //delete account
+    if (userData === null) {
       this.setState({
-        isAuthenticated: state,
+        isAuthenticated: authState,
         showProfile: false,
-        user: data,
+        profile: {
+          user: userData,
+        },
       })
     } else {
       this.setState({
-        isAuthenticated: state,
-        user: data,
+        isAuthenticated: authState,
+        profile: {
+          user: userData,
+        },
       })
     }
+    // if (restaurants.length > 0) {
+    //   this.setState({
+    //     profile: {
+    //       restaurants: restaurants,
+    //     },
+    //   })
+    // }
   }
 
   //when there is no cookies, the getUser request will not be sent,
   //see the definition
   UNSAFE_componentWillMount = () => {
     const currentCookie = getCookie('token')
-    getUser(currentCookie, this.setUserAndState)
+    getUser(currentCookie, this.updateState)
   }
 
   componentDidUpdate = (prevProps, prevState) => {
     if (
-      prevState.isAuthenticated != this.state.isAuthenticated &&
+      prevState.isAuthenticated !== this.state.isAuthenticated &&
       this.state.isAuthenticated
     ) {
-      getUser(getCookie('token'), this.setUserAndState)
+      getUser(getCookie('token'), this.updateState)
+      // getRestaurants(getCookie('token'), this.updateState)
     }
+
+    // if (prevState.profile.restaurants !== this.state.profile.restaurants) {
+    //   this.props.getRestaurants(this.state.profile.restaurants)
+    // }
   }
 
   onAuthenticated = state => {
@@ -80,7 +101,9 @@ class Homepage extends React.Component {
                 isAuthenticated: false,
                 showProfile: false,
                 showLoginCard: false,
-                user: null,
+                profile: {
+                  user: null,
+                },
               })
               deleteCookie('token')
             }}
@@ -241,8 +264,8 @@ class Homepage extends React.Component {
           {this.state.showProfile && (
             <SiderBar
               visible={this.state.showProfile}
-              userDetail={this.state.user}
-              setUserAndState={this.setUserAndState}
+              profile={this.state.profile}
+              updateState={this.updateState}
             />
           )}
         </div>
