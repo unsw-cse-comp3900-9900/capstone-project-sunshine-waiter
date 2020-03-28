@@ -16,9 +16,10 @@ if (!config.get('JWT_SECRET')) {
 }
 
 // const
-const PORT = 8000
-const app = express()
+const PORT_MAIN = 7000
+const PORT_WEBSOCKET = 5000
 
+const app = express()
 app.set('json spaces', 2)
 app.use(express.json())
 app.use(cors())
@@ -29,8 +30,21 @@ app.use('/restaurants', restaurants)
 
 app.use(errorHandler)
 
-app.listen(PORT, () => {
-  console.log('Listening at ' + PORT)
+app.listen(PORT_MAIN, () => {
+  console.log('Node RESTful API listening at ' + PORT_MAIN)
+})
+
+// websocket
+const app2 = require('express')()
+const connectionHandler = require('./server')
+const http = require('http').Server(app2)
+const io = require('socket.io')(http)
+var nsps = {}
+
+io.on('connect', connectionHandler(nsps, io))
+
+http.listen(PORT_WEBSOCKET, function () {
+  console.log('Websocket listening at ' + PORT_WEBSOCKET)
 })
 
 connectDb()
