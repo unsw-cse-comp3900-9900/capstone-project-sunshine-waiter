@@ -1,6 +1,24 @@
+const app = require('express')()
+const http = require('http').Server(app)
+const io = require('socket.io')(http)
+const port = process.env.PORT || 8000
+
+let { fakeData } = require('../frontend/src/components/Waiter/fakeData.js')
+let { dishes, requests } = fakeData
+
+const arrayToObj = (array) => {
+  let result = {}
+  for (let item of array) {
+    result[item._id] = item
+  }
+  return result
+}
+
+dishes = arrayToObj(dishes)
+requests = arrayToObj(requests)
+
 const connectionHandler = (nsps, io) => {
   console.log('io passed in')
-
   const onConnection = (anonymousClient) => {
     console.log('Unknow User ' + anonymousClient.id + ' connected!')
 
@@ -32,11 +50,13 @@ const connectionHandler = (nsps, io) => {
               // dish served or fail send from waiter, server need to update the db
               // update db
               console.log(dish)
+              dishes[dish._id] = dish
               nsp.to('waiter').emit('update dish', dish) // let all other waiter know
             })
             socket.on('update request', (request) => {
               // update db
               console.log(request)
+              requests[request._id] = request
               nsp.to('waiter').emit('update request', request)
             })
             socket.on('disconnect', () => {
@@ -45,8 +65,8 @@ const connectionHandler = (nsps, io) => {
               )
             })
 
-            // test
-            // nsp.to('waiter').emit('update dish', fakeNewDish)
+            // initiate data
+            socket.emit('initiate data', dishes, requests)
           })
           nsps[restaurantId] = nsp
         }
