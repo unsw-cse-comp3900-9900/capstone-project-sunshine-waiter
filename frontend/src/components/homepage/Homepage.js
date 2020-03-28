@@ -19,31 +19,35 @@ class Homepage extends React.Component {
     },
   }
 
-  updateState = (userData, authState = true, restaurants = []) => {
+  updateState = (userData, authState = true) => {
     //delete account
     if (userData === null) {
-      this.setState({
+      this.setState(prevState => ({
         isAuthenticated: authState,
         showProfile: false,
         profile: {
+          ...prevState.profile,
           user: userData,
         },
-      })
+      }))
     } else {
-      this.setState({
+      this.setState(prevState => ({
         isAuthenticated: authState,
         profile: {
+          ...prevState.profile,
           user: userData,
         },
-      })
+      }))
     }
-    // if (restaurants.length > 0) {
-    //   this.setState({
-    //     profile: {
-    //       restaurants: restaurants,
-    //     },
-    //   })
-    // }
+  }
+
+  updateRestaurants = (restaurants = []) => {
+    this.setState(prevState => ({
+      profile: {
+        ...prevState.profile,
+        restaurants: restaurants,
+      },
+    }))
   }
 
   //when there is no cookies, the getUser request will not be sent,
@@ -59,12 +63,12 @@ class Homepage extends React.Component {
       this.state.isAuthenticated
     ) {
       getUser(getCookie('token'), this.updateState)
-      // getRestaurants(getCookie('token'), this.updateState)
+      getRestaurants(getCookie('token'), this.updateRestaurants)
     }
 
-    // if (prevState.profile.restaurants !== this.state.profile.restaurants) {
-    //   this.props.getRestaurants(this.state.profile.restaurants)
-    // }
+    if (prevState.profile.restaurants !== this.state.profile.restaurants) {
+      this.props.fetchRestaurants(this.state.profile.restaurants)
+    }
   }
 
   onAuthenticated = state => {

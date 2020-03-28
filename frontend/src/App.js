@@ -20,9 +20,9 @@ class App extends React.Component {
     ],
   }
 
-  getRestaurants = restaurants => {
-    console.log('did run', restaurants)
-    this.setState({ restaurants: restaurants })
+  fetchRestaurants = restaurants => {
+    if (restaurants !== undefined && restaurants.length > 0)
+      this.setState({ restaurants: restaurants })
   }
 
   renderRestaurantRoutes = () => {
@@ -61,7 +61,7 @@ class App extends React.Component {
     return (
       <Switch>
         <Route exact path="/">
-          <Homepage getRestaurants={this.getRestaurants} />
+          <Homepage fetchRestaurants={this.fetchRestaurants} />
         </Route>
         {this.renderRestaurantRoutes()}
         <Route path="/not-found" component={NotFound} />
