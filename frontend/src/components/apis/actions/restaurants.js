@@ -13,7 +13,14 @@ export const getRestaurants = (token, callback = () => {}) => {
     }
     BaseProvider.get('/restaurants', config)
       .then(res => {
-        callback(res.data.data)
+        // callback(res.data.data)
+        callback([
+          {
+            _id: '1',
+            name: 'test',
+            description: 'test',
+          },
+        ])
       })
       .catch(err => console.log({ err }))
   }
