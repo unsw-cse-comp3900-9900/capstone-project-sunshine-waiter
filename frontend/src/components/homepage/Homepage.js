@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 import AuthCard from '../authenticate/AuthCard'
 import SiderBar from './profile/SiderBar'
@@ -176,8 +177,8 @@ class Homepage extends React.Component {
                   className="ui mini circular image"
                   src={require('./SWLogo.png')}
                 />
-                <a
-                  href="/"
+                <Link
+                  to="/"
                   className={
                     this.state.headerMouseOver === 'home'
                       ? 'active item'
@@ -187,9 +188,10 @@ class Homepage extends React.Component {
                   onMouseLeave={this.onMouseLeave}
                 >
                   Home
-                </a>
+                </Link>
 
-                <a
+                <Link
+                  to="#"
                   className={
                     this.state.headerMouseOver === 'about'
                       ? 'active item'
@@ -199,7 +201,7 @@ class Homepage extends React.Component {
                   onMouseLeave={this.onMouseLeave}
                 >
                   About
-                </a>
+                </Link>
               </div>
               {this.state.isAuthenticated
                 ? this.renderAfterLogin()
