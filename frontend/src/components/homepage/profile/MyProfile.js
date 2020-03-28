@@ -1,10 +1,12 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import 'antd/dist/antd.css'
 
 import '../default.css'
 import { getCookie } from '../../authenticate/Cookies'
 import { deleteUser, updateUser } from '../../apis/actions/users'
 import { MODE } from './constant'
+import CreateRestaurantModal from './CreateRestaurantModal'
 
 class MyProfile extends React.Component {
   state = {
@@ -13,16 +15,18 @@ class MyProfile extends React.Component {
       name: '',
       password: '',
     },
+    modalVisible: false,
   }
 
   componentDidMount = () => {
     if (this.props.profile.user !== null) {
       const { name } = this.props.profile.user
-      this.setState({
+      this.setState(prevState => ({
         editingUser: {
+          ...prevState.editingUser,
           name: name,
         },
-      })
+      }))
     }
   }
 
@@ -37,6 +41,18 @@ class MyProfile extends React.Component {
         {name}
       </span>
     )
+  }
+
+  showModal = () => {
+    this.setState({
+      modalVisible: true,
+    })
+  }
+
+  handleModalCancel = () => {
+    this.setState({
+      modalVisible: false,
+    })
   }
 
   handleSubmit = async e => {
@@ -86,8 +102,7 @@ class MyProfile extends React.Component {
   }
 
   renderRestaurantsLists = () => {
-    const { profile } = this.props
-    const { restaurants } = profile
+    const { restaurants } = this.props
 
     //DO NOT USE <A> TAG, IT WILL RELOAD THE PAGE AND MAKE THE STATE BACK INITIAL STATE IN App.js
     if (restaurants && restaurants.length > 0) {
@@ -104,7 +119,11 @@ class MyProfile extends React.Component {
   }
 
   render() {
-    const { profile, updateState } = this.props
+    const {
+      profile,
+      updateState,
+      recordRestaurantsListUpdatedStatus,
+    } = this.props
     if (profile.user === null) {
       return null
     }
@@ -134,10 +153,20 @@ class MyProfile extends React.Component {
           <i className="tag icon"></i>
           Dashboard
         </h4>
+        <CreateRestaurantModal
+          visible={this.state.modalVisible}
+          onCancel={this.handleModalCancel}
+          recordRestaurantsListUpdatedStatus={
+            recordRestaurantsListUpdatedStatus
+          }
+        />
         <div className="my-restaurant">
           <h3>
             <i className="coffee icon" />
             My Restaurants
+            <span onClick={this.showModal}>
+              <i className="plus circle icon right" />
+            </span>
           </h3>
           {this.renderRestaurantsLists()}
         </div>

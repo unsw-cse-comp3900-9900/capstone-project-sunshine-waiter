@@ -6,7 +6,7 @@ import SiderBar from './profile/SiderBar'
 import { getCookie, deleteCookie } from '../authenticate/Cookies'
 import './default.css'
 import { getUser } from '../apis/actions/users'
-import { getRestaurants } from '../apis/actions/restaurants'
+// import { getRestaurants } from '../apis/actions/restaurants'
 
 class Homepage extends React.Component {
   state = {
@@ -16,7 +16,6 @@ class Homepage extends React.Component {
     headerMouseOver: '',
     profile: {
       user: null,
-      restaurants: [],
     },
   }
 
@@ -42,14 +41,14 @@ class Homepage extends React.Component {
     }
   }
 
-  updateRestaurants = (restaurants = []) => {
-    this.setState(prevState => ({
-      profile: {
-        ...prevState.profile,
-        restaurants: restaurants,
-      },
-    }))
-  }
+  // updateRestaurants = (restaurants = []) => {
+  //   this.setState(prevState => ({
+  //     profile: {
+  //       ...prevState.profile,
+  //       restaurants: restaurants,
+  //     },
+  //   }))
+  // }
 
   //when there is no cookies, the getUser request will not be sent,
   //see the definition
@@ -64,12 +63,13 @@ class Homepage extends React.Component {
       this.state.isAuthenticated
     ) {
       getUser(getCookie('token'), this.updateState)
-      getRestaurants(getCookie('token'), this.updateRestaurants)
+      // getRestaurants(getCookie('token'), this.updateRestaurants)
+      this.props.recordRestaurantsListUpdatedStatus()
     }
 
-    if (prevState.profile.restaurants !== this.state.profile.restaurants) {
-      this.props.fetchRestaurants(this.state.profile.restaurants)
-    }
+    // if (prevState.profile.restaurants !== this.state.profile.restaurants) {
+    //   this.props.fetchRestaurants(this.state.profile.restaurants)
+    // }
   }
 
   onAuthenticated = state => {
@@ -167,6 +167,7 @@ class Homepage extends React.Component {
   }
 
   render() {
+    const { recordRestaurantsListUpdatedStatus, restaurants } = this.props
     return (
       <div className="pusher">
         <div className="ui inverted vertical masthead center aligned segment">
@@ -272,6 +273,10 @@ class Homepage extends React.Component {
               visible={this.state.showProfile}
               profile={this.state.profile}
               updateState={this.updateState}
+              recordRestaurantsListUpdatedStatus={
+                recordRestaurantsListUpdatedStatus
+              }
+              restaurants={restaurants}
             />
           )}
         </div>
