@@ -9,35 +9,66 @@ import Waiter from './components/Waiter/Waiter'
 import Manager from './components/Manager'
 import NotFound from './components/NotFound'
 
-const App = () => {
-  return (
-    <Switch>
-      <Route exact path="/">
-        <Homepage />
-      </Route>
-      <Route exact path="/restaurants/1">
-        <Resturant />
-      </Route>
-      <Route exact path="/restaurants/1/waiter">
-        <Waiter />
-      </Route>
-      <Route exact path="/restaurants/1/cook">
-        <Kitchen />
-      </Route>
-      <Route exact path="/restaurants/1/manager">
-        <Manager />
-      </Route>
-      <Route exact path="/restaurants/1/cashier">
-        <div>cashier</div>
-      </Route>
-      <Route exact path="/restaurants/1/customer">
-        <Customer />
-      </Route>
+class App extends React.Component {
+  state = {
+    restaurants: [
+      {
+        _id: '1',
+        name: 'test',
+        description: 'test',
+      },
+    ],
+  }
 
-      <Route path="/not-found" component={NotFound} />
-      <Redirect to="/not-found"></Redirect>
-    </Switch>
-  )
+  getRestaurants = restaurants => {
+    console.log('did run', restaurants)
+    this.setState({ restaurants: restaurants })
+  }
+
+  renderRestaurantRoutes = () => {
+    if (this.state.restaurants.length > 0) {
+      return this.state.restaurants.map(({ _id, name, description }) => (
+        <div key={_id}>
+          <Route exact path={'/restaurants/' + _id}>
+            <Resturant
+              details={{
+                name: name,
+                description: description,
+              }}
+            />
+          </Route>
+          <Route exact path={'/restaurants/' + _id + '/waiter'}>
+            <Waiter />
+          </Route>
+          <Route exact path={'/restaurants/' + _id + '/cook'}>
+            <Kitchen />
+          </Route>
+          <Route exact path={'/restaurants/' + _id + '/manager'}>
+            <Manager />
+          </Route>
+          <Route exact path={'/restaurants/' + _id + '/cashier'}>
+            <div>cashier</div>
+          </Route>
+          <Route exact path={'/restaurants/' + _id + '/customer'}>
+            <Customer />
+          </Route>
+        </div>
+      ))
+    }
+  }
+
+  render() {
+    return (
+      <Switch>
+        <Route exact path="/">
+          <Homepage getRestaurants={this.getRestaurants} />
+        </Route>
+        {this.renderRestaurantRoutes()}
+        <Route path="/not-found" component={NotFound} />
+        <Redirect to="/not-found"></Redirect>
+      </Switch>
+    )
+  }
 }
 
 export default App
