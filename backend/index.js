@@ -7,6 +7,8 @@ const restaurants = require('./routes/restaurant.routes')
 const cors = require('cors')
 const errorHandler = require('./middleware/errorHandler')
 
+require('./server.js')
+
 // check environment variables
 if (!config.get('JWT_SECRET')) {
   console.error(
@@ -17,7 +19,6 @@ if (!config.get('JWT_SECRET')) {
 
 // const
 const PORT_MAIN = 7000
-const PORT_WEBSOCKET = 5000
 
 const app = express()
 app.set('json spaces', 2)
@@ -35,16 +36,5 @@ app.listen(PORT_MAIN, () => {
 })
 
 // websocket
-const app2 = require('express')()
-const connectionHandler = require('./server')
-const http = require('http').Server(app2)
-const io = require('socket.io')(http)
-var nsps = {}
-
-io.on('connect', connectionHandler(nsps, io))
-
-http.listen(PORT_WEBSOCKET, function () {
-  console.log('Websocket listening at ' + PORT_WEBSOCKET)
-})
 
 connectDb()
