@@ -1,7 +1,7 @@
 import jwtDecode from 'jwt-decode'
 
-import BaseProvider from './BaseProvider'
-import { deleteCookie } from '../authenticate/Cookies'
+import BaseProvider from '../BaseProvider'
+import { deleteCookie } from '../../authenticate/Cookies'
 
 export const getUser = (token, callback = () => {}) => {
   if (token !== undefined) {

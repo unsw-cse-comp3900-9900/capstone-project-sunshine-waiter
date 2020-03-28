@@ -1,9 +1,13 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
+import 'antd/dist/antd.css'
 
 import '../default.css'
 import { getCookie } from '../../authenticate/Cookies'
-import { deleteUser, updateUser } from '../../apis/actions'
+import { deleteUser, updateUser } from '../../apis/actions/users'
 import { MODE } from './constant'
+import CreateRestaurantModal from './CreateRestaurantModal'
+import { deleteRestaurant } from '../../apis/actions/restaurants'
 
 class MyProfile extends React.Component {
   state = {
@@ -12,16 +16,18 @@ class MyProfile extends React.Component {
       name: '',
       password: '',
     },
+    modalVisible: false,
   }
 
   componentDidMount = () => {
-    if (this.props.userDetail !== null) {
-      const { name } = this.props.userDetail
-      this.setState({
+    if (this.props.profile.user !== null) {
+      const { name } = this.props.profile.user
+      this.setState(prevState => ({
         editingUser: {
+          ...prevState.editingUser,
           name: name,
         },
-      })
+      }))
     }
   }
 
@@ -38,19 +44,31 @@ class MyProfile extends React.Component {
     )
   }
 
+  showModal = () => {
+    this.setState({
+      modalVisible: true,
+    })
+  }
+
+  handleModalCancel = () => {
+    this.setState({
+      modalVisible: false,
+    })
+  }
+
   handleSubmit = async e => {
     e.preventDefault()
     const param = {
       name: this.state.editingUser.name,
     }
     const token = getCookie('token')
-    const { userDetail, setUserAndState } = this.props
+    const { profile, updateState } = this.props
     //if no this await, the setState will not update when log
     await updateUser(token, param)
-    setUserAndState({
-      _id: userDetail._id,
+    updateState({
+      _id: profile.user._id,
       name: this.state.editingUser.name,
-      email: userDetail.email,
+      email: profile.user.email,
     })
     this.setState({ mode: MODE.VIEW })
   }
@@ -84,13 +102,42 @@ class MyProfile extends React.Component {
     )
   }
 
+  onDeleteRestaurant = async id => {
+    await deleteRestaurant(getCookie('token'), id)
+    this.props.recordRestaurantsListUpdatedStatus()
+  }
+
+  renderRestaurantsLists = () => {
+    const { restaurants } = this.props
+
+    //DO NOT USE <A> TAG, IT WILL RELOAD THE PAGE AND MAKE THE STATE BACK INITIAL STATE IN App.js
+    if (restaurants && restaurants.length > 0) {
+      return restaurants.map(({ _id, name }) => (
+        <span key={_id}>
+          <h3>{name}</h3>
+          <span onClick={() => this.onDeleteRestaurant(_id)}>
+            <i className="trash alternate outline icon right clickable" />
+          </span>
+          <Link to={'/restaurants/' + _id} name={name}>
+            <i className="caret square right icon" />
+          </Link>
+        </span>
+      ))
+    }
+    return null
+  }
+
   render() {
-    const { userDetail, setUserAndState } = this.props
-    if (userDetail === null) {
+    const {
+      profile,
+      updateState,
+      recordRestaurantsListUpdatedStatus,
+    } = this.props
+    if (profile.user === null) {
       return null
     }
 
-    const { _id, name, email, avatar } = userDetail
+    const { _id, name, email, avatar } = profile.user
     return (
       <div className="profile">
         <div className="basic">
@@ -115,24 +162,29 @@ class MyProfile extends React.Component {
           <i className="tag icon"></i>
           Dashboard
         </h4>
+        <CreateRestaurantModal
+          visible={this.state.modalVisible}
+          onCancel={this.handleModalCancel}
+          recordRestaurantsListUpdatedStatus={
+            recordRestaurantsListUpdatedStatus
+          }
+        />
         <div className="my-restaurant">
           <h3>
             <i className="coffee icon" />
             My Restaurants
+            <span onClick={this.showModal}>
+              <i className="plus circle icon right" />
+            </span>
           </h3>
-          <span>
-            Restaurant 1
-            <a href="/restaurants/1">
-              <i className="caret square right icon" />
-            </a>
-          </span>
+          {this.renderRestaurantsLists()}
         </div>
         <div className="footer">
           <div
             className="ui red button"
             onClick={() => {
               const token = getCookie('token')
-              deleteUser(token, setUserAndState)
+              deleteUser(token, updateState)
             }}
           >
             Delete My Account
