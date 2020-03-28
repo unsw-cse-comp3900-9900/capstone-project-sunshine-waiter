@@ -40,3 +40,20 @@ export const createRestaurant = (token, param, callback = () => {}) => {
       .catch(err => console.log({ err }))
   }
 }
+
+export const deleteRestaurant = (token, id) => {
+  if (token !== undefined) {
+    const config = {
+      headers: {
+        'x-auth-token': token,
+        'Content-Type': 'application/json',
+      },
+    }
+    BaseProvider.delete('/restaurants/' + id, config)
+      .then(res => {
+        console.log({ res })
+        alert(res.data.message)
+      })
+      .catch(err => console.log({ err }))
+  }
+}

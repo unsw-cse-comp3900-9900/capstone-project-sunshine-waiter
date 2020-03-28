@@ -28,6 +28,7 @@ class App extends React.Component {
   }
 
   recordRestaurantsListUpdatedStatus = () => {
+    console.log('touched!')
     this.setState({
       restaurantsListUpdated: !this.state.restaurantsListUpdated,
     })

@@ -7,6 +7,7 @@ import { getCookie } from '../../authenticate/Cookies'
 import { deleteUser, updateUser } from '../../apis/actions/users'
 import { MODE } from './constant'
 import CreateRestaurantModal from './CreateRestaurantModal'
+import { deleteRestaurant } from '../../apis/actions/restaurants'
 
 class MyProfile extends React.Component {
   state = {
@@ -101,6 +102,11 @@ class MyProfile extends React.Component {
     )
   }
 
+  onDeleteRestaurant = async id => {
+    await deleteRestaurant(getCookie('token'), id)
+    this.props.recordRestaurantsListUpdatedStatus()
+  }
+
   renderRestaurantsLists = () => {
     const { restaurants } = this.props
 
@@ -109,6 +115,9 @@ class MyProfile extends React.Component {
       return restaurants.map(({ _id, name }) => (
         <span key={_id}>
           <h3>{name}</h3>
+          <span onClick={() => this.onDeleteRestaurant(_id)}>
+            <i className="trash alternate outline icon right clickable" />
+          </span>
           <Link to={'/restaurants/' + _id} name={name}>
             <i className="caret square right icon" />
           </Link>
