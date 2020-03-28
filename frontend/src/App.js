@@ -8,16 +8,14 @@ import Kitchen from './components/Kitchen'
 import Waiter from './components/Waiter/Waiter'
 import Manager from './components/Manager'
 import NotFound from './components/NotFound'
+import { getCookie } from './components/authenticate/Cookies'
+import { getRestaurants } from './components/apis/actions/restaurants'
 
 class App extends React.Component {
+  //I think reason is when using a tag, it freshes when hitting the page url, so state got freshed back to init
+  //prolem is I used a tag in Myprofile
   state = {
-    restaurants: [
-      {
-        _id: '1',
-        name: 'test',
-        description: 'test',
-      },
-    ],
+    restaurants: [],
   }
 
   fetchRestaurants = restaurants => {
@@ -55,6 +53,7 @@ class App extends React.Component {
         </div>
       ))
     }
+    return null
   }
 
   render() {
@@ -65,7 +64,7 @@ class App extends React.Component {
         </Route>
         {this.renderRestaurantRoutes()}
         <Route path="/not-found" component={NotFound} />
-        <Redirect to="/not-found"></Redirect>
+        <Redirect to="/"></Redirect>
       </Switch>
     )
   }
