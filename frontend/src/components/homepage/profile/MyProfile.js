@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 import '../default.css'
 import { getCookie } from '../../authenticate/Cookies'
@@ -84,6 +85,24 @@ class MyProfile extends React.Component {
     )
   }
 
+  renderRestaurantsLists = () => {
+    const { profile } = this.props
+    const { restaurants } = profile
+
+    //DO NOT USE <A> TAG, IT WILL RELOAD THE PAGE AND MAKE THE STATE BACK INITIAL STATE IN App.js
+    if (restaurants && restaurants.length > 0) {
+      return restaurants.map(({ _id, name }) => (
+        <span key={_id}>
+          <h3>{name}</h3>
+          <Link to={'/restaurants/' + _id} name={name}>
+            <i className="caret square right icon" />
+          </Link>
+        </span>
+      ))
+    }
+    return null
+  }
+
   render() {
     const { profile, updateState } = this.props
     if (profile.user === null) {
@@ -120,12 +139,7 @@ class MyProfile extends React.Component {
             <i className="coffee icon" />
             My Restaurants
           </h3>
-          <span>
-            Restaurant 1
-            <a href="/restaurants/1" target="_blank">
-              <i className="caret square right icon" />
-            </a>
-          </span>
+          {this.renderRestaurantsLists()}
         </div>
         <div className="footer">
           <div
