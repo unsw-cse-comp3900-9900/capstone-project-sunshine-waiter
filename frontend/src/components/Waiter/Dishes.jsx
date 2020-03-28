@@ -38,10 +38,9 @@ class Dishes extends React.Component {
       finished: {},
       failed: {},
     }
-    this.handleClick = this.handleClick.bind(this)
   }
 
-  handleClick(dish, action, e) {
+  handleClick = (dish, action, e) => {
     if (this.props.socket === null || this.props.socket.disconnected) {
       message.error('Not connect to server!')
       return

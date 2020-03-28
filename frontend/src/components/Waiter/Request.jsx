@@ -16,10 +16,9 @@ class Request extends React.Component {
     this.state = {
       finished: {},
     }
-    this.handleClick = this.handleClick.bind(this)
   }
 
-  handleClick(request, action, e) {
+  handleClick = (request, action, e) => {
     if (this.props.socket === null || this.props.socket.disconnected) {
       message.error('Not connect to server!')
       return
