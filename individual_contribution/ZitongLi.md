@@ -87,3 +87,7 @@ Perfect the waiter page, now different waiters of a same restaurant can share th
 3. add `servedBy` attribute to the dish and `handleBy` to the request, which indicates that who did this job
 4. finish button will only be visible by the `servedBy` user
 5. before every button click event, the connection will be checked
+
+#### Sunday, 29 March 2020
+
+Merge websocket server into backend
