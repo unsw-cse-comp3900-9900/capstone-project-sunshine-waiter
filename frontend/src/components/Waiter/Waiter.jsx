@@ -149,7 +149,6 @@ class Waiter extends React.Component {
   }
 
   render() {
-    console.log(this.user)
     return (
       <div>
         <header>

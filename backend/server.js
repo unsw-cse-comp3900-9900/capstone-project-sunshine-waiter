@@ -79,6 +79,6 @@ const onConnection = (anonymousClient) => {
 
 io.on('connect', onConnection)
 
-http.listen(port, function () {
+exports = http.listen(port, function () {
   console.log('listening on *:' + port)
 })
