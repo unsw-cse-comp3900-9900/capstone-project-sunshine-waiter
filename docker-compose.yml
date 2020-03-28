@@ -17,7 +17,8 @@ services:
     env_file:
       - ./backend/.env_file
     ports:
-      - 8000:8000
+      - "8000:8000"
+      - "5000:5000"
     volumes:
       - /app/node_modules
       - ./backend:/app

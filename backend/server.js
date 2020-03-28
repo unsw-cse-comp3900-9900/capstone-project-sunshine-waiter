@@ -1,8 +1,7 @@
 const app = require('express')()
 const http = require('http').Server(app)
 const io = require('socket.io')(http)
-
-const PORT_WEBSOCKET = 8000
+const PORT = 5000
 
 const arrayToObj = (array) => {
   let result = {}
@@ -283,8 +282,8 @@ const onConnection = (anonymousClient) => {
 
 io.on('connect', onConnection)
 
-http.listen(PORT_WEBSOCKET, function () {
-  console.log('Websocket listening at ' + PORT_WEBSOCKET)
+http.listen(PORT, function () {
+  console.log('Websocket listening at ' + PORT)
 })
 
 module.exports = http

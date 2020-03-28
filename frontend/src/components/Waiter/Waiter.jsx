@@ -5,7 +5,7 @@ import './Waiter.css'
 import { notification } from 'antd'
 import { connect } from '../apis/socketClient'
 
-const URL = 'http://localhost:8000'
+const URL = 'http://localhost:5000'
 
 const arrayToObj = array => {
   let result = {}
@@ -155,7 +155,6 @@ class Waiter extends React.Component {
   }
 
   render() {
-    console.log(this.user)
     return (
       <div>
         <header>
