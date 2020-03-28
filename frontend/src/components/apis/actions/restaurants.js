@@ -13,14 +13,29 @@ export const getRestaurants = (token, callback = () => {}) => {
     }
     BaseProvider.get('/restaurants', config)
       .then(res => {
-        // callback(res.data.data)
-        callback([
-          {
-            _id: '1',
-            name: 'test',
-            description: 'test',
-          },
-        ])
+        callback(res.data.data)
+      })
+      .catch(err => console.log({ err }))
+  }
+}
+
+export const createRestaurant = (token, param, callback = () => {}) => {
+  if (token !== undefined) {
+    const config = {
+      headers: {
+        'x-auth-token': token,
+        'Content-Type': 'application/json',
+      },
+    }
+    BaseProvider.post('/restaurants', param, config)
+      .then(res => {
+        alert(
+          'Congrats restaurant ' +
+            res.data.data.name +
+            ' is ' +
+            res.statusText +
+            '!'
+        )
       })
       .catch(err => console.log({ err }))
   }
