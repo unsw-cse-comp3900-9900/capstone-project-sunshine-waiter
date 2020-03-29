@@ -53,6 +53,7 @@ class App extends React.Component {
           <Route exact path={'/restaurants/' + _id}>
             <Resturant
               details={{
+                _id: _id,
                 name: name,
                 description: description,
               }}

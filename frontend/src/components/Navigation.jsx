@@ -13,12 +13,22 @@ export default class Navigation extends React.Component {
 
   render() {
     const { activeItem } = this.state
+    const { id } = this.props
+    console.log(id)
 
     return (
       <div>
         <NavigationButtonCard
           linkActiveItem={activeItem}
-          linkTo="/restaurants/1/waiter"
+          linkTo={'/restaurants/' + id + '/customer'}
+          linkName="Customer"
+          linkOnClick={this.handleItemClick}
+        >
+          <i className="spy icon"></i>
+        </NavigationButtonCard>
+        <NavigationButtonCard
+          linkActiveItem={activeItem}
+          linkTo={'/restaurants/' + id + '/waiter'}
           linkName="Waiter"
           linkOnClick={this.handleItemClick}
         >
@@ -26,7 +36,7 @@ export default class Navigation extends React.Component {
         </NavigationButtonCard>
         <NavigationButtonCard
           linkActiveItem={activeItem}
-          linkTo="/restaurants/1/cook"
+          linkTo={'/restaurants/' + id + '/cook'}
           linkName="Cook"
           linkOnClick={this.handleItemClick}
         >
@@ -34,7 +44,7 @@ export default class Navigation extends React.Component {
         </NavigationButtonCard>
         <NavigationButtonCard
           linkActiveItem={activeItem}
-          linkTo="/restaurants/1/cashier"
+          linkTo={'/restaurants/' + id + '/cashier'}
           linkName="Cashier"
           linkOnClick={this.handleItemClick}
         >
@@ -42,7 +52,7 @@ export default class Navigation extends React.Component {
         </NavigationButtonCard>
         <NavigationButtonCard
           linkActiveItem={activeItem}
-          linkTo="/restaurants/1/manager"
+          linkTo={'/restaurants/' + id + '/manager'}
           linkName="Manager"
           linkOnClick={this.handleItemClick}
         >
