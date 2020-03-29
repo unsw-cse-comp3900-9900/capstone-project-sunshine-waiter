@@ -1,7 +1,7 @@
 import React from 'react'
 import { Route, Redirect, Switch } from 'react-router-dom'
 
-import Customer from './components/Customer'
+import Customer from './components/customer/Customer'
 import Resturant from './components/Resturant'
 import Kitchen from './components/Kitchen'
 import Waiter from './components/Waiter'
