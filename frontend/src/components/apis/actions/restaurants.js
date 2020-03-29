@@ -27,6 +27,7 @@ export const createRestaurant = (token, param, callback = () => {}) => {
     }
     BaseProvider.post('/restaurants', param, config)
       .then(res => {
+        callback()
         alert(
           'Congrats restaurant ' +
             res.data.data.name +
@@ -39,7 +40,7 @@ export const createRestaurant = (token, param, callback = () => {}) => {
   }
 }
 
-export const deleteRestaurant = (token, id) => {
+export const deleteRestaurant = (token, id, callback = () => {}) => {
   if (token !== undefined) {
     const config = {
       headers: {
@@ -49,7 +50,25 @@ export const deleteRestaurant = (token, id) => {
     }
     BaseProvider.delete('/restaurants/' + id, config)
       .then(res => {
-        console.log({ res })
+        callback()
+        console.log('done', { res })
+        alert(res.data.message)
+      })
+      .catch(err => console.log({ err }))
+  }
+}
+
+export const updateRestaurant = (token, id, param, callback = () => {}) => {
+  if (token !== undefined) {
+    const config = {
+      headers: {
+        'x-auth-token': token,
+        'Content-Type': 'application/json',
+      },
+    }
+    BaseProvider.put('/restaurants/' + id, param, config)
+      .then(res => {
+        callback()
         alert(res.data.message)
       })
       .catch(err => console.log({ err }))
