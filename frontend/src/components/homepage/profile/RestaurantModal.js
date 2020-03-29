@@ -1,25 +1,51 @@
 import React from 'react'
 import { Modal } from 'antd'
-import { createRestaurant } from '../../apis/actions/restaurants'
+import {
+  createRestaurant,
+  updateRestaurant,
+} from '../../apis/actions/restaurants'
 import { getCookie } from '../../authenticate/Cookies'
 
-class CreateRestaurantModal extends React.Component {
+class RestaurantModal extends React.Component {
   state = {
     name: '',
     description: '',
   }
 
   onSubmit = async e => {
-    const { recordRestaurantsListUpdatedStatus } = this.props
+    const { recordRestaurantsListUpdatedStatus, editingRestaurant } = this.props
     e.preventDefault()
-    await createRestaurant(getCookie('token'), this.state)
-    recordRestaurantsListUpdatedStatus()
+    if (editingRestaurant !== null) {
+      await updateRestaurant(
+        getCookie('token'),
+        editingRestaurant._id,
+        this.state,
+        recordRestaurantsListUpdatedStatus()
+      )
+    } else {
+      await createRestaurant(
+        getCookie('token'),
+        this.state,
+        recordRestaurantsListUpdatedStatus()
+      )
+    }
 
     this.props.onCancel()
   }
 
+  UNSAFE_componentWillReceiveProps = nextProps => {
+    const { editingRestaurant } = nextProps
+    if (editingRestaurant !== null) {
+      this.setState({
+        name: editingRestaurant.name,
+        description: editingRestaurant.description,
+      })
+    }
+  }
+
   render() {
     const { visible, onCancel } = this.props
+
     return (
       <Modal visible={visible} onCancel={onCancel} onOk={this.onSubmit}>
         <form className="ui form" onSubmit={this.onSubmit}>
@@ -57,4 +83,4 @@ class CreateRestaurantModal extends React.Component {
   }
 }
 
-export default CreateRestaurantModal
+export default RestaurantModal
