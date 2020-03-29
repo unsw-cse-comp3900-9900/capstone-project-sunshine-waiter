@@ -13,9 +13,6 @@ class CreateRestaurantModal extends React.Component {
     const { recordRestaurantsListUpdatedStatus } = this.props
     e.preventDefault()
     await createRestaurant(getCookie('token'), this.state)
-    // console.log(curRestaurants, this.state)
-    // updateRestaurants(curRestaurants.push(this.state))
-    // console.log(curRestaurants)
     recordRestaurantsListUpdatedStatus()
 
     this.props.onCancel()
@@ -38,6 +35,7 @@ class CreateRestaurantModal extends React.Component {
                 })
               }
             />
+            <small>The name has to be more than 5 letters</small>
           </div>
           <div className="field">
             <label htmlFor="description">Description </label>
@@ -51,6 +49,7 @@ class CreateRestaurantModal extends React.Component {
                 })
               }
             />
+            <small>The description has to be more than 5 letters</small>
           </div>
         </form>
       </Modal>

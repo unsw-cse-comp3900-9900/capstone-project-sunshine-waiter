@@ -113,15 +113,18 @@ class MyProfile extends React.Component {
     //DO NOT USE <A> TAG, IT WILL RELOAD THE PAGE AND MAKE THE STATE BACK INITIAL STATE IN App.js
     if (restaurants && restaurants.length > 0) {
       return restaurants.map(({ _id, name }) => (
-        <span key={_id}>
-          <h3>{name}</h3>
+        <li className="list" key={_id}>
+          {name}
           <span onClick={() => this.onDeleteRestaurant(_id)}>
             <i className="trash alternate outline icon right clickable" />
+          </span>
+          <span>
+            <i className="pencil alternate right clickable icon" />
           </span>
           <Link to={'/restaurants/' + _id} name={name}>
             <i className="caret square right icon" />
           </Link>
-        </span>
+        </li>
       ))
     }
     return null
