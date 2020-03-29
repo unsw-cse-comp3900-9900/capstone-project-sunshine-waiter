@@ -13,9 +13,16 @@ const connect = (component, URL, userData, configure) => {
     for (let [event, response] of Object.entries(configure)) {
       safeConnect.on(event, response)
     }
+    safeConnect.on('disconnect', () => {
+      message.error('Lost connection')
+    })
     component.setState({
       socket: safeConnect,
     })
+  })
+  socket.on('connect_error', () => {
+    message.error('Connect error')
+    socket.disconnect()
   })
 }
 
