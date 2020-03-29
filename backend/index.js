@@ -8,6 +8,9 @@ const menus = require('./routes/menu.routes')
 const cors = require('cors')
 const errorHandler = require('./middleware/errorHandler')
 
+// import websocket
+require('./server.js')
+
 // check environment variables
 if (!config.get('JWT_SECRET')) {
   console.error(
@@ -17,9 +20,9 @@ if (!config.get('JWT_SECRET')) {
 }
 
 // const
-const PORT = 8000
-const app = express()
+const PORT_MAIN = 8000
 
+const app = express()
 app.set('json spaces', 2)
 app.use(express.json())
 app.use(cors())
@@ -31,8 +34,8 @@ app.use('/restaurants', menus)
 
 app.use(errorHandler)
 
-app.listen(PORT, () => {
-  console.log('Listening at ' + PORT)
+app.listen(PORT_MAIN, () => {
+  console.log('Node RESTful API listening at ' + PORT_MAIN)
 })
 
 connectDb()

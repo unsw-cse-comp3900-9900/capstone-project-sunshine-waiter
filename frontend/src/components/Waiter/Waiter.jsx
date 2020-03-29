@@ -4,11 +4,8 @@ import Request from './Request'
 import './Waiter.css'
 import { notification } from 'antd'
 import { connect } from '../apis/socketClient'
-import { fakeData } from './fakeData'
 
-const { dishes, requests } = fakeData
-
-const URL = 'http://localhost:8000'
+const URL = 'http://localhost:5000'
 
 const arrayToObj = array => {
   let result = {}
@@ -26,21 +23,55 @@ const objToArray = obj => {
   return result
 }
 
+const WelcomeMessage = props => {
+  return (
+    <div>
+      <h1 id="welcome-message">
+        Hello {props.userName}! <br />
+        Welcome to the Waiter Page.
+      </h1>
+    </div>
+  )
+}
+
 class Waiter extends React.Component {
   constructor(props) {
     super(props)
-    this.user = {
-      restaurantId: 'restaurant1',
-      userId: 'user1',
-      userType: 'waiter',
-      userName: 'Steve',
-      password: 'password',
-    }
+    this.user = this.getRandomUserFrom(['Steve', 'Jason', 'Jeren', 'Annie'])
     this.state = {
       socket: null,
-      dishQue: dishes,
-      requestQue: requests,
+      dishQue: [],
+      requestQue: [],
     }
+  }
+
+  getRandomUserFrom = names => {
+    let randomInt = Math.floor(Math.random() * names.length)
+    return {
+      restaurantId: 'restaurant1',
+      userId: 'user' + randomInt.toString(),
+      userType: 'waiter',
+      userName: names[randomInt],
+      password: 'password',
+    }
+  }
+
+  initiate = (dishes, requests) => {
+    this.setState({
+      dishQue: objToArray(dishes)
+        .filter(dish => dish.state === 'READY' || dish.state === 'SERVING')
+        .sort(
+          (a, b) =>
+            new Date(a.readyTime).getTime() - new Date(b.readyTime).getTime()
+        ),
+      requestQue: objToArray(requests)
+        .filter(request => request.finishTime == null)
+        .sort(
+          (a, b) =>
+            new Date(a.receiveTime).getTime() -
+            new Date(b.receiveTime).getTime()
+        ),
+    })
   }
 
   update = queName => {
@@ -63,7 +94,11 @@ class Waiter extends React.Component {
             case 'SERVED':
               notification['success']({
                 message: target.name + ' served!',
-                description: 'Dish id: ' + target._id + ' By waiter: ', // TODO: get the user from message
+                description:
+                  'Dish id: ' +
+                  target._id +
+                  ' By waiter: ' +
+                  target.servedBy.userName,
                 duration: 3,
               })
               break
@@ -91,7 +126,7 @@ class Waiter extends React.Component {
           if (target.finishTime !== null) {
             notification['success']({
               message: 'Request from table ' + target.tableId + ' fulfilled',
-              description: 'Handled by waiter: ', //TODO: get the user from message
+              description: 'Handled by waiter: ' + target.handleBy.userName,
               duration: 3,
             })
           }
@@ -107,18 +142,23 @@ class Waiter extends React.Component {
 
     // configure includs the event and response you defined for the socket
     const configure = {
+      'initiate data': this.initiate,
       'update dish': this.update('dishQue'),
       'update request': this.update('requestQue'),
     }
 
-    connect(this, URL, userData, configure)
+    try {
+      connect(this, URL, userData, configure)
+    } catch (error) {
+      console.log({ error })
+    }
   }
 
   render() {
     return (
       <div>
         <header>
-          <h1 id="welcome-message">Welcome to the Waiter Page.</h1>
+          <WelcomeMessage userName={this.user.userName} />
         </header>
         <div id="box-container">
           <Dishes

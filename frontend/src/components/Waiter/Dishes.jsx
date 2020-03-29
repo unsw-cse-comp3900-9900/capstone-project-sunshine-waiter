@@ -38,10 +38,9 @@ class Dishes extends React.Component {
       finished: {},
       failed: {},
     }
-    this.handleClick = this.handleClick.bind(this)
   }
 
-  handleClick(dish, action, e) {
+  handleClick = (dish, action, e) => {
     if (this.props.socket === null || this.props.socket.disconnected) {
       message.error('Not connect to server!')
       return
@@ -191,16 +190,17 @@ class RenderDishes extends React.Component {
             </Tooltip>
           )}
 
-          {dish.state === SERVING && this.props.user._id === dish.servedBy._id && (
-            <Tooltip title="finish">
-              <button
-                className="finish"
-                onClick={e => this.props.handleClick(dish, 'finish', e)}
-              >
-                <i className="fas fa-check"></i>
-              </button>
-            </Tooltip>
-          )}
+          {dish.state === SERVING &&
+            this.props.user.userId === dish.servedBy.userId && (
+              <Tooltip title="finish">
+                <button
+                  className="finish"
+                  onClick={e => this.props.handleClick(dish, 'finish', e)}
+                >
+                  <i className="fas fa-check"></i>
+                </button>
+              </Tooltip>
+            )}
 
           {dish.state === SERVING && (
             <Popconfirm
