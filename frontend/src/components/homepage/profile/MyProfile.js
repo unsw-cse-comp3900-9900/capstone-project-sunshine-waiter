@@ -6,7 +6,7 @@ import '../default.css'
 import { getCookie } from '../../authenticate/Cookies'
 import { deleteUser, updateUser } from '../../apis/actions/users'
 import { MODE } from './constant'
-import CreateRestaurantModal from './CreateRestaurantModal'
+import RestaurantModal from './RestaurantModal'
 import { deleteRestaurant } from '../../apis/actions/restaurants'
 
 class MyProfile extends React.Component {
@@ -17,6 +17,7 @@ class MyProfile extends React.Component {
       password: '',
     },
     modalVisible: false,
+    editingRestaurant: null,
   }
 
   componentDidMount = () => {
@@ -56,7 +57,7 @@ class MyProfile extends React.Component {
     })
   }
 
-  handleSubmit = async e => {
+  handleUserFormSubmit = async e => {
     e.preventDefault()
     const param = {
       name: this.state.editingUser.name,
@@ -75,7 +76,7 @@ class MyProfile extends React.Component {
 
   renderEditModeBasic = () => {
     return (
-      <form onSubmit={this.handleSubmit}>
+      <form onSubmit={this.handleUserFormSubmit}>
         <span>
           <img
             className="ui avatar image"
@@ -103,8 +104,11 @@ class MyProfile extends React.Component {
   }
 
   onDeleteRestaurant = async id => {
-    await deleteRestaurant(getCookie('token'), id)
-    this.props.recordRestaurantsListUpdatedStatus()
+    await deleteRestaurant(
+      getCookie('token'),
+      id,
+      this.props.recordRestaurantsListUpdatedStatus()
+    )
   }
 
   renderRestaurantsLists = () => {
@@ -112,16 +116,24 @@ class MyProfile extends React.Component {
 
     //DO NOT USE <A> TAG, IT WILL RELOAD THE PAGE AND MAKE THE STATE BACK INITIAL STATE IN App.js
     if (restaurants && restaurants.length > 0) {
-      return restaurants.map(({ _id, name }) => (
-        <span key={_id}>
-          <h3>{name}</h3>
+      return restaurants.map(({ _id, name, description }) => (
+        <li className="list" key={_id}>
+          {name}
           <span onClick={() => this.onDeleteRestaurant(_id)}>
             <i className="trash alternate outline icon right clickable" />
+          </span>
+          <span
+            onClick={() => {
+              this.showModal()
+              this.setState({ editingRestaurant: { _id, name, description } })
+            }}
+          >
+            <i className="pencil alternate right clickable icon" />
           </span>
           <Link to={'/restaurants/' + _id} name={name}>
             <i className="caret square right icon" />
           </Link>
-        </span>
+        </li>
       ))
     }
     return null
@@ -162,12 +174,13 @@ class MyProfile extends React.Component {
           <i className="tag icon"></i>
           Dashboard
         </h4>
-        <CreateRestaurantModal
+        <RestaurantModal
           visible={this.state.modalVisible}
           onCancel={this.handleModalCancel}
           recordRestaurantsListUpdatedStatus={
             recordRestaurantsListUpdatedStatus
           }
+          editingRestaurant={this.state.editingRestaurant}
         />
         <div className="my-restaurant">
           <h3>

@@ -97,3 +97,7 @@
   bottom: 10px;
   left: 20%;
 }
+
+.sidebar .profile .my-restaurant .list {
+  font-size: 13px;
+}

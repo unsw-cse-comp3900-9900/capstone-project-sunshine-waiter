@@ -1,28 +1,51 @@
 import React from 'react'
 import { Modal } from 'antd'
-import { createRestaurant } from '../../apis/actions/restaurants'
+import {
+  createRestaurant,
+  updateRestaurant,
+} from '../../apis/actions/restaurants'
 import { getCookie } from '../../authenticate/Cookies'
 
-class CreateRestaurantModal extends React.Component {
+class RestaurantModal extends React.Component {
   state = {
     name: '',
     description: '',
   }
 
   onSubmit = async e => {
-    const { recordRestaurantsListUpdatedStatus } = this.props
+    const { recordRestaurantsListUpdatedStatus, editingRestaurant } = this.props
     e.preventDefault()
-    await createRestaurant(getCookie('token'), this.state)
-    // console.log(curRestaurants, this.state)
-    // updateRestaurants(curRestaurants.push(this.state))
-    // console.log(curRestaurants)
-    recordRestaurantsListUpdatedStatus()
+    if (editingRestaurant !== null) {
+      await updateRestaurant(
+        getCookie('token'),
+        editingRestaurant._id,
+        this.state,
+        recordRestaurantsListUpdatedStatus()
+      )
+    } else {
+      await createRestaurant(
+        getCookie('token'),
+        this.state,
+        recordRestaurantsListUpdatedStatus()
+      )
+    }
 
     this.props.onCancel()
   }
 
+  UNSAFE_componentWillReceiveProps = nextProps => {
+    const { editingRestaurant } = nextProps
+    if (editingRestaurant !== null) {
+      this.setState({
+        name: editingRestaurant.name,
+        description: editingRestaurant.description,
+      })
+    }
+  }
+
   render() {
     const { visible, onCancel } = this.props
+
     return (
       <Modal visible={visible} onCancel={onCancel} onOk={this.onSubmit}>
         <form className="ui form" onSubmit={this.onSubmit}>
@@ -38,6 +61,7 @@ class CreateRestaurantModal extends React.Component {
                 })
               }
             />
+            <small>The name has to be more than 5 letters</small>
           </div>
           <div className="field">
             <label htmlFor="description">Description </label>
@@ -51,6 +75,7 @@ class CreateRestaurantModal extends React.Component {
                 })
               }
             />
+            <small>The description has to be more than 5 letters</small>
           </div>
         </form>
       </Modal>
@@ -58,4 +83,4 @@ class CreateRestaurantModal extends React.Component {
   }
 }
 
-export default CreateRestaurantModal
+export default RestaurantModal
