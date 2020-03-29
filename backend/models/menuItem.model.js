@@ -54,4 +54,4 @@ const restaurantSchema = new mongoose.Schema({
 
 const MenuItem = mongoose.model('MenuItem', restaurantSchema)
 
-exports.MenuItem = MenuItem
+module.exports = MenuItem

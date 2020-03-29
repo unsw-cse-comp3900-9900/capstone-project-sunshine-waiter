@@ -1,0 +1,26 @@
+import React from 'react'
+
+import MyProfile from './MyProfile'
+import '../default.css'
+
+const SiderBar = ({
+  visible,
+  profile,
+  restaurants,
+  updateState,
+  recordRestaurantsListUpdatedStatus,
+}) => {
+  return (
+    <div className={visible ? 'ui right visible sidebar' : 'ui right sidebar'}>
+      <MyProfile
+        profile={profile}
+        updateState={updateState}
+        recordRestaurantsListUpdatedStatus={recordRestaurantsListUpdatedStatus}
+        restaurants={restaurants}
+      />
+    </div>
+  )
+}
+// updateRestaurants={updateRestaurants}
+
+export default SiderBar

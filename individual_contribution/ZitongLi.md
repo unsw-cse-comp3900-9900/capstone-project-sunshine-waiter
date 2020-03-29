@@ -65,3 +65,29 @@ Finished Waiter page layout design.
 #### Sat, 2020/3/21
 
 Finished several major functions of waiter page, like SW-49, SW-50, SW-51. Details of these tasks are on Jira.
+
+#### Sun, 2020/3/22
+
+Finished request box of waiter page, UI improved.
+
+## Week6
+
+#### Tue, 2020/3/24
+
+Finished web-socket functions. Now the waiter can recieve new ready dishes and send finished or failed dishes to the server.
+
+#### Thursday, 26 March 2020
+
+Perfect the waiter page, now different waiters of a same restaurant can share the common information and get real-time update when any events happened.
+
+#### Friday, 27 March 2020
+
+1. add user information for identification
+2. update can only be done by the server
+3. add `servedBy` attribute to the dish and `handleBy` to the request, which indicates that who did this job
+4. finish button will only be visible by the `servedBy` user
+5. before every button click event, the connection will be checked
+
+#### Sunday, 29 March 2020
+
+Merge websocket server into backend

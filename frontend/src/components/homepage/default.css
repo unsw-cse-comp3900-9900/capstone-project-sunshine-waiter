@@ -1,0 +1,103 @@
+.pusher {
+  width: 100vw;
+  height: 40px;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.right {
+  float: right;
+}
+
+.pusher .ui.sticky {
+  background-color: #1b1c1d;
+  width: 100vw;
+  position: fixed;
+  top: 0;
+}
+
+.ui.text.container h1.ui.inverted.header {
+  background-color: #1b1c1d;
+  padding-top: 100px;
+  font-size: 50px;
+}
+
+.ui.text.container h2 {
+  color: grey;
+  padding-bottom: 150px;
+}
+
+.ui.vertical.stripe.segment h1 {
+  font-size: 30px;
+  padding-top: 30px;
+  padding-bottom: 10px;
+  font-weight: bold;
+}
+
+.ui.vertical.stripe.segment p {
+  font-size: 15px;
+  width: 800px;
+  font-style: italic;
+  padding-bottom: 30px;
+}
+
+.ui.inverted.vertical.footer.segment .ui.container h4 {
+  color: grey;
+  width: 300px;
+
+  position: relative;
+  margin-left: 30vw;
+}
+
+.sidebar {
+  background-color: whitesmoke;
+}
+
+.sidebar .profile {
+  margin-top: 72px;
+}
+
+.sidebar .profile .basic {
+  width: 256px;
+  height: 140px;
+  background-color: whitesmoke;
+  border: 0.5px solid grey;
+  border-radius: 5px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.sidebar .profile .basic .name {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.sidebar .profile .basic .meta {
+  margin-top: 5px;
+  margin-left: 10px;
+  font-style: italic;
+  font-size: 12px;
+  color: grey;
+}
+
+.sidebar .profile .basic .name .input {
+  width: 80px;
+  height: 27px;
+}
+
+.sidebar .profile .my-restaurant {
+  margin-left: 10px;
+}
+
+.sidebar .profile .footer {
+  position: absolute;
+  bottom: 10px;
+  left: 20%;
+}
+
+.sidebar .profile .my-restaurant .list {
+  font-size: 13px;
+}

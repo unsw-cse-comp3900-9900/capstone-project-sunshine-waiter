@@ -6,6 +6,13 @@ const restaurantSchema = new mongoose.Schema({
     required: true,
     minlength: 5,
     maxlength: 50,
+    unique: true,
+  },
+  description: {
+    type: String,
+    required: true,
+    minlength: 5,
+    maxlength: 2047,
   },
   pic: {
     type: String,
@@ -19,6 +26,7 @@ const restaurantSchema = new mongoose.Schema({
     ref: 'Menu',
     require: false,
   },
+
   userGroups: {
     manager: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     cook: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
@@ -35,4 +43,4 @@ const restaurantSchema = new mongoose.Schema({
 
 const Restaurant = mongoose.model('Restaurant', restaurantSchema)
 
-exports.Restaurant = Restaurant
+module.exports = Restaurant

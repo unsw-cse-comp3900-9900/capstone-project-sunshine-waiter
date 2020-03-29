@@ -36,6 +36,7 @@ class Customer extends Component {
         uniqueCategoryItems.push(category)
         uniqueItemsId.push(category._id)
       }
+      return
     })
     return uniqueCategoryItems
   }

@@ -1,10 +1,9 @@
 const { accessControl: ac } = require('./accessControl')
-const Restaurant = require('../models/restaurant')
+const Restaurant = require('../models/restaurant.model')
 
-const scopes = Object.freeze({ administration: 1, restaurant: 2 })
+const scopes = Object.freeze({ website_admin: 1, restaurant: 2 })
 const roles = Object.freeze({
-  // administration
-  admin: 'admin',
+  // every user has this role
   basic: 'basic',
 
   // restaurant
@@ -13,6 +12,9 @@ const roles = Object.freeze({
   cook: 'cook',
   waiter: 'waiter',
   customer: 'customer',
+
+  // website_admin
+  admin: 'admin',
 })
 
 const allowIfLoggedin = async (req, res, next) => {
@@ -26,14 +28,13 @@ const allowIfLoggedin = async (req, res, next) => {
   next()
 }
 
-// administration
+// website_admin
 const requestAccess = function(scope, action, resource) {
-  scope.administration
-  if (scope === scopes.administration) {
+  if (scope === scopes.website_admin) {
     return requestAccessOnUser(action, resource)
-  }
-  if (scope === scopes.restaurant) {
-    return requestAccessOnRestaurant(action, resource)
+  } else {
+    // scope === scopes.restaurant
+    return requestAccessRestaurant(action, resource)
   }
 }
 
@@ -81,26 +82,40 @@ const requestAccessOnUser = function(action, resource) {
 
 /*
 pre-cond: 
-  1. target restaurantId: req.params.restaurantId;
+  1. target restaurantId: req.params.restaurantId; 
   2. verified loginedUser: req.user 
   3. assuming data structure of restaurant.userGroups is { role: [userId] }
 
 post-cond
-  1. if user has permission on [target restaurant : target resource]: pass to next() 
-  2. else: 401 
+  1. if user has (the role that has) permission on [target restaurant : target resource]: pass to next() 
+  2. else: 403 forbidden
 */
-const requestAccessOnRestaurant = function(resource, action) {
+const requestAccessRestaurant = function(action, resource) {
   return async (req, res, next) => {
     try {
-      // 1. check pre-cond
       const { restaurantId } = req.params
+
+      // 1. on 'restaurants/'
+      if (!restaurantId && resource == 'restaurant_management') {
+        const isGranted = ac.can(roles.basic)[action + 'Own'](resource).granted
+
+        if (!isGranted)
+          return res.status(403).json({
+            error: `You don't have enough permission to perform ${action} on ${resource}`,
+          })
+        else return next()
+      }
+
+      // 2. on 'restaurants/:restaurantId/'
+      // 2.1 verify user
       const { user } = req
-      if (!restaurantId || !user) {
+
+      if (!user)
         return res.status(500).json({
           error: 'Precond not satisfied! restaurantId or req.user not exist!',
         })
-      }
 
+      // 2.2 verify restaurant
       const restaurant = await Restaurant.findById(restaurantId)
       if (!restaurant) {
         return res.status(404).json({
@@ -108,29 +123,38 @@ const requestAccessOnRestaurant = function(resource, action) {
         })
       }
 
-      // 2. calculate isGranted
+      // 3. calculate isGranted
+      const isGrantedAsOwner =
+        restaurant.createdBy.equals(user._id) &&
+        ac.can(roles.basic)[action + 'Own'](resource).granted
+
+      // TODO: test this part
       // Assumption -- restaurant.userGroups - { role: [userId] }
-      var isGranted = false // default
-      const userGroups = restaurant.userGroups
-      for (const role in userGroups) {
-        if (userGroups.hasOwnProperty(role)) {
-          const userIds = userGroups[role]
-          if (
-            userIds.includes(user._id) &&
-            ac.can(roles[role])[action + 'Own'](resource).granted
-          ) {
-            isGranted = true
-            break
+      const isGrantedAsStuff = (user, restaurant, action, resource) => {
+        const userGroups = restaurant.userGroups
+        for (const role in Object.keys(userGroups)) {
+          if (userGroups.hasOwnProperty(role)) {
+            const userIds = userGroups[role]
+            if (
+              userIds.includes(user._id) &&
+              ac.can(roles[role])[action + 'Own'](resource).granted
+            ) {
+              return true
+            }
           }
         }
+        return false
       }
 
       // 3. pass or reject based on isGranted
-      if (isGranted) {
+      if (
+        isGrantedAsOwner ||
+        isGrantedAsStuff(user, restaurant, action, resource)
+      ) {
         next()
       } else {
-        return res.status(401).json({
-          error: "You don't have enough permission to perform this action",
+        return res.status(403).json({
+          error: `You don't have enough permission to perform ${action} on ${resource}`,
         })
       }
     } catch (error) {
@@ -143,6 +167,5 @@ module.exports = {
   scopes,
   roles,
   allowIfLoggedin,
-  requestAccessOnRestaurant,
   requestAccess,
 }

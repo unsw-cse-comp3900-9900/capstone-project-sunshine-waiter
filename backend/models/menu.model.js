@@ -4,8 +4,12 @@ const restaurantSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
-    minlength: 5,
     maxlength: 50,
+  },
+  description: {
+    type: String,
+    required: false,
+    maxlength: 2047,
   },
   pic: {
     type: String,
@@ -22,17 +26,8 @@ const restaurantSchema = new mongoose.Schema({
     ref: 'Restaurant',
     required: true,
   },
-  createdBy: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true,
-  },
-  createAt: {
-    type: Date,
-    required: true,
-  },
 })
 
 const Menu = mongoose.model('Menu', restaurantSchema)
 
-exports.Menu = Menu
+module.exports = Menu
