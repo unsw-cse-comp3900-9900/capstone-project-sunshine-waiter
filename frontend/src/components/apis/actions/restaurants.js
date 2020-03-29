@@ -1,5 +1,3 @@
-import jwtDecode from 'jwt-decode'
-
 import BaseProvider from '../BaseProvider'
 // import { deleteCookie } from '../../authenticate/Cookies'
 
