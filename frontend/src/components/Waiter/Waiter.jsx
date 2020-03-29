@@ -5,7 +5,7 @@ import './Waiter.css'
 import { notification } from 'antd'
 import { connect } from '../apis/socketClient'
 
-const URL = 'http://localhost:8000'
+const URL = 'http://localhost:5000'
 
 const arrayToObj = array => {
   let result = {}
@@ -25,10 +25,12 @@ const objToArray = obj => {
 
 const WelcomeMessage = props => {
   return (
-    <h1 id="welcome-message">
-      Hello {props.userName}! <br />
-      Welcome to the Waiter Page.
-    </h1>
+    <div>
+      <h1 id="welcome-message">
+        Hello {props.userName}! <br />
+        Welcome to the Waiter Page.
+      </h1>
+    </div>
   )
 }
 
@@ -145,7 +147,11 @@ class Waiter extends React.Component {
       'update request': this.update('requestQue'),
     }
 
-    connect(this, URL, userData, configure)
+    try {
+      connect(this, URL, userData, configure)
+    } catch (error) {
+      console.log({ error })
+    }
   }
 
   render() {

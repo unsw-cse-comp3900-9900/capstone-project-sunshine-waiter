@@ -32,11 +32,9 @@ const allowIfLoggedin = async (req, res, next) => {
 const requestAccess = function(scope, action, resource) {
   if (scope === scopes.website_admin) {
     return requestAccessOnUser(action, resource)
-  } else if (action === 'create' && resource === 'restaurant_management') {
-    // This is a corner case. At this moment, restaurant haven got created. No restaurantId yet.
-    return requestAccessOnCreateRestaurant('create', 'restaurant_management')
-  } else if (scope === scopes.restaurant) {
-    return requestAccessInRestaurant(action, resource)
+  } else {
+    // scope === scopes.restaurant
+    return requestAccessRestaurant(action, resource)
   }
 }
 
@@ -82,23 +80,6 @@ const requestAccessOnUser = function(action, resource) {
   }
 }
 
-const requestAccessOnCreateRestaurant = function(action, resource) {
-  return async (req, res, next) => {
-    try {
-      const isGranted = ac.can(roles.basic)[action + 'Own'](resource).granted
-      if (isGranted) {
-        next()
-      } else {
-        return res.status(401).json({
-          error: "You don't have enough permission to perform this action",
-        })
-      }
-    } catch (error) {
-      next(error)
-    }
-  }
-}
-
 /*
 pre-cond: 
   1. target restaurantId: req.params.restaurantId; 
@@ -109,19 +90,32 @@ post-cond
   1. if user has (the role that has) permission on [target restaurant : target resource]: pass to next() 
   2. else: 403 forbidden
 */
-const requestAccessInRestaurant = function(action, resource) {
+const requestAccessRestaurant = function(action, resource) {
   return async (req, res, next) => {
     try {
-      // 1. check pre-cond
       const { restaurantId } = req.params
+
+      // 1. on 'restaurants/'
+      if (!restaurantId && resource == 'restaurant_management') {
+        const isGranted = ac.can(roles.basic)[action + 'Own'](resource).granted
+
+        if (!isGranted)
+          return res.status(403).json({
+            error: `You don't have enough permission to perform ${action} on ${resource}`,
+          })
+        else return next()
+      }
+
+      // 2. on 'restaurants/:restaurantId/'
+      // 2.1 verify user
       const { user } = req
-      if (!restaurantId || !user) {
+
+      if (!user)
         return res.status(500).json({
           error: 'Precond not satisfied! restaurantId or req.user not exist!',
         })
-      }
-      // verify restaurantId
 
+      // 2.2 verify restaurant
       const restaurant = await Restaurant.findById(restaurantId)
       if (!restaurant) {
         return res.status(404).json({
@@ -129,7 +123,7 @@ const requestAccessInRestaurant = function(action, resource) {
         })
       }
 
-      // 2. calculate isGranted
+      // 3. calculate isGranted
       const isGrantedAsOwner =
         restaurant.createdBy.equals(user._id) &&
         ac.can(roles.basic)[action + 'Own'](resource).granted
@@ -149,7 +143,6 @@ const requestAccessInRestaurant = function(action, resource) {
             }
           }
         }
-
         return false
       }
 
@@ -161,7 +154,7 @@ const requestAccessInRestaurant = function(action, resource) {
         next()
       } else {
         return res.status(403).json({
-          error: "You don't have enough permission to perform this action",
+          error: `You don't have enough permission to perform ${action} on ${resource}`,
         })
       }
     } catch (error) {
@@ -174,6 +167,5 @@ module.exports = {
   scopes,
   roles,
   allowIfLoggedin,
-  requestAccessInRestaurant,
   requestAccess,
 }

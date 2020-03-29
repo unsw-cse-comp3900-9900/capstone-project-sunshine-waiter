@@ -77,13 +77,12 @@ updateUser = async (req, res, next) => {
     if (!user) return res.status(404).json({ error: 'User does not exist' })
 
     // validate new data
-    const { name, email, password } = req.body
-    const { error } = validateUpdateDataFormat({ name, email, password })
+    const { name, password } = req.body
+    const { error } = validateUpdateDataFormat({ name, password })
     if (error) return res.status(400).json({ error: error.details[0].message })
 
     // update
     user.name = name || user.name
-    user.email = email || user.email
     user.password = password ? await hashPassword(password) : user.password
     await user.save()
 

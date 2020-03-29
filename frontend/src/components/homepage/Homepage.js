@@ -1,10 +1,12 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 import AuthCard from '../authenticate/AuthCard'
 import SiderBar from './profile/SiderBar'
 import { getCookie, deleteCookie } from '../authenticate/Cookies'
 import './default.css'
-import { getUser } from '../apis/actions'
+import { getUser } from '../apis/actions/users'
+// import { getRestaurants } from '../apis/actions/restaurants'
 
 class Homepage extends React.Component {
   state = {
@@ -12,30 +14,62 @@ class Homepage extends React.Component {
     showProfile: false,
     showLoginCard: false,
     headerMouseOver: '',
-    user: null,
+    profile: {
+      user: null,
+    },
   }
 
-  setUserAndState = data => {
-    this.setState({
-      isAuthenticated: true,
-      user: data,
-    })
+  updateState = (userData, authState = true) => {
+    //delete account
+    if (userData === null) {
+      this.setState(prevState => ({
+        isAuthenticated: authState,
+        showProfile: false,
+        profile: {
+          ...prevState.profile,
+          user: userData,
+        },
+      }))
+    } else {
+      this.setState(prevState => ({
+        isAuthenticated: authState,
+        profile: {
+          ...prevState.profile,
+          user: userData,
+        },
+      }))
+    }
   }
+
+  // updateRestaurants = (restaurants = []) => {
+  //   this.setState(prevState => ({
+  //     profile: {
+  //       ...prevState.profile,
+  //       restaurants: restaurants,
+  //     },
+  //   }))
+  // }
 
   //when there is no cookies, the getUser request will not be sent,
   //see the definition
   UNSAFE_componentWillMount = () => {
     const currentCookie = getCookie('token')
-    getUser(currentCookie, this.setUserAndState)
+    getUser(currentCookie, this.updateState)
   }
 
   componentDidUpdate = (prevProps, prevState) => {
     if (
-      prevState.isAuthenticated != this.state.isAuthenticated &&
+      prevState.isAuthenticated !== this.state.isAuthenticated &&
       this.state.isAuthenticated
     ) {
-      getUser(getCookie('token'), this.setUserAndState)
+      getUser(getCookie('token'), this.updateState)
+      // getRestaurants(getCookie('token'), this.updateRestaurants)
+      this.props.recordRestaurantsListUpdatedStatus()
     }
+
+    // if (prevState.profile.restaurants !== this.state.profile.restaurants) {
+    //   this.props.fetchRestaurants(this.state.profile.restaurants)
+    // }
   }
 
   onAuthenticated = state => {
@@ -72,7 +106,9 @@ class Homepage extends React.Component {
                 isAuthenticated: false,
                 showProfile: false,
                 showLoginCard: false,
-                user: null,
+                profile: {
+                  user: null,
+                },
               })
               deleteCookie('token')
             }}
@@ -131,18 +167,19 @@ class Homepage extends React.Component {
   }
 
   render() {
+    const { recordRestaurantsListUpdatedStatus, restaurants } = this.props
     return (
       <div className="pusher">
         <div className="ui inverted vertical masthead center aligned segment">
-          <div className="ui container sticky">
+          <div className="ui sticky">
             <div className="ui secondary inverted pointing menu">
               <div className="left item">
                 <img
                   className="ui mini circular image"
                   src={require('./SWLogo.png')}
                 />
-                <a
-                  href="/"
+                <Link
+                  to="/"
                   className={
                     this.state.headerMouseOver === 'home'
                       ? 'active item'
@@ -152,9 +189,10 @@ class Homepage extends React.Component {
                   onMouseLeave={this.onMouseLeave}
                 >
                   Home
-                </a>
+                </Link>
 
-                <a
+                <Link
+                  to="#"
                   className={
                     this.state.headerMouseOver === 'about'
                       ? 'active item'
@@ -164,7 +202,7 @@ class Homepage extends React.Component {
                   onMouseLeave={this.onMouseLeave}
                 >
                   About
-                </a>
+                </Link>
               </div>
               {this.state.isAuthenticated
                 ? this.renderAfterLogin()
@@ -233,7 +271,12 @@ class Homepage extends React.Component {
           {this.state.showProfile && (
             <SiderBar
               visible={this.state.showProfile}
-              userDetail={this.state.user}
+              profile={this.state.profile}
+              updateState={this.updateState}
+              recordRestaurantsListUpdatedStatus={
+                recordRestaurantsListUpdatedStatus
+              }
+              restaurants={restaurants}
             />
           )}
         </div>

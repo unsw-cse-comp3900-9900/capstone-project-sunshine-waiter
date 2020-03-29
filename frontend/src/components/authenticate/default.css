@@ -11,3 +11,7 @@
 small {
   color: grey;
 }
+
+.clickable {
+  cursor: pointer;
+}

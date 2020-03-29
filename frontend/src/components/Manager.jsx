@@ -39,23 +39,23 @@ class Manager extends React.Component {
               <Menu.Item
                 onClick={() => this.setState({ displayIndex: DASHBOARD })}
               >
-                <i class="chart pie icon"></i>
+                <i className="chart pie icon"></i>
                 Dashboard
               </Menu.Item>
               <Menu.Item
                 onClick={() => this.setState({ displayIndex: STAFFS })}
               >
-                <i class="users icon"></i>
+                <i className="users icon"></i>
                 Staff
               </Menu.Item>
               <Menu.Item onClick={() => this.setState({ displayIndex: MENUS })}>
-                <i class="list icon"></i>
+                <i className="list icon"></i>
                 Menu
               </Menu.Item>
               <Menu.Item
                 onClick={() => this.setState({ displayIndex: ORDERS })}
               >
-                <i class="hand pointer icon"></i>
+                <i className="hand pointer icon"></i>
                 Order
               </Menu.Item>
             </Menu>

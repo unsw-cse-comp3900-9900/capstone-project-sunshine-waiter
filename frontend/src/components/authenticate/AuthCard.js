@@ -54,9 +54,9 @@ const onAuth = ([param, onAuthenticated, showSignUp]) => event => {
       .then(res => {
         const token = showSignUp ? res.data.accessToken : res.data
         setCookie('token', token)
+        getCookie('token') !== undefined && onAuthenticated(true)
       })
-      .then(getCookie('token') != undefined && onAuthenticated(true))
-      .catch(({ response }) => alert(response.data))
+      .catch(({ response }) => alert(response.data.error))
   }
 }
 
@@ -127,6 +127,7 @@ const AuthCard = ({ onAuthenticated }) => {
         </div>
         {showSignUp || (
           <span
+            className="clickable"
             onClick={() => setShowSignUp(true)}
             style={{
               fontSize: '10px',
