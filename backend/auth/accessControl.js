@@ -23,12 +23,6 @@ const accessGranted = {
       'create:own': ['*'],
       'read:own': ['*'],
     },
-    menuItem: {
-      'create:own': ['*'],
-      'read:own': ['*'],
-      'update:own': ['*'],
-      'delete:own': ['*'],
-    },
   },
 
   // roles in restaurant
