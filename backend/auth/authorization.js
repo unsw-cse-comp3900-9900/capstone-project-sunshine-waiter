@@ -29,9 +29,9 @@ const resources = Object.freeze({
   profile: 'profile',
   order: 'order',
   dashboard: 'dashboard',
-  restaurant_management: 'restaurant_management',
-  menu_management: 'menu_management',
-  stuff_management: 'stuff_management',
+  restaurant: 'restaurant',
+  menu: 'menu',
+  stuff: 'stuff',
   cooking_queue: 'cooking_queue',
   serving_queue: 'serving_queue',
 })
@@ -115,7 +115,7 @@ const requestAccessOnRestaurant = function (action, resource) {
       const { restaurantId } = req.params
 
       // 1. on 'restaurants/' ; no restaurantId presented
-      if (!restaurantId && resource == 'restaurant_management') {
+      if (!restaurantId && resource == 'restaurant') {
         const isGranted = ac.can(roles.basic)[action + 'Own'](resource).granted
         if (isGranted) return next()
       }

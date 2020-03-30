@@ -12,7 +12,7 @@ const accessGranted = {
       'delete:own': ['*'],
     },
 
-    restaurant_management: {
+    restaurant: {
       // here, "own" means: restaurant.createdBy == user._id
       // that is, current user is the creator&owner of the restaurant
       'create:own': ['*'],
@@ -29,18 +29,18 @@ const accessGranted = {
   // here, "own" means: restaurant.userGroups[role].includes(user._id)
   // that is, current user is in the role-group of restaurant
   owner: {
-    restaurant_management: {
+    restaurant: {
       'read:own': ['*'],
       'update:own': ['*'],
       'delete:own': ['*'],
     },
-    menu_management: {
+    menu: {
       'create:own': ['*'],
       'read:own': ['*'],
       'update:own': ['*'],
       'delete:own': ['*'],
     },
-    stuff_management: {
+    stuff: {
       'create:own': ['*'],
       'read:own': ['*'],
       'update:own': ['*'],
@@ -67,18 +67,18 @@ const accessGranted = {
     },
   },
   manager: {
-    restaurant_management: {
+    restaurant: {
       // including restaurant history data, staff management, menu, etc
       'read:own': ['*'],
       'update:own': ['*'],
     },
-    menu_management: {
+    menu: {
       'create:own': ['*'],
       'read:own': ['*'],
       'update:own': ['*'],
       'delete:own': ['*'],
     },
-    stuff_management: {
+    stuff: {
       'create:own': ['*'],
       'read:own': ['*'],
       'update:own': ['*'],
