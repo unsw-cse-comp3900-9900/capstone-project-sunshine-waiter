@@ -3,12 +3,16 @@
       {{#repeat 20}}
         {
           "_id": {{@index}},
-          "name": "{{food}}",
-          "readyTime": "{{time '00:00' '07:00' 'HH:mm:ss'}}",
-          "tableId": {{int 1 10}},
-          "orderId": "o{{@index}}",
-          "state": "READY",
-          "serveTime": null
+          "menuItem": {
+            "title": "{{food}}"
+          },
+          "amount": {{int 1 4}},
+          "placedBy": {{int 1 10}},
+          "status": "PLACED",
+          "order" : {
+            "_id": "o{{@index}}",
+            "createAt": "{{time '00:00' '07:00' 'HH:mm:ss'}}"
+          }
         }
       {{/repeat}}
     ],

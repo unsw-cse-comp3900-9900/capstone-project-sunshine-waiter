@@ -7,7 +7,7 @@ import { connect } from '../apis/socketClient'
 
 const URL = 'http://localhost:5000'
 
-const arrayToObj = array => {
+export const arrayToObj = array => {
   let result = {}
   for (let item of array) {
     result[item._id] = item
@@ -15,7 +15,7 @@ const arrayToObj = array => {
   return result
 }
 
-const objToArray = obj => {
+export const objToArray = obj => {
   let result = []
   for (let key in obj) {
     result.push(obj[key])
@@ -23,12 +23,12 @@ const objToArray = obj => {
   return result
 }
 
-const WelcomeMessage = props => {
+export const WelcomeMessage = props => {
   return (
     <div>
       <h1 id="welcome-message">
         Hello {props.userName}! <br />
-        Welcome to the Waiter Page.
+        Welcome to the {props.pageName} Page.
       </h1>
     </div>
   )
@@ -49,9 +49,9 @@ class Waiter extends React.Component {
     let randomInt = Math.floor(Math.random() * names.length)
     return {
       restaurantId: 'restaurant1',
-      userId: 'user' + randomInt.toString(),
-      userType: 'waiter',
-      userName: names[randomInt],
+      _id: 'user' + randomInt.toString(),
+      type: 'waiter',
+      name: names[randomInt],
       password: 'password',
     }
   }
@@ -59,7 +59,7 @@ class Waiter extends React.Component {
   initiate = (dishes, requests) => {
     this.setState({
       dishQue: objToArray(dishes)
-        .filter(dish => dish.state === 'READY' || dish.state === 'SERVING')
+        .filter(dish => dish.status === 'READY' || dish.status === 'SERVING')
         .sort(
           (a, b) =>
             new Date(a.readyTime).getTime() - new Date(b.readyTime).getTime()
@@ -81,7 +81,9 @@ class Waiter extends React.Component {
       switch (queName) {
         case 'dishQue':
           const newDishQue = objToArray(newObj)
-            .filter(dish => dish.state === 'READY' || dish.state === 'SERVING')
+            .filter(
+              dish => dish.status === 'READY' || dish.status === 'SERVING'
+            )
             .sort(
               (a, b) =>
                 new Date(a.readyTime).getTime() -
@@ -90,22 +92,22 @@ class Waiter extends React.Component {
           this.setState({
             dishQue: newDishQue,
           })
-          switch (target.state) {
+          switch (target.status) {
             case 'SERVED':
               notification['success']({
-                message: target.name + ' served!',
+                message: target.menuItem.title + ' served!',
                 description:
                   'Dish id: ' +
                   target._id +
                   ' By waiter: ' +
-                  target.servedBy.userName,
+                  target.servedBy.name,
                 duration: 3,
               })
               break
             case 'READY':
               notification['success']({
-                message: 'New dish: ' + target.name + ' ready!',
-                description: 'Ordered by table: ' + target.tableId,
+                message: 'New dish: ' + target.menuItem.title + ' ready!',
+                description: 'Ordered by table: ' + target.placedBy,
                 duration: 3,
               })
               break
@@ -158,16 +160,16 @@ class Waiter extends React.Component {
     return (
       <div>
         <header>
-          <WelcomeMessage userName={this.user.userName} />
+          <WelcomeMessage userName={this.user.name} pageName={'waiter'} />
         </header>
         <div id="box-container">
           <Dishes
-            dishQue={arrayToObj(this.state.dishQue)}
+            dishQue={this.state.dishQue}
             socket={this.state.socket}
             user={this.user}
           />
           <Request
-            requestQue={arrayToObj(this.state.requestQue)}
+            requestQue={this.state.requestQue}
             socket={this.state.socket}
             user={this.user}
           />

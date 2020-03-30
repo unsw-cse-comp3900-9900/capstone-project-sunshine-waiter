@@ -20,6 +20,5 @@ var template = fs.readFileSync('frontend/src/components/fakeDataTemplate.hbs', {
   encoding: 'utf8',
 })
 var result = dummyjson.parse(template, { helpers: myHelpers })
-var fakeData = JSON.parse(result)
 
-console.log(fakeData)
+console.log(result)
