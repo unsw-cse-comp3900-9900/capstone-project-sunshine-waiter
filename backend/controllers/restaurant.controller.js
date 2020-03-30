@@ -3,8 +3,13 @@ const Restaurant = require('../models/restaurant.model')
 const Menu = require('../models/menu.model')
 const _ = require('lodash')
 
+// present data to client side
+const present = obj => {
+  const { __v, createdBy, ...data } = obj._doc
+  return data
+}
 // create restaurant,
-const createRestaurant = async (req, res, next) => {
+createRestaurant = async (req, res, next) => {
   try {
     // validate
     const { error } = validateCreateDataFormat(req.body)
@@ -21,7 +26,13 @@ const createRestaurant = async (req, res, next) => {
     restaurant = new Restaurant({
       ..._.pick(req.body, ['name', 'description']),
       createdBy: req.user._id,
-      userGroups: { manager: [], cook: [], waiter: [], cashier: [] },
+      userGroups: {
+        owner: [req.user._id],
+        manager: [req.user._id],
+        cook: [],
+        waiter: [],
+        cashier: [],
+      },
     })
 
     const menu = new Menu({
@@ -32,13 +43,9 @@ const createRestaurant = async (req, res, next) => {
     })
     await menu.save()
     restaurant.menu = menu._id
-
     await restaurant.save()
 
-    // res
-    res.status(201).json({
-      data: _.pick(restaurant, ['_id', 'name', 'description']),
-    })
+    res.status(201).json({ data: present(restaurant) })
   } catch (error) {
     next(error)
   }
@@ -53,9 +60,7 @@ readRestaurant = async (req, res, next) => {
       return res.status(404).json({ error: 'Restaurant does not exist' })
 
     // res
-    res.json({
-      data: _.pick(restaurant, ['_id', 'name', 'description']),
-    })
+    res.json({ data: present(restaurant) })
   } catch (error) {
     next(error)
   }
@@ -67,7 +72,8 @@ precond: req.user exists;
 readMyRestaurants = async (req, res, next) => {
   try {
     const restaurants = await Restaurant.find({ createdBy: req.user._id })
-    res.json({ data: restaurants })
+    const data = restaurants.map(obj => present(obj))
+    res.json({ data })
   } catch (error) {
     next(error)
   }

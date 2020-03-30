@@ -4,6 +4,8 @@ const router = express.Router()
 const { verifyAuthToken } = require('../auth/authentication')
 const {
   scopes,
+  actions,
+  resources,
   allowIfLoggedin,
   requestAccess,
 } = require('../auth/authorization')
@@ -16,7 +18,7 @@ router.put(
   '/:restaurantId/menus',
   verifyAuthToken,
   allowIfLoggedin,
-  requestAccess(scopes.restaurant, 'update', 'restaurant_management'),
+  requestAccess(scopes.restaurant, actions.update, resources.menu),
   updateMenu
 )
 

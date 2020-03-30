@@ -4,10 +4,11 @@ const router = express.Router()
 const { verifyAuthToken } = require('../auth/authentication')
 const {
   scopes,
+  actions,
+  resources,
   allowIfLoggedin,
   requestAccess,
 } = require('../auth/authorization')
-
 const {
   createRestaurant,
   readRestaurant,
@@ -21,7 +22,7 @@ router.post(
   '/',
   verifyAuthToken,
   allowIfLoggedin,
-  requestAccess(scopes.restaurant, 'create', 'restaurant_management'),
+  requestAccess(scopes.restaurant, actions.create, resources.restaurant),
   createRestaurant
 )
 
@@ -29,7 +30,7 @@ router.get(
   '/:restaurantId',
   verifyAuthToken,
   allowIfLoggedin,
-  requestAccess(scopes.restaurant, 'read', 'restaurant_management'),
+  requestAccess(scopes.restaurant, actions.read, resources.restaurant),
   readRestaurant
 )
 
@@ -37,7 +38,7 @@ router.get(
   '/',
   verifyAuthToken,
   allowIfLoggedin,
-  requestAccess(scopes.restaurant, 'read', 'restaurant_management'),
+  requestAccess(scopes.restaurant, actions.read, resources.restaurant),
   readMyRestaurants
 )
 
@@ -45,7 +46,7 @@ router.put(
   '/:restaurantId',
   verifyAuthToken,
   allowIfLoggedin,
-  requestAccess(scopes.restaurant, 'update', 'restaurant_management'),
+  requestAccess(scopes.restaurant, actions.update, resources.restaurant),
   updateRestaurant
 )
 
@@ -53,7 +54,7 @@ router.delete(
   '/:restaurantId',
   verifyAuthToken,
   allowIfLoggedin,
-  requestAccess(scopes.restaurant, 'delete', 'restaurant_management'),
+  requestAccess(scopes.restaurant, actions.delete, resources.restaurant),
   deleteRestaurant
 )
 

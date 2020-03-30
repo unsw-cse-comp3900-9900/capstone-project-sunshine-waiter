@@ -88,7 +88,10 @@ If you want to get error message, you can perform normal (single resource) reque
     body: {
     	name: 'menu name',
     	description: 'description string',
-    	pic: 'http://example.com/url-for-a-picutre.jpg'
+    	// following properties are only provided when menu has them.
+    	pic: 'http://example.com/url-for-a-picutre.jpg',
+    	...
+    	...
     }
     ```
     
@@ -190,8 +193,9 @@ GET 'sw.com/api/restaurants/567813/categories/'
     }
     
     body: {
-    	name: 'foo',
-    	description: '	description	description'
+    	title: 'foo',
+    	description: '	description	description',
+    	cost: 20,
     	categories: ['67tyguhjf897y80up', '67tyguhjf897yuig9p8ouyg'],
     	// A list of category _id; This is optional
     }
@@ -201,10 +205,10 @@ GET 'sw.com/api/restaurants/567813/categories/'
 
 -   `Update`
 
--   `Delete`  many
+-   `Delete`  
 
     ```
-    DELETE 'sw.com/api/restaurants/567813/menuItems/'
+    DELETE 'sw.com/api/restaurants/567813/menuItems/:id'
     header: {
     	x-auth-token: 'edftguyhjnklmd468f79gy8h0ujid5rctvygibhunjif6g978h0u'
     }
@@ -363,17 +367,23 @@ Skip 3rd party service.
 
 ## TODO
 
-2.  Follow HTTP protocol on [401 response for jwt](https://stackoverflow.com/questions/33265812/best-http-authorization-header-type-for-jwt  ) 
+*   [ ] Follow HTTP protocol on [401 response for jwt](https://stackoverflow.com/questions/33265812/best-http-authorization-header-type-for-jwt  ) 
 
-3.  `405` Method Not Allowed 
+*   [ ] `405` Method Not Allowed 
 
     The method specified in the Request-Line is not allowed for the resource identified by the Request-URI. The response MUST include an Allow header containing a list of valid methods for the requested resource.
-    
-3.  add `helmet` to protect HTTP request. 
 
-4.  Add response data filter by `AccessControl`.
+*   [ ] add `helmet` to protect HTTP request. 
 
-5.  Change `menu` in `restaurant` to be `required: true`. This requires transactional creation of `restaurant`. Need some research.
+*   [ ] Add response data filter by `AccessControl`.
+
+*   [ ] Change `menu` in `restaurant` to be `required: true`. This requires transactional creation of `restaurant`. Need some research.
+
+*   [ ] `readMenu`: after `menuItem` `category` implemented, should return the lists of  `menuItem` and `category`.
+
+*   [ ] think through the process of "waiter-serve-dish". finish the DB operation of waiter request. 
+
+*   [ ] add `updated_keys` to update routes. It looks like `updated_keys: ["name"]`
 
 
 
@@ -383,38 +393,83 @@ Skip 3rd party service.
 
 ## Bug record
 
-1.  When compare mongoose id
+### 1. mongoose id comparision
 
-    -   Use `results.userId.equals(AnotherMongoDocument._id) `. 
-    -   Don't use `results.userId == AnotherMongoDocument._id `. It will never be `true`. They are not string comparison, even one of them maybe string.  `==` doesn't help at this case.
+-   Use `results.userId.equals(AnotherMongoDocument._id) `. 
+-   Don't use `results.userId == AnotherMongoDocument._id `. It will never be `true`. They are not string comparison, even one of them maybe string.  `==` doesn't help at this case.
 
-    In my case, it's  `restaurant.createdBy.equals(user._id)`.
+In my case, it's  `restaurant.createdBy.equals(user._id)`.
 
-2.  Moogoose model `findById` (or `findOne({_id:theID})`) throw an `mongoose.CastError` when the `id `  is invalid ( format ). 
+### 2.  Moogoose model `findById` (or `findOne({_id:theID})`) throw an `mongoose.CastError` when the `id `  is invalid ( format ). 
 
-    >   I expect it just return a `undefined`. This is unexpected by me, but it's an expected performance by `mongoose`. 
+>   I expect it just return a `undefined`. This is unexpected by me, but it's an expected performance by `mongoose`. 
 
-    So I catch it globally by a `errorHandler `middleware in `index.js`.
+So I catch it globally by a `errorHandler `middleware in `index.js`.
 
-3.  `MoongoDB` `E11000` duplicated key error.
+### 3.  `MoongoDB` `E11000` duplicated key error.
 
-    -   My `restaurant` schema has a key `name` set as unique.
-    -   I updated  `restaurantB.name` to `foo`, which is occupied by a `restaurantA`. So even though `foo` went through the `joi` validation, it trigered this error.
+-   My `restaurant` schema has a key `name` set as unique.
+-   I updated  `restaurantB.name` to `foo`, which is occupied by a `restaurantA`. So even though `foo` went through the `joi` validation, it trigered this error.
 
-    Solution: globally catch this `error`  and `res` `400`
+Solution: globally catch this `error`  and `res` `400`
 
-    ```
-     if (err.name === 'MongoError') {
-        if (err.code == 11000) {
-    
-    	......
-    	res.status(400).json({
-            err: `${JSON.stringify(
-              err.keyValue
-            )} is occupied. Please chose another value.`,
-          })
-          
-    	......
-    ```
+```
+if (err.name === 'MongoError') {
+if (err.code == 11000) {
 
-    
+......
+res.status(400).json({
+    err: `${JSON.stringify(
+        err.keyValue
+    )} is occupied. Please chose another value.`,
+})
+
+......
+```
+
+### 4.  A pair of `$init : true` appears unexpectedly when I "for-through key-value pairs in js". 
+
+```
+for (let [key, value] of Object.entries(userGroups)) {
+	console.log(key, value)
+}
+```
+
+```
+// console.log({userGroups})
+{
+    userGroups: {
+        owner: [ 5e7f0d5a7b832f00287423e3 ],
+        manager: [ 5e7f0d5a7b832f00287423e3 ],
+        cook: [],
+        waiter: [],
+        cashier: []
+    }
+}
+```
+
+```
+$init true
+owner ["5e7f0d5a7b832f00287423e3"]
+manager ["5e7f0d5a7b832f00287423e3"]
+cook []
+waiter []
+cashier []
+```
+
+Beware of properties inherited from the object's prototype (which could happen if you're including any libraries on your page, such as older versions of Prototype). You can check for this by using the object's `hasOwnProperty()` method. This is generally a good idea when using `for...in` loops:
+
+```js
+var user = {};
+
+function setUsers(data) {
+    for (var k in data) {
+        if (data.hasOwnProperty(k)) {
+	        user[k] = data[k];
+        }
+    }
+}
+```
+
+>   credit to stackoverflow
+
