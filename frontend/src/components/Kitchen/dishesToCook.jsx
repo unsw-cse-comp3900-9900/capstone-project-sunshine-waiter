@@ -172,7 +172,7 @@ class RenderFinished extends React.Component {
     return (
       <div className="dishBox" key={dish._id}>
         <div className="dishName">{dish.menuItem.title}</div>
-        <div>{new Date(dish.readyTime).toLocaleTimeString}</div>
+        <div>{new Date(dish.readyTime).toLocaleTimeString()}</div>
         <div className="buttonBox">
           <Popconfirm
             title="Reset this dish as unfinished?"
