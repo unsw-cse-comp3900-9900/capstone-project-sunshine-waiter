@@ -38,6 +38,8 @@ const restaurantSchema = new mongoose.Schema({
   },
   readyTime: { type: Date },
   serveTime: { type: Date },
+  servedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  cookedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
 
   order: {
     type: mongoose.Schema.Types.ObjectId,
