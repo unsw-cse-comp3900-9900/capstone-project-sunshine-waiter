@@ -5,7 +5,7 @@ const { generateAuthToken } = require('../auth/authentication')
 const _ = require('lodash')
 
 // create user,
-const createUser = async (req, res, next) => {
+createUser = async (req, res, next) => {
   try {
     const { error } = validateSignUpDataFormat(req.body)
     if (error) {

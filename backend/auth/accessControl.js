@@ -12,13 +12,11 @@ const accessGranted = {
       'delete:own': ['*'],
     },
 
-    restaurant_management: {
+    restaurant: {
       // here, "own" means: restaurant.createdBy == user._id
       // that is, current user is the creator&owner of the restaurant
       'create:own': ['*'],
       'read:own': ['*'],
-      'update:own': ['*'],
-      'delete:own': ['*'],
     },
     order: {
       // here, "own" means: order.placedBy == user._id
@@ -30,11 +28,61 @@ const accessGranted = {
   // roles in restaurant
   // here, "own" means: restaurant.userGroups[role].includes(user._id)
   // that is, current user is in the role-group of restaurant
+  owner: {
+    restaurant: {
+      'read:own': ['*'],
+      'update:own': ['*'],
+      'delete:own': ['*'],
+    },
+    menu: {
+      'create:own': ['*'],
+      'read:own': ['*'],
+      'update:own': ['*'],
+      'delete:own': ['*'],
+    },
+    stuff: {
+      'create:own': ['*'],
+      'read:own': ['*'],
+      'update:own': ['*'],
+      'delete:own': ['*'],
+    },
+
+    cooking_queue: {
+      'read:own': ['*'],
+      'update:own': ['*'],
+    },
+    serving_queue: {
+      'read:own': ['*'],
+      'update:own': ['*'],
+    },
+    order: {
+      // active order; majorly for cashier page
+      'read:own': ['*'],
+      'update:own': ['*'],
+    },
+    dashboard: {
+      // including stuff management; order history; menu update
+      'read:own': ['*'],
+      'update:own': ['*'],
+    },
+  },
   manager: {
-    restaurant_management: {
+    restaurant: {
       // including restaurant history data, staff management, menu, etc
       'read:own': ['*'],
       'update:own': ['*'],
+    },
+    menu: {
+      'create:own': ['*'],
+      'read:own': ['*'],
+      'update:own': ['*'],
+      'delete:own': ['*'],
+    },
+    stuff: {
+      'create:own': ['*'],
+      'read:own': ['*'],
+      'update:own': ['*'],
+      'delete:own': ['*'],
     },
     cooking_queue: {
       'read:own': ['*'],
