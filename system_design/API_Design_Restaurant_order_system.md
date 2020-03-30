@@ -393,38 +393,83 @@ Skip 3rd party service.
 
 ## Bug record
 
-1.  When compare mongoose id
+### 1. mongoose id comparision
 
-    -   Use `results.userId.equals(AnotherMongoDocument._id) `. 
-    -   Don't use `results.userId == AnotherMongoDocument._id `. It will never be `true`. They are not string comparison, even one of them maybe string.  `==` doesn't help at this case.
+-   Use `results.userId.equals(AnotherMongoDocument._id) `. 
+-   Don't use `results.userId == AnotherMongoDocument._id `. It will never be `true`. They are not string comparison, even one of them maybe string.  `==` doesn't help at this case.
 
-    In my case, it's  `restaurant.createdBy.equals(user._id)`.
+In my case, it's  `restaurant.createdBy.equals(user._id)`.
 
-2.  Moogoose model `findById` (or `findOne({_id:theID})`) throw an `mongoose.CastError` when the `id `  is invalid ( format ). 
+### 2.  Moogoose model `findById` (or `findOne({_id:theID})`) throw an `mongoose.CastError` when the `id `  is invalid ( format ). 
 
-    >   I expect it just return a `undefined`. This is unexpected by me, but it's an expected performance by `mongoose`. 
+>   I expect it just return a `undefined`. This is unexpected by me, but it's an expected performance by `mongoose`. 
 
-    So I catch it globally by a `errorHandler `middleware in `index.js`.
+So I catch it globally by a `errorHandler `middleware in `index.js`.
 
-3.  `MoongoDB` `E11000` duplicated key error.
+### 3.  `MoongoDB` `E11000` duplicated key error.
 
-    -   My `restaurant` schema has a key `name` set as unique.
-    -   I updated  `restaurantB.name` to `foo`, which is occupied by a `restaurantA`. So even though `foo` went through the `joi` validation, it trigered this error.
+-   My `restaurant` schema has a key `name` set as unique.
+-   I updated  `restaurantB.name` to `foo`, which is occupied by a `restaurantA`. So even though `foo` went through the `joi` validation, it trigered this error.
 
-    Solution: globally catch this `error`  and `res` `400`
+Solution: globally catch this `error`  and `res` `400`
 
-    ```
-     if (err.name === 'MongoError') {
-        if (err.code == 11000) {
-    
-    	......
-    	res.status(400).json({
-            err: `${JSON.stringify(
-              err.keyValue
-            )} is occupied. Please chose another value.`,
-          })
-          
-    	......
-    ```
+```
+if (err.name === 'MongoError') {
+if (err.code == 11000) {
 
-    
+......
+res.status(400).json({
+    err: `${JSON.stringify(
+        err.keyValue
+    )} is occupied. Please chose another value.`,
+})
+
+......
+```
+
+### 4.  A pair of `$init : true` appears unexpectedly when I "for-through key-value pairs in js". 
+
+```
+for (let [key, value] of Object.entries(userGroups)) {
+	console.log(key, value)
+}
+```
+
+```
+// console.log({userGroups})
+{
+    userGroups: {
+        owner: [ 5e7f0d5a7b832f00287423e3 ],
+        manager: [ 5e7f0d5a7b832f00287423e3 ],
+        cook: [],
+        waiter: [],
+        cashier: []
+    }
+}
+```
+
+```
+$init true
+owner ["5e7f0d5a7b832f00287423e3"]
+manager ["5e7f0d5a7b832f00287423e3"]
+cook []
+waiter []
+cashier []
+```
+
+Beware of properties inherited from the object's prototype (which could happen if you're including any libraries on your page, such as older versions of Prototype). You can check for this by using the object's `hasOwnProperty()` method. This is generally a good idea when using `for...in` loops:
+
+```js
+var user = {};
+
+function setUsers(data) {
+    for (var k in data) {
+        if (data.hasOwnProperty(k)) {
+	        user[k] = data[k];
+        }
+    }
+}
+```
+
+>   credit to stackoverflow
+
