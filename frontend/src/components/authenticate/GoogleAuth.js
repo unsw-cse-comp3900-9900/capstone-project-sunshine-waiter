@@ -48,7 +48,6 @@ class GoogleAuth extends React.Component {
     } else {
       return (
         <div>
-          <Nivagation />
           <button className="ui basic button" onClick={this.onSignOut}>
             <i className="google icon" />
             Sign out
