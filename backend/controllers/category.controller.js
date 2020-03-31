@@ -92,7 +92,7 @@ updateCategory = async (req, res, next) => {
 deleteCategory = async (req, res, next) => {
   try {
     const menu = await findMenu(req, res)
-    
+
     const categoryId = req.params.categoryId
     const category = await Category.findById(categoryId)
     if (!category)
@@ -102,14 +102,15 @@ deleteCategory = async (req, res, next) => {
 
     // update menuItem reference
     const allMenuItemsInRestaurant = await MenuItem.find({ menu: menu.id })
-    allMenuItemsInRestaurant.forEach((menuItem) => {
-      if (menuItem.categorys.includes(categoryId)) {
-        menuItem.categorys = menuItem.categorys.filter((id) => !id.equals(categoryId))
+    allMenuItemsInRestaurant.forEach(async (menuItem) => {
+      const { categoryArray: cArray } = menuItem
+      if (Array.isArray(cArray) && cArray.includes(categoryId)) {
+        menuItem.categoryArray = cArray.filter((id) => !id.equals(categoryId))
         await menuItem.save()
       }
     })
-    console.log(allMenuItemsInRestaurant)
 
+    // delete
     await Category.findByIdAndDelete(categoryId)
 
     return res.json({
@@ -145,8 +146,8 @@ function validateCreateDataFormat(category) {
 
 function validateUpdateDataFormat(category) {
   const schema = {
-    name: Joi.string().min(5).max(50),
-    description: Joi.string().min(5).max(2047),
+    name: Joi.string().min(1).max(50),
+    description: Joi.string().min(1).max(2047),
   }
 
   return Joi.validate(category, schema)
