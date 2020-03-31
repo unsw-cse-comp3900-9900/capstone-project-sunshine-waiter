@@ -22,7 +22,6 @@ const connect = (component, URL, userData, configure) => {
   })
   socket.on('connect_error', () => {
     message.error('Connect error')
-    socket.disconnect()
   })
 }
 
