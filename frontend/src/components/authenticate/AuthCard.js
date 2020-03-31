@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 
 import './default.css'
-import GoogleAuth from './GoogleAuth'
+// import GoogleAuth from './GoogleAuth'
 import BaseProvider from '../apis/BaseProvider'
 import { setCookie, getCookie } from './Cookies'
 
@@ -24,14 +24,14 @@ const renderSignUp = (username, setUsername) => {
   )
 }
 
-const renderGoogleAuth = () => {
-  return (
-    <div>
-      <div className="ui horizontal divider">Or</div>
-      <GoogleAuth />
-    </div>
-  )
-}
+// const renderGoogleAuth = () => {
+//   return (
+//     <div>
+//       <div className="ui horizontal divider">Or</div>
+//       {/* <GoogleAuth /> */}
+//     </div>
+//   )
+// }
 
 const onAuth = ([param, onAuthenticated, showSignUp]) => event => {
   event.preventDefault()
@@ -60,7 +60,7 @@ const onAuth = ([param, onAuthenticated, showSignUp]) => event => {
   }
 }
 
-const AuthCard = ({ onAuthenticated }) => {
+const AuthCard = ({ onAuthenticated, onCloseAuthCard }) => {
   const [showSignUp, setShowSignUp] = useState(false)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -82,6 +82,9 @@ const AuthCard = ({ onAuthenticated }) => {
   return (
     <div className="auth-card">
       <div className="ui placeholder segment">
+        <span onClick={onCloseAuthCard}>
+          <i className="right clickable close icon"></i>
+        </span>
         <div className="column">
           <form
             className="ui form"
@@ -122,10 +125,10 @@ const AuthCard = ({ onAuthenticated }) => {
             >
               {showSignUp ? 'Sign up' : 'Login'}
             </button>
-            {showSignUp ? renderGoogleAuth() : null}
+            {/* {showSignUp ? renderGoogleAuth() : null} */}
           </form>
         </div>
-        {showSignUp || (
+        {!showSignUp ? (
           <span
             className="clickable"
             onClick={() => setShowSignUp(true)}
@@ -137,6 +140,19 @@ const AuthCard = ({ onAuthenticated }) => {
             }}
           >
             >>register?
+          </span>
+        ) : (
+          <span
+            className="clickable"
+            onClick={() => setShowSignUp(false)}
+            style={{
+              fontSize: '10px',
+              color: 'blue',
+              paddingTop: '10px',
+              left: '20px',
+            }}
+          >
+            >>sign in?
           </span>
         )}
       </div>
