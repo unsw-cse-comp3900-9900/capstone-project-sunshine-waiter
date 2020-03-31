@@ -4,7 +4,7 @@ const Menu = require('../models/menu.model')
 const _ = require('lodash')
 
 // present data to client side
-const present = obj => {
+const present = (obj) => {
   const { __v, createdBy, ...data } = obj._doc
   return data
 }
@@ -72,7 +72,7 @@ precond: req.user exists;
 readMyRestaurants = async (req, res, next) => {
   try {
     const restaurants = await Restaurant.find({ createdBy: req.user._id })
-    const data = restaurants.map(obj => present(obj))
+    const data = restaurants.map((obj) => present(obj))
     res.json({ data })
   } catch (error) {
     next(error)
@@ -132,13 +132,8 @@ deleteRestaurant = async (req, res, next) => {
 
 function validateCreateDataFormat(restaurant) {
   const schema = {
-    name: Joi.string()
-      .min(5)
-      .max(50)
-      .required(),
-    description: Joi.string()
-      .min(5)
-      .max(2047),
+    name: Joi.string().min(1).max(50).required(),
+    description: Joi.string().min(1).max(2047),
   }
 
   return Joi.validate(restaurant, schema)
@@ -146,12 +141,8 @@ function validateCreateDataFormat(restaurant) {
 
 function validateUpdateDataFormat(restaurant) {
   const schema = {
-    name: Joi.string()
-      .min(5)
-      .max(50),
-    description: Joi.string()
-      .min(5)
-      .max(2047),
+    name: Joi.string().min(1).max(50),
+    description: Joi.string().min(1).max(2047),
   }
 
   return Joi.validate(restaurant, schema)

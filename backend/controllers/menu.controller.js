@@ -67,12 +67,8 @@ const findMenu = async (req, res) => {
 
 function validateUpdateDataFormat(menu) {
   const schema = {
-    name: Joi.string()
-      .min(5)
-      .max(50),
-    description: Joi.string()
-      .min(5)
-      .max(2047),
+    name: Joi.string().min(1).max(50),
+    description: Joi.string().min(1).max(2047),
   }
 
   return Joi.validate(menu, schema)

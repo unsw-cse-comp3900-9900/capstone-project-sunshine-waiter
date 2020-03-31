@@ -1,11 +1,11 @@
 const mongoose = require('mongoose')
 
 const restaurantSchema = new mongoose.Schema({
-  cost: {
+  price: {
     type: Number,
     required: true,
   },
-  title: {
+  name: {
     type: String,
     required: true,
     maxlength: 50,
@@ -32,28 +32,17 @@ const restaurantSchema = new mongoose.Schema({
     minlength: 5,
     maxlength: 200,
   },
-
-  supportedConfiguration: [
-    {
-      name: { type: String, required: true },
-      options: { type: String, required: true },
-      maximumSelect: {
-        type: Number,
-        default: 0, // 0 means no restriction
-        required: false, // non-exist means no restriction
-        validate: {
-          validator: Number.isInteger,
-          message: '{VALUE} is not an integer value',
-        },
-      },
-    },
-  ],
-
   menu: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Menu',
     require: true,
   },
+  categoryArray: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Category',
+    },
+  ],
 })
 
 const MenuItem = mongoose.model('MenuItem', restaurantSchema)

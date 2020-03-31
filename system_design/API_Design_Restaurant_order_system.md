@@ -393,20 +393,22 @@ Skip 3rd party service.
 
 ## Bug record
 
-### 1. mongoose id comparision
+#### mongoose id comparision
 
 -   Use `results.userId.equals(AnotherMongoDocument._id) `. 
 -   Don't use `results.userId == AnotherMongoDocument._id `. It will never be `true`. They are not string comparison, even one of them maybe string.  `==` doesn't help at this case.
 
 In my case, it's  `restaurant.createdBy.equals(user._id)`.
 
-### 2.  Moogoose model `findById` (or `findOne({_id:theID})`) throw an `mongoose.CastError` when the `id `  is invalid ( format ). 
+####  `mongoose.CastError`
+
+Moogoose model `findById` (or `findOne({_id:theID})`) throw an when the `id `  is invalid ( format ).
 
 >   I expect it just return a `undefined`. This is unexpected by me, but it's an expected performance by `mongoose`. 
 
 So I catch it globally by a `errorHandler `middleware in `index.js`.
 
-### 3.  `MoongoDB` `E11000` duplicated key error.
+#### `MoongoDB` `E11000` duplicated key error.
 
 -   My `restaurant` schema has a key `name` set as unique.
 -   I updated  `restaurantB.name` to `foo`, which is occupied by a `restaurantA`. So even though `foo` went through the `joi` validation, it trigered this error.
@@ -427,7 +429,9 @@ res.status(400).json({
 ......
 ```
 
-### 4.  A pair of `$init : true` appears unexpectedly when I "for-through key-value pairs in js". 
+####  `$init : true` when enumerate Mongoose Object
+
+>   A pair of appears unexpectedly when I "for-through key-value pairs in js".
 
 ```
 for (let [key, value] of Object.entries(userGroups)) {
@@ -472,4 +476,16 @@ function setUsers(data) {
 ```
 
 >   credit to stackoverflow
+
+### Cannot read property `includes` of `undefined` 
+
+>   This happened when calling `menuItem.categoryArray.includes()`
+
+It's because `categoryArray` is not required in `menuItem`, and it wasn't initiated. I assumed it would be `[]` and that's a wrong assumption.
+
+This reminds me of formal method. What states every variable can be in their life circle? 
+
+I feel that, formalizing pre-condtion and post-condition in a expression of these state might help me to enumerate all the corner cases. 
+
+
 

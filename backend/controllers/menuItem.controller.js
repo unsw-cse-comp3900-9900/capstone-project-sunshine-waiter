@@ -2,16 +2,15 @@ const Joi = require('joi')
 const _ = require('lodash')
 
 const MenuItem = require('../models/menuItem.model')
-const Menu = require('../models/menu.model')
 const { findMenu } = require('./menu.controller')
 
 // present data to client side
-const present = obj => {
+const present = (obj) => {
   const { __v, ...data } = obj._doc
   return data
 }
 
-// create menuItem { title, cost, description, note  }
+// create menuItem { name, price, description, note  }
 createMenuItem = async (req, res, next) => {
   try {
     // validate input ( params, body )
@@ -21,8 +20,9 @@ createMenuItem = async (req, res, next) => {
 
     // create menuItem
     menuItem = new MenuItem({
-      ..._.pick(req.body, ['title', 'cost', 'description', 'note']),
+      ..._.pick(req.body, ['name', 'price', 'description', 'note']),
       menu: menu._id,
+      categoryArray: [],
     })
     await menuItem.save()
 
@@ -52,13 +52,13 @@ readMany = async (req, res, next) => {
     const menu = await findMenu(req, res)
     const menuItems = await MenuItem.find({ menu: menu._id })
 
-    res.json({ data: menuItems.map(v => present(v)) })
+    res.json({ data: menuItems.map((v) => present(v)) })
   } catch (error) {
     next(error)
   }
 }
 
-// update scope: { title, description }
+// update scope: { name, description }
 updateMenuItem = async (req, res, next) => {
   try {
     // find
@@ -68,13 +68,17 @@ updateMenuItem = async (req, res, next) => {
       return res.status(404).json({ error: 'MenuItem does not exist' })
 
     // validate new data
-    const { title, description } = req.body
-    const { error } = validateUpdateDataFormat({ title, description })
+    const { error } = validateUpdateDataFormat(req.body)
     if (error) return res.status(400).json({ error: error.details[0].message })
+    const { name, description, categoryArray, note, price } = req.body
 
     // update
-    menuItem.title = title || menuItem.title
+    menuItem.name = name || menuItem.name
+    menuItem.price = price || menuItem.price
     menuItem.description = description || menuItem.description
+    menuItem.categoryArray = categoryArray || menuItem.categoryArray
+    menuItem.note = note || menuItem.note
+
     await menuItem.save()
 
     // res
@@ -123,26 +127,33 @@ deleteMany = async (req, res, next) => {
 
 function validateCreateDataFormat(menuItem) {
   const schema = {
-    title: Joi.string()
-      .max(50)
-      .required(),
-    cost: Joi.number().required(),
+    name: Joi.string().max(50).required(),
+    price: Joi.number().required(),
     description: Joi.string().max(2047),
     note: Joi.string().max(255),
+    categoryArray: Joi.array(),
   }
 
   return Joi.validate(menuItem, schema)
 }
 
+/* example
+    "categoryArray": [],
+    "name": "beff rice nuddle - big",
+    "price": 30,
+    "description": "200 years of improvement. ",
+    "note": "Available after 10:30am at participating restaurants"
+*/
 function validateUpdateDataFormat(menuItem) {
   const schema = {
-    title: Joi.string()
-      .min(5)
-      .max(50),
-    description: Joi.string()
-      .min(5)
-      .max(2047),
+    name: Joi.string().min(1).max(50),
+    description: Joi.string().min(1).max(2047),
+    note: Joi.string().min(1).max(2047),
+    price: Joi.number().min(0),
+    categoryArray: Joi.array(),
   }
+
+  // TODO: menuItem.categoryArray.foreach: validate(categoryId)
 
   return Joi.validate(menuItem, schema)
 }

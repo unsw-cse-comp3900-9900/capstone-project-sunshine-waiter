@@ -3,7 +3,7 @@ const fakeData = {
     {
       _id: 0,
       menuItem: {
-        title: 'Chicken',
+        name: 'Chicken',
       },
       amount: 1,
       placedBy: 9,
@@ -16,7 +16,7 @@ const fakeData = {
     {
       _id: 1,
       menuItem: {
-        title: 'Egg',
+        name: 'Egg',
       },
       amount: 2,
       placedBy: 5,
@@ -29,7 +29,7 @@ const fakeData = {
     {
       _id: 2,
       menuItem: {
-        title: 'Coffee',
+        name: 'Coffee',
       },
       amount: 1,
       placedBy: 4,
@@ -42,7 +42,7 @@ const fakeData = {
     {
       _id: 3,
       menuItem: {
-        title: 'Egg',
+        name: 'Egg',
       },
       amount: 4,
       placedBy: 1,
@@ -55,7 +55,7 @@ const fakeData = {
     {
       _id: 4,
       menuItem: {
-        title: 'Egg',
+        name: 'Egg',
       },
       amount: 1,
       placedBy: 8,
@@ -68,7 +68,7 @@ const fakeData = {
     {
       _id: 5,
       menuItem: {
-        title: 'Coffee',
+        name: 'Coffee',
       },
       amount: 4,
       placedBy: 10,
@@ -81,7 +81,7 @@ const fakeData = {
     {
       _id: 6,
       menuItem: {
-        title: 'Burger',
+        name: 'Burger',
       },
       amount: 3,
       placedBy: 7,
@@ -94,7 +94,7 @@ const fakeData = {
     {
       _id: 7,
       menuItem: {
-        title: 'Egg',
+        name: 'Egg',
       },
       amount: 2,
       placedBy: 1,
@@ -107,7 +107,7 @@ const fakeData = {
     {
       _id: 8,
       menuItem: {
-        title: 'Chicken',
+        name: 'Chicken',
       },
       amount: 4,
       placedBy: 8,
@@ -120,7 +120,7 @@ const fakeData = {
     {
       _id: 9,
       menuItem: {
-        title: 'Coffee',
+        name: 'Coffee',
       },
       amount: 3,
       placedBy: 6,
@@ -133,7 +133,7 @@ const fakeData = {
     {
       _id: 10,
       menuItem: {
-        title: 'Chicken',
+        name: 'Chicken',
       },
       amount: 3,
       placedBy: 9,
@@ -146,7 +146,7 @@ const fakeData = {
     {
       _id: 11,
       menuItem: {
-        title: 'Lamb',
+        name: 'Lamb',
       },
       amount: 1,
       placedBy: 5,
@@ -159,7 +159,7 @@ const fakeData = {
     {
       _id: 12,
       menuItem: {
-        title: 'Apple',
+        name: 'Apple',
       },
       amount: 3,
       placedBy: 8,
@@ -172,7 +172,7 @@ const fakeData = {
     {
       _id: 13,
       menuItem: {
-        title: 'Chicken',
+        name: 'Chicken',
       },
       amount: 2,
       placedBy: 4,
@@ -185,7 +185,7 @@ const fakeData = {
     {
       _id: 14,
       menuItem: {
-        title: 'Egg',
+        name: 'Egg',
       },
       amount: 2,
       placedBy: 10,
@@ -198,7 +198,7 @@ const fakeData = {
     {
       _id: 15,
       menuItem: {
-        title: 'Apple',
+        name: 'Apple',
       },
       amount: 4,
       placedBy: 5,
@@ -211,7 +211,7 @@ const fakeData = {
     {
       _id: 16,
       menuItem: {
-        title: 'Beef',
+        name: 'Beef',
       },
       amount: 3,
       placedBy: 5,
@@ -224,7 +224,7 @@ const fakeData = {
     {
       _id: 17,
       menuItem: {
-        title: 'Beef',
+        name: 'Beef',
       },
       amount: 4,
       placedBy: 7,
@@ -237,7 +237,7 @@ const fakeData = {
     {
       _id: 18,
       menuItem: {
-        title: 'Coke',
+        name: 'Coke',
       },
       amount: 3,
       placedBy: 1,
@@ -250,7 +250,7 @@ const fakeData = {
     {
       _id: 19,
       menuItem: {
-        title: 'Lamb',
+        name: 'Lamb',
       },
       amount: 3,
       placedBy: 8,

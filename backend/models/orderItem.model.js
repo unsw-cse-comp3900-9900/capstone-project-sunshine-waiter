@@ -1,17 +1,26 @@
 const mongoose = require('mongoose')
 
+/*
+Design base
+1. The menuItem can be updated/deleted later on. We have to store some basic information here.
+2. Considering discount, the real price can be different from order.menuItem.price.
+*/
+
 const restaurantSchema = new mongoose.Schema({
   menuItem: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'MenuItem',
     required: true,
   },
-  configuration: [
-    {
-      name: { type: String, required: true },
-      options: { type: String, required: true },
-    },
-  ],
+  price: {
+    type: Number,
+    required: true,
+  },
+  name: {
+    type: String,
+    required: true,
+    maxlength: 50,
+  },
   amount: {
     type: Number,
     default: 1,
@@ -21,7 +30,6 @@ const restaurantSchema = new mongoose.Schema({
       message: '{VALUE} is not an integer value',
     },
   },
-
   notes: {
     type: String, // configuration, e.g lactose free
     required: true,
