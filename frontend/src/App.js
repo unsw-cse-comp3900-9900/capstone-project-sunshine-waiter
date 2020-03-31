@@ -18,13 +18,20 @@ class App extends React.Component {
     //true or false of the value does not matter, just to record it updated
     //and then can trigger the ComponentDidUpdate
     restaurantsListUpdated: false,
-    restaurants: [],
+    restaurants: [
+      {
+        _id: 1,
+        name: 'Hello World',
+        description: 'We serve you well!',
+      },
+    ],
   }
 
   updateRestaurants = (restaurants = []) => {
-    this.setState({
-      restaurants: restaurants,
-    })
+    console.log(restaurants)
+    // this.setState({
+    //   restaurants: restaurants,
+    // })
   }
 
   recordRestaurantsListUpdatedStatus = () => {
