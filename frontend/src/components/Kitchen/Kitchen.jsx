@@ -73,7 +73,7 @@ class Kitchen extends React.Component {
             case 'READY':
               notification['success']({
                 message: 'Dish: ' + target.menuItem.title + ' finished!',
-                description: 'Cooked by table: ' + target.cookedBy.name,
+                description: 'Cooked by: ' + target.cookedBy.name,
                 duration: 3,
               })
               break
