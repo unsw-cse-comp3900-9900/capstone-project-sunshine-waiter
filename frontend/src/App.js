@@ -1,12 +1,14 @@
 import React from 'react'
 import { Route, Redirect, Switch } from 'react-router-dom'
 
-import Homepage from './components/homepage/Homepage'
 import Customer from './components/customer/Customer'
+
+import Homepage from './components/homepage/Homepage'
+
 import Resturant from './components/Resturant'
 import Kitchen from './components/Kitchen/Kitchen'
 import Waiter from './components/Waiter/Waiter'
-import Manager from './components/manager/Manager'
+import Manager from './components/Manager'
 import NotFound from './components/NotFound'
 import { getCookie } from './components/authenticate/Cookies'
 import { getRestaurants } from './components/apis/actions/restaurants'
@@ -18,20 +20,13 @@ class App extends React.Component {
     //true or false of the value does not matter, just to record it updated
     //and then can trigger the ComponentDidUpdate
     restaurantsListUpdated: false,
-    restaurants: [
-      {
-        _id: 1,
-        name: 'Hello World',
-        description: 'We serve you well!',
-      },
-    ],
+    restaurants: [],
   }
 
   updateRestaurants = (restaurants = []) => {
-    console.log(restaurants)
-    // this.setState({
-    //   restaurants: restaurants,
-    // })
+    this.setState({
+      restaurants: restaurants,
+    })
   }
 
   recordRestaurantsListUpdatedStatus = () => {
