@@ -77,7 +77,7 @@ class DishesToCook extends React.Component {
 
   render() {
     return (
-      <div className="half">
+      <div id="kitchen">
         <div className="title">
           <h2>Dishes to cook</h2>
         </div>
