@@ -1,14 +1,12 @@
 import React from 'react'
 import { Route, Redirect, Switch } from 'react-router-dom'
 
-import Customer from './components/customer/Customer'
-
 import Homepage from './components/homepage/Homepage'
-
+import Customer from './components/customer/Customer'
 import Resturant from './components/Resturant'
 import Kitchen from './components/Kitchen/Kitchen'
 import Waiter from './components/Waiter/Waiter'
-import Manager from './components/Manager'
+import Manager from './components/manager/Manager'
 import NotFound from './components/NotFound'
 import { getCookie } from './components/authenticate/Cookies'
 import { getRestaurants } from './components/apis/actions/restaurants'
