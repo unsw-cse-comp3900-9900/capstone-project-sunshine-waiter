@@ -221,7 +221,7 @@ class Homepage extends React.Component {
         </div>
         <div className="ui vertical stripe segment">
           <div className="ui left aligned stackable grid container">
-            <h1 className="header">Sunshine to The Community</h1>
+            <h1>Sunshine to The Community</h1>
             <p>
               When people go out for a meal, sometimes they need to wait for a
               long time to place order in peak time. Too long waiting time may
