@@ -2,8 +2,8 @@ import React from 'react'
 import { Layout, Menu } from 'antd'
 import 'antd/dist/antd.css'
 
-import { ContentType } from './Constant'
 import './default.css'
+import { ContentType } from './Constant'
 
 const { Header, Content, Sider } = Layout
 const { DASHBOARD, STAFFS, MENUS, ORDERS } = ContentType
@@ -31,12 +31,12 @@ class Manager extends React.Component {
   render() {
     return (
       <Layout>
-        <Header>
+        <Header className="ui pink small message header">
           <h1>Hi, Manager! How do you feel today?</h1>
         </Header>
         <Layout>
           <Sider>
-            <Menu>
+            <Menu style={{ height: '100vh' }}>
               <Menu.Item
                 onClick={() => this.setState({ displayIndex: DASHBOARD })}
               >
@@ -55,8 +55,8 @@ class Manager extends React.Component {
               </Menu.Item>
             </Menu>
           </Sider>
-          <Content>
-            <div>{this.renderContent()}</div>
+          <Content className="site-layout content" style={{ height: '100vh' }}>
+            <div className="ui container">{this.renderContent()}</div>
           </Content>
         </Layout>
       </Layout>
