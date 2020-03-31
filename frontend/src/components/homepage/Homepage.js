@@ -76,6 +76,10 @@ class Homepage extends React.Component {
     this.setState({ isAuthenticated: state, showLoginCard: !state })
   }
 
+  onCloseAuthCard = () => {
+    this.setState({ showLoginCard: false })
+  }
+
   onMouseEnter = header => {
     this.setState({
       headerMouseOver: header,
@@ -265,7 +269,10 @@ class Homepage extends React.Component {
           </div>
         </div>
         {this.state.showLoginCard && (
-          <AuthCard onAuthenticated={this.onAuthenticated} />
+          <AuthCard
+            onAuthenticated={this.onAuthenticated}
+            onCloseAuthCard={this.onCloseAuthCard}
+          />
         )}
         <div>
           {this.state.showProfile && (

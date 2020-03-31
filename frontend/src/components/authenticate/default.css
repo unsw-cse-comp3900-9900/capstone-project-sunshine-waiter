@@ -15,3 +15,7 @@ small {
 .clickable {
   cursor: pointer;
 }
+
+.right {
+  float: right;
+}
