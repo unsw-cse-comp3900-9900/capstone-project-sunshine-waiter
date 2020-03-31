@@ -63,10 +63,7 @@ class Kitchen extends React.Component {
               notification['success']({
                 message: target.menuItem.title + ' ordered!',
                 description:
-                  'Dish id: ' +
-                  target._id +
-                  ' From table: ' +
-                  target.order.placedBy,
+                  'Dish id: ' + target._id + ' From table: ' + target.placedBy,
                 duration: 3,
               })
               break

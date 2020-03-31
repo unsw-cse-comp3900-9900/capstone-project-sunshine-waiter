@@ -128,7 +128,7 @@ class Waiter extends React.Component {
           if (target.finishTime !== null) {
             notification['success']({
               message: 'Request from table ' + target.tableId + ' fulfilled',
-              description: 'Handled by waiter: ' + target.handleBy.userName,
+              description: 'Handled by waiter: ' + target.handleBy.name,
               duration: 3,
             })
           }
