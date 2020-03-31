@@ -162,7 +162,7 @@ class Waiter extends React.Component {
         <header>
           <WelcomeMessage userName={this.user.name} pageName={'waiter'} />
         </header>
-        <div id="box-container">
+        <div className="box-container">
           <Dishes
             dishQue={this.state.dishQue}
             socket={this.state.socket}

@@ -72,7 +72,7 @@ class Kitchen extends React.Component {
               break
             case 'READY':
               notification['success']({
-                message: 'New dish: ' + target.menuItem.title + ' finished!',
+                message: 'Dish: ' + target.menuItem.title + ' finished!',
                 description: 'Cooked by table: ' + target.cookedBy.name,
                 duration: 3,
               })
@@ -108,7 +108,7 @@ class Kitchen extends React.Component {
         <header>
           <WelcomeMessage userName={this.user.name} pageName={'kitchen'} />
         </header>
-        <div id="box-container">
+        <div className="box-container">
           <DishesToCook
             dishQue={this.state.dishQue}
             socket={this.state.socket}

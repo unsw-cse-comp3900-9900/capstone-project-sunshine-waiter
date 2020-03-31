@@ -113,27 +113,32 @@
   font-size: xx-large;
   font-weight: bolder;
 }
+.box-container {
+  display: flex;
+  margin: 0 10px;
+  justify-content: space-evenly;
+}
 @media screen and (min-width: 701px) {
-  #box-container {
-    display: flex;
-    margin: 5%;
-    margin-top: 0;
+  .box-container {
     height: 530px;
     justify-content: space-evenly;
   }
-  #box-container .half {
+  .box-container .half {
     width: 50%;
+    margin: 0 10px;
   }
-  #box-container .half .box {
+  .box-container .box {
     padding-top: 70px;
   }
 }
 @media screen and (max-width: 700px) {
-  #box-container {
-    display: flex;
+  .box-container {
     flex-direction: column;
   }
   .box {
-    padding-top: 30px;
+    padding-top: 20px;
   }
+}
+#kitchen {
+  width: 100%;
 }
