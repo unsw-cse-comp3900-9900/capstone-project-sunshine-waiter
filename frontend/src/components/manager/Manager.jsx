@@ -1,8 +1,9 @@
 import React from 'react'
 import { Layout, Menu } from 'antd'
+import 'antd/dist/antd.css'
 
-import './Default.css'
-import { ContentType } from '../services/Constant'
+import './default.css'
+import { ContentType } from './Constant'
 
 const { Header, Content, Sider } = Layout
 const { DASHBOARD, STAFFS, MENUS, ORDERS } = ContentType
@@ -51,12 +52,6 @@ class Manager extends React.Component {
               <Menu.Item onClick={() => this.setState({ displayIndex: MENUS })}>
                 <i className="list icon"></i>
                 Menu
-              </Menu.Item>
-              <Menu.Item
-                onClick={() => this.setState({ displayIndex: ORDERS })}
-              >
-                <i className="hand pointer icon"></i>
-                Order
               </Menu.Item>
             </Menu>
           </Sider>

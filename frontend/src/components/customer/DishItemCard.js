@@ -48,7 +48,7 @@ class DishItemCard extends Component {
           <Card.Header title={title} />
           <Card.Body>
             <img
-              src={require('./Roseberry.jpg')}
+              src={require('./statics/Roseberry.jpg')}
               alt="wrong"
               width="200px"
               height="100px"
