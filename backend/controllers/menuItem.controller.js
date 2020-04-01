@@ -20,10 +20,16 @@ createMenuItem = async (req, res, next) => {
 
     // create menuItem
     menuItem = new MenuItem({
-      ..._.pick(req.body, ['name', 'price', 'description', 'note']),
+      ..._.pick(req.body, [
+        'name',
+        'price',
+        'description',
+        'note',
+        'categoryArray',
+      ]),
       menu: menu._id,
-      categoryArray: [],
     })
+    menuItem.categoryArray = menuItem.categoryArray || []
     await menuItem.save()
 
     res.status(201).json({ data: present(menuItem) })
