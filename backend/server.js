@@ -2,6 +2,10 @@ const app = require('express')()
 const http = require('http').Server(app)
 const io = require('socket.io')(http)
 const PORT = 5000
+const Restaurant = require('./models/restaurant.model')
+const User = require('./models/user.model')
+
+const author = require('./auth/authorization')
 
 const arrayToObj = (array) => {
   let result = {}
@@ -14,13 +18,79 @@ const nsps = {}
 // dishes = arrayToObj(dishes)
 // requests = arrayToObj(requests)
 
+const isGranted = (userId, restaurant, action, resource) => {
+  const userGroups = restaurant.userGroups
+
+  for (let [roleType, userIdArray] of Object.entries(userGroups)) {
+    if (
+      userGroups.hasOwnProperty(roleType) && // skip inherited properties. e.g "$init"
+      Array.isArray(userIdArray) &&
+      userIdArray.includes(userId) && // current user has the role
+      ac.can(roleType)[action + 'Own'](resource).granted // the role has the permission
+    ) {
+      return true
+    }
+  }
+  return false
+}
+
 const { dishes, requests } = require('./fakeData')
 
 const onConnection = (anonymousClient) => {
   console.log('Unknow User ' + anonymousClient.id + ' connected!')
 
-  anonymousClient.on('authenticate', (data) => {
-    const { restaurantId, _id, type, password } = data
+  anonymousClient.on('authenticate', async (data) => {
+    const { jwt, restaurantId, _id, type, password } = data
+
+    // validate user input
+    const { userId, error } = getIdFromJWT(jwt)
+    if (error) {
+      //reject
+    }
+    const { restaurant } = await Restaurant.findById(restaurantId)
+    if (!restaurant) {
+      //reject
+    }
+    const canConnectToRestaurant = true // to be discussed
+
+    const canAccessCook = isGranted(
+      userId,
+      restaurant,
+      author.actions.update,
+      author.resource.cooking_queue
+    )
+    const canAccessWaiter = isGranted(
+      userId,
+      restaurant,
+      author.actions.update,
+      author.resource.serving_queue
+    )
+    const canAccessorder = isGranted(
+      userId,
+      restaurant,
+      author.actions.update,
+      author.resource.order
+    )
+
+    // assume steve is manager
+    if (canConnectToRestaurant) {
+      console.log(type + ' ' + _id + ' authenticated!')
+      // start connection
+      {
+        if (canAccessCook) {
+          // true
+          // add listener on cook update
+        }
+        if (canAccessWaiter) {
+          // true
+          // add listener on waiter update
+        }
+        if (canAccessorder) {
+          // true
+          // add listener on order update
+        }
+      }
+    }
 
     //skip authenticate
     var auth = true
