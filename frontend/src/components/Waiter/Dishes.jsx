@@ -180,7 +180,7 @@ class RenderDishes extends React.Component {
           )}
 
           {dish.status === SERVING &&
-            this.props.user.userId === dish.servedBy.userId && (
+            this.props.user._id === dish.servedBy._id && (
               <Tooltip title="finish">
                 <button
                   className="finish"
