@@ -4,6 +4,8 @@ import 'antd/dist/antd.css'
 
 import './default.css'
 import { ContentType } from './Constant'
+import MenuItemModal from './MenuItemModal'
+import CategoryModal from './CategoryModal'
 
 const { Header, Content, Sider } = Layout
 const { DASHBOARD, STAFFS, MENUS } = ContentType
@@ -21,7 +23,7 @@ class Manager extends React.Component {
           name: 'Tuna Sandwich',
           description: 'Serving with australia tuna and fresh vegetables',
           ingredients: ['garlic'],
-          cost: 30,
+          price: 30,
           category: { _id: '1', name: 'Sandwich' },
           image: '../services/statics/SeafoodPasta.jpg',
           alt: 'Seafood Pasta',
@@ -35,14 +37,14 @@ class Manager extends React.Component {
           name: 'Roseberry Sandwich',
           description: 'With roseberry and jam',
           note: 'Available after 10:30am at participating restaurants',
-          cost: 20,
+          price: 20,
         },
         {
           _id: '2',
           name: 'Sandwich',
           description: 'With roseberry and jam',
           note: 'Available after 10:30am at participating restaurants',
-          cost: 20,
+          price: 20,
         },
       ],
       _id: '5e82e46eddcb38002f6926ff',
@@ -63,7 +65,7 @@ class Manager extends React.Component {
             return (
               <li key={item._id}>
                 {item.name}
-                <span>{item.cost}</span>
+                <span>{item.price}</span>
               </li>
             )
           }
@@ -79,15 +81,27 @@ class Manager extends React.Component {
   }
 
   handleMenuItemEdit = clickId => {
-    this.onOpenChange(clickId)
+    // this.onOpenChange(clickId)
     this.setState({
       showMenuItemModal: true,
+    })
+  }
+
+  onCloseMenuItemModal = () => {
+    this.setState({
+      showMenuItemModal: false,
     })
   }
 
   handleCategoryEdit = () => {
     this.setState({
       showCategoryModal: true,
+    })
+  }
+
+  onCloseCategoryModal = () => {
+    this.setState({
+      showCategoryModal: false,
     })
   }
 
@@ -107,7 +121,7 @@ class Manager extends React.Component {
             {this.state.openCategoryId === item._id ? (
               <i className="clickable chevron up icon" />
             ) : (
-              <i class="clickable chevron down icon" />
+              <i className="clickable chevron down icon" />
             )}
           </span>
         </Tooltip>
@@ -145,7 +159,12 @@ class Manager extends React.Component {
       <div className="menu-builder">
         <h1>Edit your menu</h1>
         <div className="menu-segment">{this.renderCategories()}</div>
-        <Button type="primary" shape="round" className="button">
+        <Button
+          type="primary"
+          shape="round"
+          className="button"
+          onClick={this.handleCategoryEdit}
+        >
           New Category
         </Button>
       </div>
@@ -165,8 +184,19 @@ class Manager extends React.Component {
   }
 
   render() {
+    const { restaurantId } = this.props
     return (
       <Layout>
+        <MenuItemModal
+          visible={this.state.showMenuItemModal}
+          onCancel={this.onCloseMenuItemModal}
+          restaurantId={restaurantId}
+        />
+        <CategoryModal
+          visible={this.state.showCategoryModal}
+          onCancel={this.onCloseCategoryModal}
+          restaurantId={restaurantId}
+        />
         <Header className="header">
           <h1>Hi, Manager! How do you feel today?</h1>
         </Header>
