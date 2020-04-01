@@ -1,7 +1,7 @@
 const Joi = require('joi')
 const _ = require('lodash')
 
-const Order = require('../models/order.model')
+const OrderItem = require('../models/orderItem.model')
 const { findMenu } = require('./menu.controller')
 
 // present data to client side
@@ -11,7 +11,7 @@ const present = (obj) => {
 }
 
 // create order { name, price, description, note  }
-createOrder = async (req, res, next) => {
+createOrderItem = async (req, res, next) => {
   try {
     // validate input ( params, body )
     const { error } = validateCreateDataFormat(req.body)
@@ -19,7 +19,7 @@ createOrder = async (req, res, next) => {
     const menu = await findMenu(req, res)
 
     // create order
-    order = new Order({
+    order = new OrderItem({
       ..._.pick(req.body, ['name', 'price', 'description', 'note']),
       menu: menu._id,
     })
@@ -31,12 +31,13 @@ createOrder = async (req, res, next) => {
   }
 }
 
-readOrder = async (req, res, next) => {
+readOrderItem = async (req, res, next) => {
   try {
     // find
     const orderId = req.params.orderId
-    const order = await Order.findById(orderId)
-    if (!order) return res.status(404).json({ error: 'Order does not exist' })
+    const order = await OrderItem.findById(orderId)
+    if (!order)
+      return res.status(404).json({ error: 'OrderItem does not exist' })
 
     // res
     res.status(201).json({ data: present(order) })
@@ -48,7 +49,7 @@ readOrder = async (req, res, next) => {
 readMany = async (req, res, next) => {
   try {
     const menu = await findMenu(req, res)
-    const orders = await Order.find({ menu: menu._id })
+    const orders = await OrderItem.find({ menu: menu._id })
 
     res.json({ data: orders.map((v) => present(v)) })
   } catch (error) {
@@ -57,12 +58,13 @@ readMany = async (req, res, next) => {
 }
 
 // update scope: { name, description }
-updateOrder = async (req, res, next) => {
+updateOrderItem = async (req, res, next) => {
   try {
     // find
     const orderId = req.params.orderId
-    const order = await Order.findById(orderId)
-    if (!order) return res.status(404).json({ error: 'Order does not exist' })
+    const order = await OrderItem.findById(orderId)
+    if (!order)
+      return res.status(404).json({ error: 'OrderItem does not exist' })
 
     // validate new data
     const { name, description } = req.body
@@ -78,28 +80,28 @@ updateOrder = async (req, res, next) => {
     return res.json({
       success: true,
       data: present(order),
-      message: 'Order updated.',
+      message: 'OrderItem updated.',
     })
   } catch (error) {
     next(error)
   }
 }
 
-deleteOrder = async (req, res, next) => {
+deleteOrderItem = async (req, res, next) => {
   try {
     const orderId = req.params.orderId
-    const order = await Order.findById(orderId)
+    const order = await OrderItem.findById(orderId)
     if (!order)
       return res
         .status(204)
-        .send('Order has been deleted or does not exist at all.')
+        .send('OrderItem has been deleted or does not exist at all.')
 
-    await Order.findByIdAndDelete(orderId)
+    await OrderItem.findByIdAndDelete(orderId)
 
     return res.json({
       success: true,
       data: present(order),
-      message: 'Order deleted.',
+      message: 'OrderItem deleted.',
     })
   } catch (error) {
     next(error)
@@ -118,6 +120,29 @@ deleteMany = async (req, res, next) => {
   }
 }
 
+/*
+ret: 
+- new object if success
+- { error: 'error messsage' } if fail
+*/
+updateStatus = async (id, dataToUpdate) => {
+  try {
+    // 1. validtate input
+    const orderItem = await OrderItem.findById(id)
+    if (!orderItem) {
+      // const ret = {error : `orderItem ${id} not found`}
+    }
+    const { error } = validateUpdateDataFormat(dataToUpdate)
+
+    // 2. update data
+    await updateItem(dataToUpdate)
+
+    // 3. return data
+  } catch (error) {
+    return error
+  }
+}
+
 function validateCreateDataFormat(order) {
   const schema = {
     name: Joi.string().max(50).required(),
@@ -133,16 +158,18 @@ function validateUpdateDataFormat(order) {
   const schema = {
     name: Joi.string().min(1).max(50),
     description: Joi.string().min(1).max(2047),
+    // TODO:  serveTime
   }
 
   return Joi.validate(order, schema)
 }
 
 module.exports = {
-  createOrder,
-  readOrder,
-  updateOrder,
-  deleteOrder,
+  createOrderItem,
+  readOrderItem,
+  updateOrderItem,
+  deleteOrderItem,
   readMany,
   deleteMany,
+  updateStatus,
 }

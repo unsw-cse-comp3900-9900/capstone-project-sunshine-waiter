@@ -3,7 +3,6 @@ const http = require('http').Server(app)
 const io = require('socket.io')(http)
 const PORT = 5000
 const Restaurant = require('./models/restaurant.model')
-const User = require('./models/user.model')
 
 const author = require('./auth/authorization')
 
