@@ -7,6 +7,8 @@ import { ContentType } from './Constant'
 import MenuItemModal from './MenuItemModal'
 import CategoryModal from './CategoryModal'
 import { fetchMenuApi } from '../apis/actions/menus'
+import { deleteCategoryItem } from '../apis/actions/category'
+import { getCookie } from '../authenticate/Cookies'
 
 const { Header, Content, Sider } = Layout
 const { DASHBOARD, STAFFS, MENUS } = ContentType
@@ -90,6 +92,12 @@ class Manager extends React.Component {
     })
   }
 
+  onDeleteCategory = async categoryId => {
+    const { restaurantId } = this.props
+    await deleteCategoryItem(getCookie('token'), restaurantId, categoryId)
+    await this.onFetchCurrentMenu()
+  }
+
   renderCategories = () => {
     if (
       this.state.currentMenu === null ||
@@ -143,6 +151,12 @@ class Manager extends React.Component {
           >
             <i className="clickable pencil alternate icon"></i>
           </span>
+          <span
+            className="right"
+            onClick={() => this.onDeleteCategory(item._id)}
+          >
+            <i className="clickable trash icon"></i>
+          </span>
         </Tooltip>
         {this.state.openCategoryId === item._id && this.renderMenuItem(item)}
       </div>
@@ -155,7 +169,11 @@ class Manager extends React.Component {
     }
     return (
       <div className="menu-builder">
-        <h1>Edit your menu: {this.state.currentMenu.name}</h1>
+        <div>
+          {/* get api dont return description key */}
+          <h1>Edit your menu: {this.state.currentMenu.name}</h1>
+          <small>{this.state.currentMenu.description}</small>
+        </div>
         <div className="menu-segment">{this.renderCategories()}</div>
         <Button
           type="primary"
