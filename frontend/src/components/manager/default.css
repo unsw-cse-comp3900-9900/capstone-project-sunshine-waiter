@@ -52,6 +52,13 @@
   margin-left: 10%;
 }
 
+.content .container .menu-builder .menu-segment .menu-tips {
+  width: 60%;
+  margin-left: 20%;
+  margin-top: 5%;
+  text-align: center;
+}
+
 .content .container .menu-builder .menu-segment label {
   font-size: 20px;
 }
