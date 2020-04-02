@@ -186,7 +186,12 @@ class MyProfile extends React.Component {
           <h3>
             <i className="coffee icon" />
             My Restaurants
-            <span onClick={this.showModal}>
+            <span
+              onClick={() => {
+                this.setState({ editingRestaurant: null })
+                this.showModal()
+              }}
+            >
               <i className="plus circle icon right" />
             </span>
           </h3>

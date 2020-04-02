@@ -40,6 +40,11 @@ class RestaurantModal extends React.Component {
         name: editingRestaurant.name,
         description: editingRestaurant.description,
       })
+    } else {
+      this.setState({
+        name: '',
+        description: '',
+      })
     }
   }
 
