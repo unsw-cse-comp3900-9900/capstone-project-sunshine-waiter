@@ -1,7 +1,10 @@
 import React from 'react'
 import { Modal } from 'antd'
 
-import { createCategoryItem } from '../apis/actions/category'
+import {
+  createCategoryItem,
+  updateCategoryItem,
+} from '../apis/actions/category'
 import { getCookie } from '../authenticate/Cookies'
 
 class CategoryModal extends React.Component {
@@ -10,13 +13,46 @@ class CategoryModal extends React.Component {
     description: '',
   }
 
-  onSubmit = () => {
-    createCategoryItem(
-      getCookie('token'),
-      this.props.restaurantId,
-      this.state,
-      this.props.onCancel()
-    )
+  _id = ''
+
+  onSubmit = async e => {
+    e.preventDefault()
+    const { onFetchCurrentMenu } = this.props
+
+    if (this._id) {
+      await updateCategoryItem(
+        getCookie('token'),
+        this.props.restaurantId,
+        this._id,
+        this.state
+      )
+    } else {
+      await createCategoryItem(
+        getCookie('token'),
+        this.props.restaurantId,
+        this.state
+      )
+    }
+    onFetchCurrentMenu()
+    this.props.onCancel()
+  }
+
+  UNSAFE_componentWillReceiveProps = nextProps => {
+    const { currentParam } = nextProps
+
+    if (currentParam !== null) {
+      this._id = currentParam._id
+      this.setState({
+        name: currentParam.name,
+        description: currentParam.description,
+      })
+    } else {
+      this._id = ''
+      this.setState({
+        name: '',
+        description: '',
+      })
+    }
   }
 
   render() {

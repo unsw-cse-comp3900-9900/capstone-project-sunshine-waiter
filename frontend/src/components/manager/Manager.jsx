@@ -6,6 +6,7 @@ import './default.css'
 import { ContentType } from './Constant'
 import MenuItemModal from './MenuItemModal'
 import CategoryModal from './CategoryModal'
+import { fetchMenuApi } from '../apis/actions/menus'
 
 const { Header, Content, Sider } = Layout
 const { DASHBOARD, STAFFS, MENUS } = ContentType
@@ -16,46 +17,30 @@ class Manager extends React.Component {
     displayIndex: DASHBOARD,
     showMenuItemModal: false,
     showCategoryModal: false,
-    currentMenu: {
-      menuItems: [
-        {
-          _id: '5b21ca3eeb7f6fbccd471821',
-          name: 'Tuna Sandwich',
-          description: 'Serving with australia tuna and fresh vegetables',
-          ingredients: ['garlic'],
-          price: 30,
-          category: { _id: '1', name: 'Sandwich' },
-          image: '../services/statics/SeafoodPasta.jpg',
-          alt: 'Seafood Pasta',
-          note: 'Available after 10:30am at participating restaurants',
-          href: '/menu/tuna-sandwich',
-        },
-      ],
-      categories: [
-        {
-          _id: '1',
-          name: 'Roseberry Sandwich',
-          description: 'With roseberry and jam',
-          note: 'Available after 10:30am at participating restaurants',
-          price: 20,
-        },
-        {
-          _id: '2',
-          name: 'Sandwich',
-          description: 'With roseberry and jam',
-          note: 'Available after 10:30am at participating restaurants',
-          price: 20,
-        },
-      ],
-      _id: '5e82e46eddcb38002f6926ff',
-      name: 'menu',
-      restaurant: '5e82e46eddcb38002f6926fe',
-      __v: 0,
-    },
+    currentParam: null,
+    currentMenu: null,
+  }
+
+  //fetch data before rendering the component
+  UNSAFE_componentWillMount = () => {
+    this.onFetchCurrentMenu()
+  }
+
+  onSetCurrentMenu = data => {
+    this.setState({
+      currentMenu: data,
+    })
+  }
+
+  onFetchCurrentMenu = async () => {
+    await fetchMenuApi(this.props.restaurantId, this.onSetCurrentMenu)
   }
 
   renderMenuItem = category => {
-    if (this.state.currentMenu.menuItems.length === 0) {
+    if (
+      this.state.currentMenu === null ||
+      this.state.currentMenu.menuItems.length === 0
+    ) {
       return <div>add menuItem</div>
     }
     return (
@@ -106,8 +91,15 @@ class Manager extends React.Component {
   }
 
   renderCategories = () => {
-    if (this.state.currentMenu.categories.length === 0) {
-      return <div>add your menu</div>
+    if (
+      this.state.currentMenu === null ||
+      this.state.currentMenu.categories.length === 0
+    ) {
+      return (
+        <div className="ui floating message menu-tips">
+          <p>Create your first category</p>
+        </div>
+      )
     }
     return this.state.currentMenu.categories.map(item => (
       <div className="menu-content" key={item._id}>
@@ -142,7 +134,13 @@ class Manager extends React.Component {
           title="change the category"
           arrowPointAtCenter
         >
-          <span className="right" onClick={this.handleCategoryEdit}>
+          <span
+            className="right"
+            onClick={() => {
+              this.setState({ currentParam: item })
+              this.handleCategoryEdit()
+            }}
+          >
             <i className="clickable pencil alternate icon"></i>
           </span>
         </Tooltip>
@@ -157,13 +155,18 @@ class Manager extends React.Component {
     }
     return (
       <div className="menu-builder">
-        <h1>Edit your menu</h1>
+        <h1>Edit your menu: {this.state.currentMenu.name}</h1>
         <div className="menu-segment">{this.renderCategories()}</div>
         <Button
           type="primary"
           shape="round"
           className="button"
-          onClick={this.handleCategoryEdit}
+          onClick={() => {
+            this.setState({
+              currentParam: null,
+            })
+            this.handleCategoryEdit()
+          }}
         >
           New Category
         </Button>
@@ -191,11 +194,15 @@ class Manager extends React.Component {
           visible={this.state.showMenuItemModal}
           onCancel={this.onCloseMenuItemModal}
           restaurantId={restaurantId}
+          currentParam={this.state.currentParam}
+          onFetchCurrentMenu={this.onFetchCurrentMenu}
         />
         <CategoryModal
           visible={this.state.showCategoryModal}
           onCancel={this.onCloseCategoryModal}
           restaurantId={restaurantId}
+          currentParam={this.state.currentParam}
+          onFetchCurrentMenu={this.onFetchCurrentMenu}
         />
         <Header className="header">
           <h1>Hi, Manager! How do you feel today?</h1>
