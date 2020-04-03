@@ -3,7 +3,7 @@ import { Modal, Tag, Input } from 'antd'
 import { TweenOneGroup } from 'rc-tween-one'
 import _ from 'lodash'
 
-import { createMenuItem } from '../apis/actions/menuItem'
+import { createMenuItem, updateMenuItem } from '../apis/actions/menuItem'
 import { getCookie } from '../authenticate/Cookies'
 
 class MenuItemModal extends React.Component {
@@ -15,6 +15,41 @@ class MenuItemModal extends React.Component {
     description: '',
     note: '',
     price: 0,
+  }
+
+  _id = ''
+
+  UNSAFE_componentWillReceiveProps = nextProps => {
+    const { currentParam } = nextProps
+
+    if (currentParam !== null) {
+      const {
+        _id,
+        categoryArray,
+        name,
+        description,
+        note,
+        price,
+      } = currentParam
+
+      this._id = _id
+      this.setState({
+        categoryArray,
+        name,
+        description,
+        note,
+        price,
+      })
+    } else {
+      this._id = ''
+      this.setState({
+        categoryArray: [],
+        name: '',
+        description: '',
+        note: '',
+        price: 0,
+      })
+    }
   }
 
   handleCategoryTagDelete = removedTagId => {
@@ -117,17 +152,24 @@ class MenuItemModal extends React.Component {
   onSubmit = async e => {
     e.preventDefault()
     const { onFetchCurrentMenu } = this.props
-    await createMenuItem(
-      getCookie('token'),
-      this.props.restaurantId,
-      _.pick(this.state, [
-        'categoryArray',
-        'name',
-        'description',
-        'note',
-        'price',
-      ])
-    )
+    const param = _.pick(this.state, [
+      'categoryArray',
+      'name',
+      'description',
+      'note',
+      'price',
+    ])
+
+    if (this._id) {
+      await updateMenuItem(
+        getCookie('token'),
+        this.props.restaurantId,
+        this._id,
+        param
+      )
+    } else {
+      await createMenuItem(getCookie('token'), this.props.restaurantId, param)
+    }
 
     onFetchCurrentMenu()
     this.props.onCancel()

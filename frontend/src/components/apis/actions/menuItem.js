@@ -22,3 +22,27 @@ export const createMenuItem = (
       .catch(err => console.log({ err }))
   }
 }
+
+export const updateMenuItem = (
+  token,
+  restaurantId,
+  menuItemId,
+  param,
+  callback = () => {}
+) => {
+  if (token !== undefined) {
+    const config = {
+      headers: {
+        'x-auth-token': token,
+        'Content-Type': 'application/json',
+      },
+    }
+    const URL = `/restaurants/${restaurantId}/menuItems/${menuItemId}`
+    BaseProvider.put(URL, param, config)
+      .then(res => {
+        console.log({ res })
+        callback()
+      })
+      .catch(err => console.log({ err }))
+  }
+}
