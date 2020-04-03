@@ -103,7 +103,7 @@ class Manager extends React.Component {
     else this.setState({ openCategoryId: clickId })
   }
 
-  handleMenuItemEdit = clickId => {
+  handleMenuItemEdit = () => {
     // this.onOpenChange(clickId)
     this.setState({
       showMenuItemModal: true,
@@ -173,23 +173,6 @@ class Manager extends React.Component {
         </Tooltip>
         <Tooltip
           placement="topLeft"
-          title="create a menu item"
-          arrowPointAtCenter
-        >
-          <span
-            className="right"
-            onClick={() => {
-              this.setState({
-                currentParam: null,
-              })
-              this.handleMenuItemEdit(item._id)
-            }}
-          >
-            <i className="clickable plus circle icon"></i>
-          </span>
-        </Tooltip>
-        <Tooltip
-          placement="topLeft"
           title="modify the category"
           arrowPointAtCenter
         >
@@ -235,7 +218,20 @@ class Manager extends React.Component {
         <Button
           type="primary"
           shape="round"
-          className="button"
+          className="right menuItem-button"
+          onClick={() => {
+            this.setState({
+              currentParam: null,
+            })
+            this.handleMenuItemEdit()
+          }}
+        >
+          New MenuItem
+        </Button>
+        <Button
+          type="primary"
+          shape="round"
+          className="category-button"
           onClick={() => {
             this.setState({
               currentParam: null,

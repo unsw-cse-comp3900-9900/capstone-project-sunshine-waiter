@@ -68,7 +68,12 @@
   margin-top: 10px;
 }
 
-.content .container .menu-builder .button {
+.content .container .menu-builder .category-button {
   margin-left: 10%;
+  margin-top: 10px;
+}
+
+.content .container .menu-builder .menuItem-button {
+  margin-right: 10%;
   margin-top: 10px;
 }
