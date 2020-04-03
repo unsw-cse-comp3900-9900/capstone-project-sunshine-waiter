@@ -2,15 +2,15 @@
   position: relative;
   z-index: 1;
   padding: 5% 0 5% 0;
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: rgba(255, 255, 255, 0);
   backdrop-filter: blur(15px);
-  box-shadow: 0 10px 10px -10px rgba(0, 0, 0, 0.151);
+  box-shadow: 0 10px 10px -10px rgba(0, 0, 0, 0.15);
 }
 .title h2 {
   text-align: center;
 }
 .box {
-  background-color: #fff;
+  background-color: rgba(255, 255, 255, 0);
   padding: 5%;
   position: relative;
   top: -10%;
@@ -25,13 +25,13 @@
   background: transparent;
 }
 .box .tableBox {
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: #fff;
   display: flex;
   flex-direction: column;
   justify-content: left;
   border-radius: 10px;
   padding: 5%;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.151);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
   margin-bottom: 5%;
 }
 .box .tableBox .dishBox {
@@ -72,7 +72,7 @@
     cursor: pointer;
     color: #ec7355;
     transform: scale(1.5);
-    text-shadow: 0 0 5px rgba(0, 0, 0, 0.151);
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
   }
 }
 .box .buttonBox .finish:hover {
@@ -85,18 +85,18 @@
     cursor: pointer;
     color: #569de0;
     transform: scale(1.5);
-    text-shadow: 0 0 5px rgba(0, 0, 0, 0.151);
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
   }
 }
 .box .requestBox {
-  background-color: rgba(255, 255, 255, 0.8);
+  background-color: #fff;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   align-items: center;
   justify-items: center;
   border-radius: 10px;
   padding: 5%;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.151);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
   margin-bottom: 5%;
 }
 .box .requestBox .table {

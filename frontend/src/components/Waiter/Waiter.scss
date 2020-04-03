@@ -1,13 +1,13 @@
-$theme-color1: rgb(255, 255, 255);
-$theme-color2: rgb(255, 255, 255);
+$theme-color1: rgba(255, 255, 255, 0);
+$theme-color2: rgba(255, 255, 255, 1);
 
 .title {
   position: relative;
   z-index: 1;
   padding: 5% 0 5% 0;
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: rgba(255, 255, 255, 0);
   backdrop-filter: blur(15px);
-  box-shadow: 0 10px 10px -10px rgba(0, 0, 0, 0.151);
+  box-shadow: 0 10px 10px -10px rgba(0, 0, 0, 0.15);
   h2 {
     text-align: center;
   }
@@ -30,13 +30,13 @@ $theme-color2: rgb(255, 255, 255);
   }
 
   .tableBox {
-    background-color: rgba($color: $theme-color2, $alpha: 0.8);
+    background-color: $theme-color2;
     display: flex;
     flex-direction: column;
     justify-content: left;
     border-radius: 10px;
     padding: 5%;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.151);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
     margin-bottom: 5%;
     .dishBox {
       display: grid;
@@ -76,7 +76,7 @@ $theme-color2: rgb(255, 255, 255);
         cursor: pointer;
         color: rgb(236, 115, 85);
         transform: scale(1.5);
-        text-shadow: 0 0 5px rgba(0, 0, 0, 0.151);
+        text-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
       }
     }
     .finish:hover {
@@ -89,19 +89,19 @@ $theme-color2: rgb(255, 255, 255);
         cursor: pointer;
         color: rgb(86, 157, 224);
         transform: scale(1.5);
-        text-shadow: 0 0 5px rgba(0, 0, 0, 0.151);
+        text-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
       }
     }
   }
   .requestBox {
-    background-color: rgba($color: $theme-color2, $alpha: 0.8);
+    background-color: $theme-color2;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     align-items: center;
     justify-items: center;
     border-radius: 10px;
     padding: 5%;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.151);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
     margin-bottom: 5%;
     .table {
       font-weight: bold;
