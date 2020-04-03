@@ -140,8 +140,12 @@ class Manager extends React.Component {
 
   onDeleteCategory = async categoryId => {
     const { restaurantId } = this.props
-    await deleteCategoryItem(getCookie('token'), restaurantId, categoryId)
-    await this.onFetchCurrentMenu()
+    await deleteCategoryItem(
+      getCookie('token'),
+      restaurantId,
+      categoryId,
+      this.onFetchCurrentMenu
+    )
   }
 
   renderCategories = () => {
