@@ -43,7 +43,7 @@ class Manager extends React.Component {
       this.state.currentMenu === null ||
       this.state.currentMenu.menuItems.length === 0
     ) {
-      return <div>add menuItem</div>
+      return <div>Create a menuItem</div>
     }
     return (
       <div>
@@ -53,8 +53,40 @@ class Manager extends React.Component {
             if (caId === category._id) {
               return (
                 <li key={item._id}>
-                  {item.name}
-                  <span>{item.price}</span>
+                  <Tooltip
+                    placement="topLeft"
+                    title={`price is ${item.price}`}
+                    arrowPointAtCenter
+                  >
+                    {item.name}
+                  </Tooltip>
+                  <Tooltip
+                    placement="topLeft"
+                    title="modify the menuItem"
+                    arrowPointAtCenter
+                  >
+                    <span
+                      className="right"
+                      onClick={() => {
+                        this.setState({ currentParam: item })
+                        this.handleMenuItemEdit()
+                      }}
+                    >
+                      <i className="clickable pencil alternate icon"></i>
+                    </span>
+                  </Tooltip>
+                  <Tooltip
+                    placement="topLeft"
+                    title="delete the menuItem"
+                    arrowPointAtCenter
+                  >
+                    <span
+                      className="right"
+                      onClick={() => this.onDeleteMenuItem(item._id)}
+                    >
+                      <i className="clickable trash icon"></i>
+                    </span>
+                  </Tooltip>
                 </li>
               )
             }
@@ -81,6 +113,10 @@ class Manager extends React.Component {
     this.setState({
       showMenuItemModal: false,
     })
+  }
+
+  onDeleteMenuItem = id => {
+    console.log('clicked!', id)
   }
 
   handleCategoryEdit = () => {
@@ -135,7 +171,12 @@ class Manager extends React.Component {
         >
           <span
             className="right"
-            onClick={() => this.handleMenuItemEdit(item._id)}
+            onClick={() => {
+              this.setState({
+                currentParam: null,
+              })
+              this.handleMenuItemEdit(item._id)
+            }}
           >
             <i className="clickable plus circle icon"></i>
           </span>
