@@ -142,7 +142,7 @@ class Manager extends React.Component {
         </Tooltip>
         <Tooltip
           placement="topLeft"
-          title="change the category"
+          title="modify the category"
           arrowPointAtCenter
         >
           <span
@@ -154,6 +154,12 @@ class Manager extends React.Component {
           >
             <i className="clickable pencil alternate icon"></i>
           </span>
+        </Tooltip>
+        <Tooltip
+          placement="topLeft"
+          title="delete the category"
+          arrowPointAtCenter
+        >
           <span
             className="right"
             onClick={() => this.onDeleteCategory(item._id)}
