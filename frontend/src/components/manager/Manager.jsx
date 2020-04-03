@@ -47,16 +47,19 @@ class Manager extends React.Component {
     }
     return (
       <div>
-        {this.state.currentMenu.menuItems.map(item => {
-          if (item.category._id === category._id) {
-            return (
-              <li key={item._id}>
-                {item.name}
-                <span>{item.price}</span>
-              </li>
-            )
-          }
-        })}
+        {this.state.currentMenu.menuItems.map(item =>
+          item.categoryArray.map(caId => {
+            console.log(caId, category)
+            if (caId === category._id) {
+              return (
+                <li key={item._id}>
+                  {item.name}
+                  <span>{item.price}</span>
+                </li>
+              )
+            }
+          })
+        )}
       </div>
     )
   }
