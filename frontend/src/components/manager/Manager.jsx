@@ -20,7 +20,8 @@ class Manager extends React.Component {
     displayIndex: DASHBOARD,
     showMenuItemModal: false,
     showCategoryModal: false,
-    currentParam: null,
+    currentCategoryParam: null,
+    currentMenuItemParam: null,
     currentMenu: null,
   }
 
@@ -69,7 +70,7 @@ class Manager extends React.Component {
                     <span
                       className="right"
                       onClick={() => {
-                        this.setState({ currentParam: item })
+                        this.setState({ currentMenuItemParam: item })
                         this.handleMenuItemEdit()
                       }}
                     >
@@ -183,7 +184,7 @@ class Manager extends React.Component {
           <span
             className="right"
             onClick={() => {
-              this.setState({ currentParam: item })
+              this.setState({ currentCategoryParam: item })
               this.handleCategoryEdit()
             }}
           >
@@ -225,7 +226,7 @@ class Manager extends React.Component {
           className="right menuItem-button"
           onClick={() => {
             this.setState({
-              currentParam: null,
+              currentMenuItemParam: null,
             })
             this.handleMenuItemEdit()
           }}
@@ -238,7 +239,7 @@ class Manager extends React.Component {
           className="category-button"
           onClick={() => {
             this.setState({
-              currentParam: null,
+              currentCategoryParam: null,
             })
             this.handleCategoryEdit()
           }}
@@ -269,14 +270,14 @@ class Manager extends React.Component {
           visible={this.state.showMenuItemModal}
           onCancel={this.onCloseMenuItemModal}
           restaurantId={restaurantId}
-          currentParam={this.state.currentParam}
+          currentParam={this.state.currentMenuItemParam}
           onFetchCurrentMenu={this.onFetchCurrentMenu}
         />
         <CategoryModal
           visible={this.state.showCategoryModal}
           onCancel={this.onCloseCategoryModal}
           restaurantId={restaurantId}
-          currentParam={this.state.currentParam}
+          currentParam={this.state.currentCategoryParam}
           onFetchCurrentMenu={this.onFetchCurrentMenu}
         />
         <Header className="header">
