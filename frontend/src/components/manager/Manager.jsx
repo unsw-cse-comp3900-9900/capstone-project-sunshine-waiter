@@ -9,6 +9,7 @@ import CategoryModal from './CategoryModal'
 import { fetchMenuApi } from '../apis/actions/menus'
 import { deleteCategoryItem } from '../apis/actions/category'
 import { getCookie } from '../authenticate/Cookies'
+import { deleteMenuItem } from '../apis/actions/menuItem'
 
 const { Header, Content, Sider } = Layout
 const { DASHBOARD, STAFFS, MENUS } = ContentType
@@ -115,8 +116,14 @@ class Manager extends React.Component {
     })
   }
 
-  onDeleteMenuItem = id => {
-    console.log('clicked!', id)
+  onDeleteMenuItem = async menuItemId => {
+    const { restaurantId } = this.props
+    await deleteMenuItem(
+      getCookie('token'),
+      restaurantId,
+      menuItemId,
+      this.onFetchCurrentMenu
+    )
   }
 
   handleCategoryEdit = () => {
