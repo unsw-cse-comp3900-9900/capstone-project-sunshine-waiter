@@ -32,7 +32,7 @@ const restaurantSchema = new mongoose.Schema({
   },
   notes: {
     type: String, // configuration, e.g lactose free
-    required: true,
+    required: false,
   },
   placedBy: {
     type: String, // ownership reference ID. e.g table number;
