@@ -28,10 +28,10 @@ class App extends React.Component {
   }
 
   updateRestaurants = (restaurants = []) => {
-    console.log(restaurants)
-    // this.setState({
-    //   restaurants: restaurants,
-    // })
+    // console.log(restaurants)
+    this.setState({
+      restaurants: restaurants,
+    })
   }
 
   recordRestaurantsListUpdatedStatus = () => {
@@ -69,7 +69,7 @@ class App extends React.Component {
             <Kitchen />
           </Route>
           <Route exact path={'/restaurants/' + _id + '/manager'}>
-            <Manager />
+            <Manager restaurantId={_id} />
           </Route>
           <Route exact path={'/restaurants/' + _id + '/cashier'}>
             <div>cashier</div>
