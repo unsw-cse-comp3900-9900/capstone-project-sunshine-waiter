@@ -156,6 +156,10 @@ class Waiter extends React.Component {
     }
   }
 
+  componentWillUnmount() {
+    this.state.socket.close()
+  }
+
   render() {
     return (
       <div>
