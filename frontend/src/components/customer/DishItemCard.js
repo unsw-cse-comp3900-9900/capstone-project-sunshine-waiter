@@ -11,10 +11,17 @@ import {
 } from 'antd-mobile'
 import 'antd-mobile/dist/antd-mobile.css'
 
+//to make pictures display correctly. must pay attention to the order of img in file
+const requireContext = require.context('./', true, /\.jpg$/)
+const Imgs = requireContext.keys().map(requireContext)
+
+console.log('Imgs->' + Imgs)
+
 class DishItemCard extends Component {
   state = {
     menus: getMenus(),
     count: 1,
+    //dish_id: 0,
   }
 
   handleAdd() {
@@ -32,27 +39,19 @@ class DishItemCard extends Component {
       })
     }
   }
+
   render() {
-    const {
-      title,
-      image,
-      description,
-      cost,
-      getorder,
-      num_of_dishes,
-    } = this.props
+    const { title, image_id, description, cost, getorder } = this.props
+
+    var imgURL = Imgs[image_id]
+    console.log('imgurl' + imgURL)
     return (
       <WingBlank size="sm">
         <WhiteSpace size="sm" />
         <Card>
           <Card.Header title={title} />
           <Card.Body>
-            <img
-              src={require('./Roseberry.jpg')}
-              alt="wrong"
-              width="200px"
-              height="100px"
-            />
+            <img src={imgURL} alt="wrong" width="200px" height="100px" />
           </Card.Body>
           <Card.Footer
             content={description}
@@ -70,15 +69,14 @@ class DishItemCard extends Component {
                   <div className="ui icon" onClick={() => this.handleAdd()}>
                     <i className="plus square blue icon" />
                   </div>
-                  {/* <button>+</button> */}
+
                   <input
                     style={{
                       width: '20px',
                     }}
-                    //value={this.props.num_of_dishes}
                     value={this.state.count}
                   />
-                  {/* <button>-</button> */}
+
                   <div className="ui icon" onClick={() => this.handleMinus()}>
                     <i className="minus square blue icon" />
                   </div>
@@ -91,18 +89,6 @@ class DishItemCard extends Component {
                 >
                   add to cart
                 </Button>
-                {/* <div
-                  className="ui bottom attached button"
-                  onClick={() => getorder(this.props.title)}
-                  // style={{
-                  //   width: '10px',
-                  //   height: '10px',
-                  // }}
-                >
-                  <i className="plus circle icon"></i>
-                </div> */}
-                {/* <Icon type="check" /> */}
-                {/* </div> */}
               </Fragment>
             }
           />

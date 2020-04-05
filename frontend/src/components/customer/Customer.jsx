@@ -1,10 +1,19 @@
 import React, { Component } from 'react'
 import DishItemCard from './DishItemCard.js'
-import Cart from './Cart.js'
+
 import { getMenus } from './services/fakemenu'
 import './my-drawer.css'
 
-import { TabBar, List, Drawer, Icon, NavBar, Button } from 'antd-mobile'
+import {
+  TabBar,
+  List,
+  Drawer,
+  Icon,
+  NavBar,
+  Button,
+  Tabs,
+  WhiteSpace,
+} from 'antd-mobile'
 import 'antd-mobile/dist/antd-mobile.css'
 //import 'antd/dist/antd.css'
 import { ShoppingCartOutlined } from '@ant-design/icons'
@@ -16,11 +25,13 @@ class Customer extends Component {
     fullScreen: false,
     menus: getMenus(),
     //currentDisplayCatogory: '1',
-    colorlist: ['0', '1', '2'], //写死的，要改
+    //colorlist: ['0', '1', '2'], //写死的，要改
     //open: true
     docked: false,
     orderlist: [], // put the order
-    num_of_dishes: 1, // dishes in the cart
+    //num_of_dishes: 1, // dishes in the cart
+
+    dic_order: new Map(), //store dishes,count
   }
 
   onDock = d => {
@@ -35,14 +46,21 @@ class Customer extends Component {
   }
 
   increaseorder = (e, num) => {
+    if (this.state.dic_order.has(e)) {
+      this.state.dic_order.set(e, this.state.dic_order.get(e) + num)
+    } else {
+      this.state.dic_order.set(e, num)
+    }
+
     this.setState({
-      orderlist: [...this.state.orderlist, e],
-      num_of_dishes: num,
+      orderlist: [...this.state.dic_order.keys()],
     })
+
+    console.info('dic_order' + this.state.dic_order)
   }
 
   handleDeleteBtn(index) {
-    console.log('delete' + { index })
+    console.log('delete' + index)
     const orderlist = [...this.state.orderlist]
     orderlist.splice(index, 1)
     this.setState({
@@ -50,60 +68,78 @@ class Customer extends Component {
     })
   }
 
-  getUniqueCategories = () => {
-    const uniqueCategoryItems = []
-    const uniqueItemsId = []
+  // getUniqueCategories = () => {
+  //   const uniqueCategoryItems = []
+  //   const uniqueItemsId = []
+  //   this.state.menus.map(({ category }) => {
+  //     if (!uniqueItemsId.includes(category._id)) {
+  //       uniqueCategoryItems.push(category)
+  //       uniqueItemsId.push(category._id)
+  //     }
+  //   })
+  //   for (var i = 0; i < uniqueCategoryItems.length; i++) {
+  //     console.log('uniqueitems->name:' + uniqueCategoryItems.name)
+  //     for (var k in uniqueCategoryItems[i]) {
+  //       console.log('uniqueitems' + uniqueCategoryItems[i][k])
+  //     }
+  //   }
+  //   //console.log('uniqueitems' + uniqueCategoryItems)
+  //   return uniqueCategoryItems
+  // }
+
+  getCategories = () => {
+    const categoryList = new Map()
     this.state.menus.map(({ category }) => {
-      if (!uniqueItemsId.includes(category._id)) {
-        uniqueCategoryItems.push(category)
-        uniqueItemsId.push(category._id)
+      if (!categoryList.has(category)) {
+        categoryList.set(category._id, category.name)
+        //categoryList[category._id] = category.name
       }
     })
-    return uniqueCategoryItems
+
+    return [...categoryList.values()]
   }
 
-  renderCategoryItems = uniqueItems => {
-    console.log(this.state.currentDisplayCatogory)
-    console.log('currentDisplayCatogory')
-    return uniqueItems.map(({ _id, name }) => (
-      <TabBar.Item
-        key={_id}
-        title={name}
-        //className="nav-text"
-        //实现点击分类跳转
-        //onClick={() => this.setState({ currentDisplayCatogory: _id })}
-        icon={
-          <div
-            style={{
-              width: '22px',
-              height: '22px',
-              background: 'green',
-            }}
-          />
-        }
-        selectedIcon={
-          <div
-            style={{
-              width: '22px',
-              height: '22px',
-              background: 'blue',
-            }}
-          />
-        }
-        selected={this.state.selectedTab === this.state.colorlist[_id]}
-        //badge={1}
-        onPress={() => {
-          this.setState({
-            selectedTab: this.state.colorlist[_id],
-          })
-        }}
-        data-seed="logId"
-      >
-        {this.renderContent(_id)}
-      </TabBar.Item>
-    ))
-  }
+  // renderCategoryItems = uniqueItems => {
+  //   return uniqueItems.map(({ _id, name }) => (
+  //     <TabBar.Item
+  //       key={_id}
+  //       title={name}
+  //       //className="nav-text"
+  //       //实现点击分类跳转
+  //       //onClick={() => this.setState({ currentDisplayCatogory: _id })}
+  //       icon={
+  //         <div
+  //           style={{
+  //             width: '22px',
+  //             height: '22px',
+  //             background: 'green',
+  //           }}
+  //         />
+  //       }
+  //       selectedIcon={
+  //         <div
+  //           style={{
+  //             width: '22px',
+  //             height: '22px',
+  //             background: 'blue',
+  //           }}
+  //         />
+  //       }
+  //       selected={this.state.selectedTab === this.state.colorlist[_id]}
+  //       //badge={1}
+  //       onPress={() => {
+  //         this.setState({
+  //           selectedTab: this.state.colorlist[_id],
+  //         })
+  //       }}
+  //       data-seed="logId"
+  //     >
+  //       {this.renderContent(_id)}
+  //     </TabBar.Item>
+  //   ))
+  // }
 
+  //index by name, not id,may change later
   renderContent = displayIndex => {
     console.log('paole ' + displayIndex)
 
@@ -111,14 +147,14 @@ class Customer extends Component {
       <div>
         <div>
           {this.state.menus.map(
-            ({ title, description, image, category, cost, index }) => {
+            ({ title, description, image_id, category, cost, index }) => {
               return (
-                category._id === displayIndex && (
+                category.name === displayIndex && (
                   <DishItemCard
                     title={title}
                     description={description}
                     cost={cost}
-                    image={image}
+                    image_id={image_id}
                     key={title}
                     num_of_dishes={this.state.num_of_dishes}
                     getorder={this.increaseorder}
@@ -132,7 +168,29 @@ class Customer extends Component {
     )
   }
 
+  renderContentTab = tab => (
+    <div
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: '100%',
+        backgroundColor: '#fff',
+      }}
+    >
+      {this.renderContent(tab.title)}
+    </div>
+  )
+
   render() {
+    var l = this.getCategories()
+    var tabs = []
+    for (var i = 0; i < l.length; i++) {
+      var tmp = { title: l[i] }
+
+      tabs.push(tmp)
+    }
+
     const sidebar = (
       <List>
         {this.state.orderlist.map((item, index) => {
@@ -150,10 +208,7 @@ class Customer extends Component {
               }
               //thumb="https://zos.alipayobjects.com/rmsportal/eOZidTabPoEbPeU.png"
             >
-              {/* //差一个空格 。。。*/}
-              {item}
-
-              {this.state.num_of_dishes}
+              {item} {this.state.dic_order.get(item)}
             </List.Item>
           )
         })}
@@ -167,15 +222,6 @@ class Customer extends Component {
             : { height: '800px' } //related to bar 固定位置
         }
       >
-        {/* <TabBar
-          unselectedTintColor="#949494"
-          tintColor="#33A3F4"
-          barTintColor="white"
-          hidden={this.state.hidden}
-          tabBarPosition="top"
-        >
-          {this.renderCategoryItems(this.getUniqueCategories())}
-        </TabBar> */}
         <NavBar
           mode="light"
           icon={<Icon type="left" />}
@@ -210,7 +256,18 @@ class Customer extends Component {
           //onOpenChange={this.onOpenChange}
           docked={this.state.docked}
         >
-          <TabBar
+          <div>
+            <WhiteSpace />
+            <Tabs
+              tabs={tabs}
+              renderTabBar={props => <Tabs.DefaultTabBar {...props} page={3} />}
+            >
+              {this.renderContentTab}
+            </Tabs>
+            <WhiteSpace />
+          </div>
+
+          {/* <TabBar
             unselectedTintColor="#949494"
             tintColor="#33A3F4"
             barTintColor="white"
@@ -218,7 +275,7 @@ class Customer extends Component {
             tabBarPosition="top"
           >
             {this.renderCategoryItems(this.getUniqueCategories())}
-          </TabBar>
+          </TabBar> */}
         </Drawer>
       </div>
     )
