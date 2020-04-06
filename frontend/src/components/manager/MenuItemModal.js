@@ -1,5 +1,5 @@
 import React from 'react'
-import { Modal, Tag, Input } from 'antd'
+import { Modal, Tag, Select } from 'antd'
 import { TweenOneGroup } from 'rc-tween-one'
 import _ from 'lodash'
 
@@ -80,6 +80,17 @@ class MenuItemModal extends React.Component {
     })
   }
 
+  getCategoryName = tag => {
+    const { currentMenu } = this.props
+    if (currentMenu !== null) {
+      return currentMenu.categories.map(ca => {
+        if (ca._id === tag) {
+          return ca.name
+        }
+      })
+    }
+  }
+
   categoriesTagsMap = tag => {
     const tagElem = (
       <Tag
@@ -89,7 +100,7 @@ class MenuItemModal extends React.Component {
           this.handleCategoryTagDelete(tag)
         }}
       >
-        {tag}
+        {this.getCategoryName(tag)}
       </Tag>
     )
     return (
@@ -99,12 +110,38 @@ class MenuItemModal extends React.Component {
     )
   }
 
+  renderSelctorOptions = () => {
+    const { currentMenu } = this.props
+    if (currentMenu === null) {
+      return null
+    } else {
+      return currentMenu.categories.map(ca => (
+        <Select.Option key={ca._id}>{ca.name}</Select.Option>
+      ))
+    }
+  }
+
+  renderCategorySelector = () => {
+    return (
+      <Select
+        size="small"
+        style={{ width: 100 }}
+        value={this.state.categoryInputValue}
+        onChange={e => {
+          this.setState({
+            categoryInputValue: e,
+          })
+        }}
+        onBlur={this.handleCategoryInputValueConfirm}
+        onKeyDown={this.handleCategoryInputValueConfirm}
+      >
+        {this.renderSelctorOptions()}
+      </Select>
+    )
+  }
+
   renderCategoryArray = () => {
-    const {
-      categoryInputVisble,
-      categoryInputValue,
-      categoryArray,
-    } = this.state
+    const { categoryInputVisble, categoryArray } = this.state
     const categoryChild = categoryArray.map(this.categoriesTagsMap)
     return (
       <div className="field">
@@ -126,19 +163,7 @@ class MenuItemModal extends React.Component {
             {categoryChild}
           </TweenOneGroup>
           {categoryInputVisble ? (
-            <Input
-              type="text"
-              size="small"
-              style={{ width: 78 }}
-              value={categoryInputValue}
-              onChange={e =>
-                this.setState({
-                  categoryInputValue: e.target.value,
-                })
-              }
-              onBlur={this.handleCategoryInputValueConfirm}
-              onPressEnter={this.handleCategoryInputValueConfirm}
-            />
+            this.renderCategorySelector()
           ) : (
             <Tag onClick={this.showCategoryInput} className="site-tag-plus">
               <i className="tag icon" /> add CateTag

@@ -272,6 +272,7 @@ class Manager extends React.Component {
           restaurantId={restaurantId}
           currentParam={this.state.currentMenuItemParam}
           onFetchCurrentMenu={this.onFetchCurrentMenu}
+          currentMenu={this.state.currentMenu}
         />
         <CategoryModal
           visible={this.state.showCategoryModal}
