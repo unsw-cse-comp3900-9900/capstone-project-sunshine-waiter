@@ -1,20 +1,44 @@
 const Joi = require('joi')
 const Order = require('../models/order.model')
 const _ = require('lodash')
+const { findRestaurant } = require('.restaurant.controller')
+const { createOrderItems } = require('./orderItem.controller')
+// present data to client side
+const present = (obj) => {
+  const { __v, createdBy, ...data } = obj._doc
+  return data
+}
 
 /*
 1. validate input
 2. if valid: create new object with input; save it;
 3. response 
+
+precond: 
+- exist restaurant in DB with req.restaurantId
+- on every menuItemId from req.orderItemsData, exist menuItem in DB with such id 
 */
 createOrder = async (req, res, next) => {
   try {
-    const { restaurantId } = req.params
-    {
-      menuItem, amount, configuration
-    }
-    // if any error
-    res.status(404).json({ error: `Object ot found. id: ${id}` })
+    const placedBy = req.placedBy
+    if (!placedBy)
+      throw { resCode: 400, message: 'Request body miss key: placeBy' }
+    const restaurant = await findRestaurant(req, res, next)
+    const order = new Order({
+      placedBy,
+      isPayed: false,
+      isAllServed: false,
+      createdAt: new Date(),
+      restaurant: restaurant._id,
+      orderItems: [],
+    })
+
+    const { orderItemIds } = await createOrderItems(req, res, next, order)
+
+    order.orderItems = orderItemIds
+
+    await order.save()
+    res.status(201).json({ data: present(order) })
   } catch (error) {
     next(error)
   }
