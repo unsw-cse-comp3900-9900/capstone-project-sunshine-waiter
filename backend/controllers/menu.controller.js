@@ -1,15 +1,25 @@
 const Joi = require('joi')
 const Restaurant = require('../models/restaurant.model')
 const Menu = require('../models/menu.model')
+const Category = require('../models/category.model')
+const MenuItem = require('../models/menuItem.model')
 const _ = require('lodash')
+
+const present = (obj) => {
+  const { __v, ...data } = obj._doc
+  return data
+}
+
 /*
 1. no menuId, only Restaurant Id
-2. 
 */
 readMenu = async (req, res, next) => {
   try {
     const obj = await findMenu(req, res)
-    res.json({ data: obj })
+    const menuItems = (await MenuItem.find({ menu: obj._id })) || []
+    const categories = (await Category.find({ menu: obj._id })) || []
+
+    res.json({ data: { menuItems, categories, ...present(obj) } })
   } catch (error) {
     next(error)
   }
@@ -42,6 +52,9 @@ updateMenu = async (req, res, next) => {
 }
 
 /*
+returns a menu instance base on req.param.restaurant.
+Note that it's not a req handler. 
+
 precond: 
 1. req.params.restaurantId exist;
 2. any restaurant has menu; 
@@ -64,12 +77,8 @@ const findMenu = async (req, res) => {
 
 function validateUpdateDataFormat(menu) {
   const schema = {
-    name: Joi.string()
-      .min(5)
-      .max(50),
-    description: Joi.string()
-      .min(5)
-      .max(2047),
+    name: Joi.string().min(1).max(50),
+    description: Joi.string().min(1).max(2047),
   }
 
   return Joi.validate(menu, schema)
@@ -78,4 +87,6 @@ function validateUpdateDataFormat(menu) {
 module.exports = {
   readMenu,
   updateMenu,
+
+  findMenu, // Note that it's not a req handler.
 }

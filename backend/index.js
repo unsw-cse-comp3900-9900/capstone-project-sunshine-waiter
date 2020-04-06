@@ -5,6 +5,8 @@ const connectDb = require('./db/connection')
 const users = require('./routes/user.routes')
 const restaurants = require('./routes/restaurant.routes')
 const menus = require('./routes/menu.routes')
+const menuItems = require('./routes/menuItem.routes')
+const categories = require('./routes/category.routes')
 const cors = require('cors')
 const errorHandler = require('./middleware/errorHandler')
 
@@ -31,6 +33,8 @@ app.use(cors())
 app.use('/users', users)
 app.use('/restaurants', restaurants)
 app.use('/restaurants', menus)
+app.use('/restaurants', menuItems)
+app.use('/restaurants', categories)
 
 app.use(errorHandler)
 

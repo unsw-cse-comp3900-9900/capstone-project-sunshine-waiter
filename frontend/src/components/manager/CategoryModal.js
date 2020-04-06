@@ -1,46 +1,53 @@
 import React from 'react'
 import { Modal } from 'antd'
-import {
-  createRestaurant,
-  updateRestaurant,
-} from '../../apis/actions/restaurants'
-import { getCookie } from '../../authenticate/Cookies'
 
-class RestaurantModal extends React.Component {
+import {
+  createCategoryItem,
+  updateCategoryItem,
+} from '../apis/actions/category'
+import { getCookie } from '../authenticate/Cookies'
+
+class CategoryModal extends React.Component {
   state = {
     name: '',
     description: '',
   }
 
+  _id = ''
+
   onSubmit = async e => {
-    const { recordRestaurantsListUpdatedStatus, editingRestaurant } = this.props
     e.preventDefault()
-    if (editingRestaurant !== null) {
-      await updateRestaurant(
+    const { onFetchCurrentMenu } = this.props
+
+    if (this._id) {
+      await updateCategoryItem(
         getCookie('token'),
-        editingRestaurant._id,
-        this.state,
-        recordRestaurantsListUpdatedStatus()
+        this.props.restaurantId,
+        this._id,
+        this.state
       )
     } else {
-      await createRestaurant(
+      await createCategoryItem(
         getCookie('token'),
-        this.state,
-        recordRestaurantsListUpdatedStatus()
+        this.props.restaurantId,
+        this.state
       )
     }
-
+    onFetchCurrentMenu()
     this.props.onCancel()
   }
 
   UNSAFE_componentWillReceiveProps = nextProps => {
-    const { editingRestaurant } = nextProps
-    if (editingRestaurant !== null) {
+    const { currentParam } = nextProps
+
+    if (currentParam !== null) {
+      this._id = currentParam._id
       this.setState({
-        name: editingRestaurant.name,
-        description: editingRestaurant.description,
+        name: currentParam.name,
+        description: currentParam.description,
       })
     } else {
+      this._id = ''
       this.setState({
         name: '',
         description: '',
@@ -50,12 +57,11 @@ class RestaurantModal extends React.Component {
 
   render() {
     const { visible, onCancel } = this.props
-
     return (
       <Modal visible={visible} onCancel={onCancel} onOk={this.onSubmit}>
         <form className="ui form" onSubmit={this.onSubmit}>
           <div className="field">
-            <label htmlFor="name">Restaurant Name </label>
+            <label htmlFor="name">Name</label>
             <input
               type="text"
               id="name"
@@ -66,10 +72,10 @@ class RestaurantModal extends React.Component {
                 })
               }
             />
-            <small>The name has to be more than 5 letters</small>
+            <small>The name has to be more than 5 letters?</small>
           </div>
           <div className="field">
-            <label htmlFor="description">Description </label>
+            <label htmlFor="description">Description</label>
             <input
               type="text"
               id="description"
@@ -80,7 +86,7 @@ class RestaurantModal extends React.Component {
                 })
               }
             />
-            <small>The description has to be more than 5 letters</small>
+            <small>The description has to be more than 5 letters?</small>
           </div>
         </form>
       </Modal>
@@ -88,4 +94,4 @@ class RestaurantModal extends React.Component {
   }
 }
 
-export default RestaurantModal
+export default CategoryModal

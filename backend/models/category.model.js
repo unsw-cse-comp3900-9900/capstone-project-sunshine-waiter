@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-const restaurantSchema = new mongoose.Schema({
+const schema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
@@ -17,14 +17,13 @@ const restaurantSchema = new mongoose.Schema({
     minlength: 5,
     maxlength: 200,
   },
-
-  restaurant: {
+  menu: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Restaurant',
+    ref: 'Menu',
     required: true,
   },
 })
 
-const Menu = mongoose.model('Menu', restaurantSchema)
+const Category = mongoose.model('Category', schema)
 
-module.exports = Menu
+module.exports = Category

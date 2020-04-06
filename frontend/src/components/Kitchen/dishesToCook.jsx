@@ -1,33 +1,19 @@
 import React from 'react'
 import { Popconfirm, message, Tooltip, Collapse } from 'antd'
 import QueueAnim from 'rc-queue-anim'
+import { groupBy } from '../Waiter/Dishes'
 
 const { Panel } = Collapse
 
 const PLACED = 'PLACED'
+const COOKING = 'COOKING'
 const READY = 'READY'
-const SERVED = 'SERVED'
-const FAILED = 'FAILED'
-const SERVING = 'SERVING'
 
-export const groupBy = (array, key) => {
-  // Return the end result
-  return array.reduce((result, currentValue) => {
-    // If an array already present for key, push it to the array. Else create an array and push the object
-    let tmp = result.get(currentValue[key]) || []
-    tmp.push(currentValue)
-    result.set(currentValue[key], tmp)
-    // Return the current iteration `result` value, this will be taken as next iteration `result` value and accumulate
-    return result
-  }, new Map()) // empty object is the initial value for result object
-}
-
-class Dishes extends React.Component {
+class DishesToCook extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
       finished: [],
-      failed: [],
     }
   }
 
@@ -36,13 +22,12 @@ class Dishes extends React.Component {
       message.error('Not connect to server!')
       return
     }
-
     let targetDish = dish
 
     switch (action) {
-      case 'serving':
-        targetDish.status = SERVING
-        targetDish.servedBy = this.props.user
+      case 'cooking':
+        targetDish.status = COOKING
+        targetDish.cookedBy = this.props.user
 
         // send finished dish to server
         try {
@@ -53,8 +38,8 @@ class Dishes extends React.Component {
         break
 
       case 'finish':
-        targetDish.status = SERVED
-        targetDish.serveTime = new Date()
+        targetDish.status = READY
+        targetDish.readyTime = new Date()
 
         // send finished dish to server
         try {
@@ -65,29 +50,12 @@ class Dishes extends React.Component {
         } catch (error) {
           console.log(error)
         }
-        break
 
-      case 'failed':
-        targetDish.status = FAILED
-        targetDish.servedBy = this.props.user
-        targetDish.serveTime = new Date()
-
-        // send failed dish to server
-        try {
-          this.props.socket.emit('update dish', targetDish)
-          this.setState({
-            failed: [...this.state.failed, targetDish],
-          })
-
-          message.success('Dish removed.')
-        } catch (error) {
-          console.log(error)
-        }
         break
 
       case 'reset':
-        targetDish.status = READY
-        targetDish.serveTime = null
+        targetDish.status = PLACED
+        targetDish.readyTime = null
 
         // send reset to server
         try {
@@ -102,17 +70,6 @@ class Dishes extends React.Component {
         }
         break
 
-      case 'not-see':
-        targetDish.status = PLACED
-
-        // send reset to server
-        try {
-          this.props.socket.emit('update dish', targetDish)
-        } catch (error) {
-          console.log(error)
-        }
-        break
-
       default:
         return
     }
@@ -120,9 +77,9 @@ class Dishes extends React.Component {
 
   render() {
     return (
-      <div className="half">
+      <div id="kitchen">
         <div className="title">
-          <h2>Dishes</h2>
+          <h2>Dishes to cook</h2>
         </div>
 
         <div className="box">
@@ -153,34 +110,26 @@ class Dishes extends React.Component {
 }
 
 class RenderDishes extends React.Component {
-  confirmFail(dish, e) {
-    this.props.handleClick(dish, 'failed', e)
-  }
-
-  confirmNotSee(dish, e) {
-    this.props.handleClick(dish, 'not-see', e)
-  }
-
   renderSingleDish(dish) {
     const renderedDish = (
       <div className="dishBox" key={dish._id}>
         <div className="dishName">{dish.menuItem.title}</div>
-        <div>{new Date(dish.readyTime).toLocaleTimeString()}</div>
+        <div>{dish.order.createAt}</div>
         <div className="buttonBox">
-          {dish.status === SERVING && <div>Serving...</div>}
-          {dish.status === READY && (
-            <Tooltip title="serving">
+          {dish.status === COOKING && <div>Cooking...</div>}
+          {dish.status === PLACED && (
+            <Tooltip title="cooking">
               <button
                 className="finish"
-                onClick={e => this.props.handleClick(dish, 'serving', e)}
+                onClick={e => this.props.handleClick(dish, 'cooking', e)}
               >
-                <i className="fas fa-running"></i>
+                <i className="fas fa-fire-alt"></i>
               </button>
             </Tooltip>
           )}
 
-          {dish.status === SERVING &&
-            this.props.user._id === dish.servedBy._id && (
+          {dish.status === COOKING &&
+            this.props.user._id === dish.cookedBy._id && (
               <Tooltip title="finish">
                 <button
                   className="finish"
@@ -190,32 +139,6 @@ class RenderDishes extends React.Component {
                 </button>
               </Tooltip>
             )}
-
-          {dish.status === SERVING && (
-            <Popconfirm
-              title="Failed to serve?"
-              onConfirm={e => this.confirmFail(dish, e)}
-              okText="Yes"
-              cancelText="No"
-            >
-              <button className="fail">
-                <i className="fas fa-times"></i>
-              </button>
-            </Popconfirm>
-          )}
-
-          {dish.status === READY && (
-            <Popconfirm
-              title="Cannot see the dish?"
-              onConfirm={e => this.confirmNotSee(dish, e)}
-              okText="Yes"
-              cancelText="No"
-            >
-              <button className="fail">
-                <i className="fas fa-question"></i>
-              </button>
-            </Popconfirm>
-          )}
         </div>
       </div>
     )
@@ -225,37 +148,42 @@ class RenderDishes extends React.Component {
   render() {
     const dishList = this.props.dishList
     const dishListGroupedByTableId = groupBy(dishList, 'placedBy')
-    console.log(dishListGroupedByTableId)
     let result = []
     for (let [tableId, orderItems] of dishListGroupedByTableId) {
       const dishes = orderItems.map(dish => this.renderSingleDish(dish))
       const tableBox = (
         <div className="tableBox" key={tableId}>
           <h3>Table: {tableId}</h3>
-          <QueueAnim type="left">{dishes}</QueueAnim>
+          <QueueAnim type="alpha">{dishes}</QueueAnim>
         </div>
       )
       result.push(tableBox)
     }
-    return <QueueAnim type="left">{result}</QueueAnim>
+    return <QueueAnim type="alpha">{result}</QueueAnim>
   }
 }
 
 class RenderFinished extends React.Component {
+  confirmReset(dish, e) {
+    this.props.handleClick(dish, 'reset', e)
+  }
+
   renderSingleDish(dish) {
     return (
       <div className="dishBox" key={dish._id}>
         <div className="dishName">{dish.menuItem.title}</div>
-        <div>{new Date(dish.serveTime).toLocaleTimeString()}</div>
+        <div>{new Date(dish.readyTime).toLocaleTimeString()}</div>
         <div className="buttonBox">
-          <Tooltip title="reset">
-            <button
-              className="reset"
-              onClick={e => this.props.handleClick(dish, 'reset', e)}
-            >
+          <Popconfirm
+            title="Reset this dish as unfinished?"
+            onConfirm={e => this.confirmReset(dish, e)}
+            okText="Yes"
+            cancelText="No"
+          >
+            <button className="reset">
               <i className="fas fa-undo-alt"></i>
             </button>
-          </Tooltip>
+          </Popconfirm>
         </div>
       </div>
     )
@@ -270,13 +198,13 @@ class RenderFinished extends React.Component {
       const tableBox = (
         <div className="tableBox" key={tableId}>
           <h3>Table: {tableId}</h3>
-          <QueueAnim type="left">{dishes}</QueueAnim>
+          <QueueAnim type="alpha">{dishes}</QueueAnim>
         </div>
       )
       result.push(tableBox)
     }
-    return <QueueAnim type="left">{result}</QueueAnim>
+    return <QueueAnim type="alpha">{result}</QueueAnim>
   }
 }
 
-export default Dishes
+export default DishesToCook

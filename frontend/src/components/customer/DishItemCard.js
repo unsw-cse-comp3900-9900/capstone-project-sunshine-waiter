@@ -51,7 +51,9 @@ class DishItemCard extends Component {
         <Card>
           <Card.Header title={title} />
           <Card.Body>
+
             <img src={imgURL} alt="wrong" width="200px" height="100px" />
+
           </Card.Body>
           <Card.Footer
             content={description}

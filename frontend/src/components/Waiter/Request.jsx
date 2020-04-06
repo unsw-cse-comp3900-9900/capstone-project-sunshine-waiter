@@ -1,14 +1,7 @@
 import React from 'react'
 import { message, Tooltip } from 'antd'
 import QueueAnim from 'rc-queue-anim'
-
-const objToArray = obj => {
-  let result = []
-  for (let key in obj) {
-    result.push(obj[key])
-  }
-  return result
-}
+import { objToArray } from './Waiter'
 
 class Request extends React.Component {
   constructor(props) {

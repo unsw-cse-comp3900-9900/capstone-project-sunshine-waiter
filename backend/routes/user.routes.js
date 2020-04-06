@@ -4,6 +4,8 @@ const router = express.Router()
 const { verifyAuthToken, login } = require('../auth/authentication')
 const {
   scopes,
+  actions,
+  resources,
   allowIfLoggedin,
   requestAccess,
 } = require('../auth/authorization')
@@ -23,7 +25,7 @@ router.get(
   '/:userId',
   verifyAuthToken,
   allowIfLoggedin,
-  requestAccess(scopes.website_admin, 'read', 'profile'),
+  requestAccess(scopes.website_admin, actions.read, resources.profile),
   readUser
 )
 
@@ -31,7 +33,7 @@ router.put(
   '/:userId',
   verifyAuthToken,
   allowIfLoggedin,
-  requestAccess(scopes.website_admin, 'update', 'profile'),
+  requestAccess(scopes.website_admin, actions.update, resources.profile),
   updateUser
 )
 
@@ -39,7 +41,7 @@ router.delete(
   '/:userId',
   verifyAuthToken,
   allowIfLoggedin,
-  requestAccess(scopes.website_admin, 'delete', 'profile'),
+  requestAccess(scopes.website_admin, actions.delete, resources.profile),
   deleteUser
 )
 
