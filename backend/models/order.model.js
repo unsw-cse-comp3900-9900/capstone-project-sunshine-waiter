@@ -25,7 +25,7 @@ const restaurantSchema = new mongoose.Schema({
     required: true,
   },
 
-  createAt: {
+  createdAt: {
     type: Date,
     required: true,
   },

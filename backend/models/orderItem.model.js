@@ -16,12 +16,16 @@ const restaurantSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+
   name: {
+    // init with menuItem.name; shall not be updated.
+    // keep this record because menuItem can be modified/deleted in future.
     type: String,
     required: true,
     maxlength: 50,
   },
   amount: {
+    // can only be updated by restaurant staff ( base on the agreement from costomer and restaurant )
     type: Number,
     default: 1,
     required: true,
@@ -31,6 +35,7 @@ const restaurantSchema = new mongoose.Schema({
     },
   },
   notes: {
+    // can only be updated by restaurant staff when the status is PLACED ( base on the agreement from costomer and restaurant )
     type: String, // configuration, e.g lactose free
     required: false,
   },
