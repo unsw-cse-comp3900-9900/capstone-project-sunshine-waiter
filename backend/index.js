@@ -8,7 +8,10 @@ const menus = require('./routes/menu.routes')
 const menuItems = require('./routes/menuItem.routes')
 const categories = require('./routes/category.routes')
 const cors = require('cors')
-const errorHandler = require('./middleware/errorHandler')
+const {
+  dbErrorHandler,
+  resCodeErrorHandler,
+} = require('./middleware/errorHandler')
 
 // import websocket
 require('./server.js')
@@ -36,7 +39,8 @@ app.use('/restaurants', menus)
 app.use('/restaurants', menuItems)
 app.use('/restaurants', categories)
 
-app.use(errorHandler)
+app.use(dbErrorHandler)
+app.use(resCodeErrorHandler)
 
 app.listen(PORT_MAIN, () => {
   console.log('Node RESTful API listening at ' + PORT_MAIN)

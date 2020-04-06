@@ -26,4 +26,9 @@ const dbErrorHandler = (err, req, res, next) => {
   } else return next(err)
 }
 
-module.exports = dbErrorHandler
+const resCodeErrorHandler = (err, req, res, next) => {
+  if (!err || !err.resCode || !err.message) return next()
+  res.status(err.resCode).json({ error: err.message })
+}
+
+module.exports = { dbErrorHandler, resCodeErrorHandler }
