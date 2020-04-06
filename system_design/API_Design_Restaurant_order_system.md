@@ -52,6 +52,8 @@ If you want to get error message, you can perform normal (single resource) reque
 
     >   No such resource. You can double check the URL, resource id.
 
+    >   URL missing parameter; [see more discussion here](https://stackoverflow.com/questions/3050518/what-http-status-response-code-should-i-use-if-the-request-is-missing-a-required)
+
 8.  `500` when server down/crash. 
 
     >   I wish you will never get this.

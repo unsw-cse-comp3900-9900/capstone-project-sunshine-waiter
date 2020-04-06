@@ -26,14 +26,14 @@ createOrder = async (req, res, next) => {
     const restaurant = await findRestaurant(req, res, next)
     const order = new Order({
       placedBy,
-      isPayed: false,
+      isPaid: false,
       isAllServed: false,
       createdAt: new Date(),
       restaurant: restaurant._id,
       orderItems: [],
     })
 
-    const { orderItemIds } = await createOrderItems(req, res, next, order)
+    const orderItemIds = await createOrderItems(req, res, next, order)
 
     order.orderItems = orderItemIds
 
@@ -42,15 +42,6 @@ createOrder = async (req, res, next) => {
   } catch (error) {
     next(error)
   }
-}
-
-function validateCreateDataFormat(order) {
-  const schema = {
-    name: Joi.string().min(1).max(50),
-    description: Joi.string().min(1).max(2047),
-  }
-
-  return Joi.validate(order, schema)
 }
 
 readOrder = async (req, res, next) => {
@@ -90,7 +81,7 @@ updateOrder = async (req, res, next) => {
 
 function validateUpdateDataFormat(order) {
   const schema = {
-    name: Joi.string().min(1).max(50),
+    isPaid: Joi.string().min(1).max(50),
     description: Joi.string().min(1).max(2047),
   }
 
