@@ -32,6 +32,11 @@ const onConnection = (anonymousClient) => {
       if (!nsps[restaurantId]) {
         const nsp = io.of(nspName) // create safe connect
         nsp.on('connect', (socket) => {
+          // do sth like first time.
+          listener.on('new order placed', (order) => {
+            nsp.to('cook').emit('update dish queue', queue)
+          })
+
           console.log(type + ' ' + _id + ' connect to ' + restaurantId)
           socket.join(type) // put user into rooms according to their type
           socket.on('dish cooked', (dish) => {
