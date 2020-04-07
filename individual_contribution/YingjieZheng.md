@@ -64,6 +64,8 @@ BackEnd framework Setup **week2** `Jason`
 
 ### Week 5
 
+>   3.16-3.22
+
 >   RBAC: Role-based-access-control
 
 1.  Design the structure of RBAC base on lib [accesscontrol](https://github.com/onury/accesscontrol)
@@ -79,4 +81,39 @@ BackEnd framework Setup **week2** `Jason`
 3.  Design `model` for  `restaurant`, `order`, `orderItem`, `menu`, `menuItem`.
 
 
+
+### Week 6
+
+>   3.23-3.28
+
+-   Restaurant CRUD
+-   Menu RU
+-   MenuItem CRUD
+
+### week 7
+
+>   3.29-4.4
+
+-   Category CRUD
+-   help Zitong Li ( Steve ) to implement websocket 
+-   help Jiangyuan ( Annie ) to implement customer page
+-   upgrade/fix reference on menu <=> menuItem 
+
+### Week 8
+
+>   4.5-4.11
+
+-   Order CRU
+    -   Create; create items at the same time
+    -   Read by Id
+    -   ReadMany 
+    -   payment status update
+
+>   This one is relatively complicate. Bug report / reflection is writen in API design document.
+
+*   [ ] Integrate websocket
+    *   [ ] new order placement update
+    *   [ ] new change on orderItem 
+
+>   This are relatively complicate as well. Cause these functions are inevitably more coupled with other modules.
 
