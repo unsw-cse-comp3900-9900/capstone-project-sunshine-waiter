@@ -13,8 +13,8 @@ const {
 const {
   createOrder,
   readOrder,
-  // updateOrder,
-  // readMany,
+  readMany,
+  updatePaymentStatus,
 } = require('../controllers/order.controller')
 
 // order CRUD
@@ -28,16 +28,17 @@ router.get(
   '/:restaurantId/orders/',
   verifyAuthToken,
   allowIfLoggedin,
-  requestAccess(scopes.restaurant, actions.update, resources.update), // readMany is for order management.
+  requestAccess(scopes.restaurant, actions.update, resources.order),
+  // readMany is for order management only.
   readMany
 )
 
-// router.put(
-//   '/:restaurantId/orders/:orderId',
-//   verifyAuthToken,
-//   allowIfLoggedin,
-//   requestAccess(scopes.restaurant, actions.update, resources.order),
-//   updateOrder
-// )
+router.patch(
+  '/:restaurantId/orders/:orderId/payment',
+  verifyAuthToken,
+  allowIfLoggedin,
+  requestAccess(scopes.restaurant, actions.update, resources.order),
+  updatePaymentStatus
+)
 
 module.exports = router

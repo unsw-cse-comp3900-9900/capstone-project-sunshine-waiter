@@ -4,6 +4,7 @@ const { allowedStatus } = require('../models/orderItem.model')
 const _ = require('lodash')
 const { findRestaurant } = require('./restaurant.controller')
 const { createOrderItems } = require('./orderItem.controller')
+const isValid = require('mongoose').Types.ObjectId.isValid
 
 // present data to client side
 const present = (obj) => {
@@ -67,19 +68,45 @@ readOrder = async (req, res, next) => {
   }
 }
 
-// update scope: { name, description }
+readMany = async (req, res, next) => {
+  try {
+    const restaurant = await findRestaurant(req, res, next)
+    const objs = await Order.find({ restaurant: restaurant._id })
+    res.json({ data: objs.map((v) => present(v)) })
+  } catch (error) {
+    next(error)
+  }
+}
+
 updatePaymentStatus = async (req, res, next) => {
   try {
-    await validateUpdateDataFormat(req.body)
-
-    obj.isPaid = req.body.isPaid
+    const { isPaid, obj } = await validatePaymentStatus(req, res, next)
+    obj.isPaid = isPaid
     await obj.save()
 
     return res.json({
       success: true,
-      data: obj,
+      data: present(obj),
       message: 'Order updated.',
     })
+  } catch (error) {
+    next(error)
+  }
+}
+validatePaymentStatus = async (req, res, next) => {
+  try {
+    const { isPaid } = req.body
+    if (typeof isPaid !== 'boolean')
+      return res.status(400).json({ error: 'Boolean "isPaid" is required.' })
+
+    const { orderId } = req.params
+    if (!orderId || !isValid(orderId))
+      return res.status(400).json({ error: 'orderId is not valid' })
+
+    const obj = await Order.findById(orderId)
+    if (!obj)
+      return res.status(404).json({ error: `Order ${orderId} not found.` })
+    return { isPaid, obj }
   } catch (error) {
     next(error)
   }
@@ -108,19 +135,10 @@ updateServedStatus = async (orderId) => {
   }
 }
 
-validateUpdateDataFormat = async (body) => {
-  const schema = {
-    isPaid: Joi.boolean().required(),
-  }
-
-  const { error } = Joi.validate(body, schema)
-  if (error)
-    if (error) return res.status(400).json({ error: error.details[0].message })
-}
-
 module.exports = {
   createOrder,
   readOrder,
+  readMany,
   updatePaymentStatus,
   updateServedStatus,
 }
