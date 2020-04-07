@@ -59,12 +59,14 @@ class Customer extends Component {
     console.info('dic_order' + this.state.dic_order)
   }
 
-  handleDeleteBtn(index) {
+  handleDeleteBtn(index, item) {
     console.log('delete' + index)
     const orderlist = [...this.state.orderlist]
     orderlist.splice(index, 1)
+    this.state.dic_order.delete(item)
     this.setState({
       orderlist: [...orderlist],
+      dic_order: this.state.dic_order,
     })
   }
 
@@ -199,7 +201,7 @@ class Customer extends Component {
               key={index}
               extra={
                 <Button
-                  onClick={() => this.handleDeleteBtn(index)}
+                  onClick={() => this.handleDeleteBtn(index, item)}
                   type="ghost"
                   size="small"
                 >
