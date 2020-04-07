@@ -1,5 +1,13 @@
 const mongoose = require('mongoose')
 
+const allowedStatus = Object.freeze({
+  PLACED: 'PLACED',
+  COOKING: 'COOKING',
+  READY: 'READY',
+  SERVING: 'SERVING',
+  SERVED: 'SERVED',
+  FAIL: 'FAIL',
+})
 /*
 Design base
 1. The menuItem can be updated/deleted later on. We have to store some basic information here.
@@ -63,4 +71,4 @@ const restaurantSchema = new mongoose.Schema({
 
 const OrderItem = mongoose.model('OrderItem', restaurantSchema)
 
-module.exports = OrderItem
+module.exports = { OrderItem, allowedStatus }

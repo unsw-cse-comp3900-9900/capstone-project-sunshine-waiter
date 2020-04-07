@@ -7,6 +7,8 @@ const restaurants = require('./routes/restaurant.routes')
 const menus = require('./routes/menu.routes')
 const menuItems = require('./routes/menuItem.routes')
 const categories = require('./routes/category.routes')
+const orders = require('./routes/order.routes')
+
 const cors = require('cors')
 const {
   dbErrorHandler,
@@ -38,6 +40,7 @@ app.use('/restaurants', restaurants)
 app.use('/restaurants', menus)
 app.use('/restaurants', menuItems)
 app.use('/restaurants', categories)
+app.use('/restaurants', orders)
 
 app.use(dbErrorHandler)
 app.use(resCodeErrorHandler)

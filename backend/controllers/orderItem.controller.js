@@ -1,15 +1,9 @@
 const Joi = require('joi')
 const _ = require('lodash')
 const mongoose = require('mongoose')
-const OrderItem = require('../models/orderItem.model')
+const { OrderItem, allowedStatus } = require('../models/orderItem.model')
 const MenuItem = require('../models/menuItem.model')
 const { findMenu } = require('./menu.controller')
-
-// present data to client side
-const present = (obj) => {
-  const { __v, ...data } = obj._doc
-  return data
-}
 
 /*
 precond:
@@ -17,16 +11,24 @@ precond:
 */
 createOrderItems = async (req, res, next, order) => {
   try {
-    const orderItemsData = await validateOrderItemsData(req, res, next)
+    await validateOrderItemsData(req, res, next)
 
-    const orderItemIds = await orderItemsData.map(async (orderItemData) => {
-      orderItem = new OrderItem({
-        ..._.pick(orderItemData, ['menuItem', 'price', "name", "amount", "notes", "placedBy"]),
-        order
-      })
-      await orderItem.save()
-      return orderItem._id
+    const { orderItemsData, placedBy } = req.body
+    const docs = orderItemsData.map((orderItemData) => {
+      return {
+        ..._.pick(orderItemData, [
+          'menuItem',
+          'price',
+          'name',
+          'amount',
+          'notes',
+        ]),
+        order,
+        placedBy,
+      }
     })
+    const orderItems = await OrderItem.create(docs)
+    const orderItemIds = orderItems.map((o) => o._id)
 
     return orderItemIds
   } catch (error) {
@@ -34,52 +36,60 @@ createOrderItems = async (req, res, next, order) => {
   }
 }
 
-
 validateOrderItemsData = async (req, res, next) => {
-  const menu = await findMenu(req, res)
+  const { placedBy } = req.body
 
   // Incomplete, not including checkInteger(amount) , checkObjectId(menuItem)
   const basicSchema = {
     name: Joi.string().max(50).required(),
     price: Joi.number().required(),
-    notes: Joi.string().max(255),
     amount: Joi.number().integer().positive().required(),
+    notes: Joi.string().max(255),
+    placedBy: Joi.string().max(255),
   }
 
-  const validateMenuItemRef = async (objectId) => {
+  const validateBasic = (orderItemData) => {
+    const data = {
+      ..._.pick(orderItemData, ['price', 'name', 'amount', 'notes']),
+      placedBy,
+    }
+    const { error } = Joi.validate(data, basicSchema)
+
+    if (error) {
+      throw {
+        resCode: 400,
+        message: error.details[0].message,
+        problematicData: orderItemData,
+      }
+    }
+  }
+
+  const currentMenu = await findMenu(req, res)
+  const validateMenuItemRef = async (orderItemData) => {
+    const objectId = orderItemData.menuItem
+
     const isValid = mongoose.Types.ObjectId.isValid
     if (!isValid(objectId)) {
       throw {
         resCode: 400,
-        message: "This orderItemData.menuItem is not a valid objectId.",
-        problematicData: orderItemData
+        message: `${objectId} is not a valid objectId.`,
+        problematicData: orderItemData,
       }
     }
+
     const menuItem = await MenuItem.findById(objectId)
-    if (!menuItem || !menuItem.menu.equals(menu)) {
+
+    if (!menuItem || !currentMenu._id.equals(menuItem.menu)) {
       throw {
         resCode: 400,
-        message: "This orderItemData.menuItem does not refer to an existing menuItem in target restaurant.",
-        problematicData: orderItemData
+        message: `Menuitem ${objectId} not found. It is not refering to an existing menuItem in target restaurant.`,
+        problematicData: orderItemData,
       }
     }
   }
 
-  const validateBasic = (orderItemData) => {
-    const data = _.pick(orderItemData, ['menuItem', 'price', "name", "amount", "notes", "placedBy"])
-    const {error} = Joi.validate(data, basicSchema)
-    if (error) {
-      throw {
-        resCode: 400,
-        error: error.details[0].message,
-        problematicData: orderItemData
-      }
-    }
-  }
-  
   try {
-    const { orderItemsData } = req
-    
+    const { orderItemsData } = req.body
     if (!Array.isArray(orderItemsData) || !orderItemsData.length) {
       throw {
         resCode: 400,
@@ -87,19 +97,21 @@ validateOrderItemsData = async (req, res, next) => {
           'Request body shall contain orderItemsData. It is an array containing data for creating orderItems.',
       }
     }
-    
-    orderItemsData.forEach(orderItemData => {
-      validateBasic(orderItemData)
-      await validateMenuItemRef(orderItemData.menuItem)
-    });
 
+    orderItemsData.forEach((orderItemData) => {
+      validateBasic(orderItemData)
+    })
+
+    const validatePromises = orderItemsData.map((orderItemData) =>
+      (async () => await validateMenuItemRef(orderItemData))()
+    )
+    await Promise.all(validatePromises)
+    return
   } catch (error) {
     next(error)
   }
 }
 
-
-
 module.exports = {
-  createOrderItems
+  createOrderItems,
 }

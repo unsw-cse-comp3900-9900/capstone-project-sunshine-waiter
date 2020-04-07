@@ -1,8 +1,10 @@
 const Joi = require('joi')
 const Order = require('../models/order.model')
+const { allowedStatus } = require('../models/orderItem.model')
 const _ = require('lodash')
-const { findRestaurant } = require('.restaurant.controller')
+const { findRestaurant } = require('./restaurant.controller')
 const { createOrderItems } = require('./orderItem.controller')
+
 // present data to client side
 const present = (obj) => {
   const { __v, createdBy, ...data } = obj._doc
@@ -20,10 +22,11 @@ precond:
 */
 createOrder = async (req, res, next) => {
   try {
-    const placedBy = req.placedBy
+    const { placedBy } = req.body
     if (!placedBy)
-      throw { resCode: 400, message: 'Request body miss key: placeBy' }
+      throw { resCode: 400, message: 'Request body miss key: placedBy' }
     const restaurant = await findRestaurant(req, res, next)
+
     const order = new Order({
       placedBy,
       isPaid: false,
@@ -36,9 +39,15 @@ createOrder = async (req, res, next) => {
     const orderItemIds = await createOrderItems(req, res, next, order)
 
     order.orderItems = orderItemIds
-
     await order.save()
     res.status(201).json({ data: present(order) })
+
+    /*
+    TODO: emit event of new order placement
+    d 
+    const orderPlacedEvent = new Event("new order placed", order}) restaurant._id
+    orderPlacedEvent.emit()
+    */
   } catch (error) {
     next(error)
   }
@@ -59,16 +68,13 @@ readOrder = async (req, res, next) => {
 }
 
 // update scope: { name, description }
-updateOrder = async (req, res, next) => {
+updatePaymentStatus = async (req, res, next) => {
   try {
-    // validate new data
+    await validateUpdateDataFormat(req.body)
 
-    // update&save
-    obj.name = name || obj.name
-    obj.description = description || obj.description
+    obj.isPaid = req.body.isPaid
     await obj.save()
 
-    // res
     return res.json({
       success: true,
       data: obj,
@@ -79,17 +85,42 @@ updateOrder = async (req, res, next) => {
   }
 }
 
-function validateUpdateDataFormat(order) {
+updateServedStatus = async (orderId) => {
+  try {
+    const order = await Order.findById(orderId)
+
+    await order.orderItems.forEach(async (orderItem) => {
+      if (
+        orderItem.status != allowedStatus.SERVED &&
+        orderItem.status != allowedStatus.FAIL
+      ) {
+        order.isAllServed = false
+        await order.save()
+        return { isAllServed: false }
+      }
+    })
+
+    order.isAllServed = true
+    await order.save()
+    return { isAllServed: true }
+  } catch (error) {
+    return error
+  }
+}
+
+validateUpdateDataFormat = async (body) => {
   const schema = {
-    isPaid: Joi.string().min(1).max(50),
-    description: Joi.string().min(1).max(2047),
+    isPaid: Joi.boolean().required(),
   }
 
-  return Joi.validate(order, schema)
+  const { error } = Joi.validate(body, schema)
+  if (error)
+    if (error) return res.status(400).json({ error: error.details[0].message })
 }
 
 module.exports = {
   createOrder,
   readOrder,
-  updateOrder,
+  updatePaymentStatus,
+  updateServedStatus,
 }
