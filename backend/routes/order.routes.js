@@ -13,39 +13,31 @@ const {
 const {
   createOrder,
   readOrder,
-  updateOrder,
-  deleteOrder,
-  readMany,
+  // updateOrder,
+  // readMany,
 } = require('../controllers/order.controller')
 
 // order CRUD
 
-// public access
-router.get('/:restaurantId/menuitems/:orderId', readOrder)
-router.get('/:restaurantId/menuitems/', readMany)
+// public access ( customer dosen't need to login/register )
+router.post('/:restaurantId/orders/', createOrder)
+router.get('/:restaurantId/orders/:orderId', readOrder)
 
 // owner/manager access
-router.post(
-  '/:restaurantId/menuitems/',
+router.get(
+  '/:restaurantId/orders/',
   verifyAuthToken,
   allowIfLoggedin,
-  requestAccess(scopes.restaurant, actions.create, resources.menu),
-  createOrder
-)
-router.put(
-  '/:restaurantId/menuitems/:orderId',
-  verifyAuthToken,
-  allowIfLoggedin,
-  requestAccess(scopes.restaurant, actions.update, resources.menu),
-  updateOrder
+  requestAccess(scopes.restaurant, actions.update, resources.update), // readMany is for order management.
+  readMany
 )
 
-router.delete(
-  '/:restaurantId/menuitems/:orderId',
-  verifyAuthToken,
-  allowIfLoggedin,
-  requestAccess(scopes.restaurant, actions.delete, resources.menu),
-  deleteOrder
-)
+// router.put(
+//   '/:restaurantId/orders/:orderId',
+//   verifyAuthToken,
+//   allowIfLoggedin,
+//   requestAccess(scopes.restaurant, actions.update, resources.order),
+//   updateOrder
+// )
 
 module.exports = router

@@ -1,5 +1,13 @@
 const mongoose = require('mongoose')
 
+const allowedStatus = Object.freeze({
+  PLACED: 'PLACED',
+  COOKING: 'COOKING',
+  READY: 'READY',
+  SERVING: 'SERVING',
+  SERVED: 'SERVED',
+  FAIL: 'FAIL',
+})
 /*
 Design base
 1. The menuItem can be updated/deleted later on. We have to store some basic information here.
@@ -16,12 +24,16 @@ const restaurantSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+
   name: {
+    // init with menuItem.name; shall not be updated.
+    // keep this record because menuItem can be modified/deleted in future.
     type: String,
     required: true,
     maxlength: 50,
   },
   amount: {
+    // can only be updated by restaurant staff ( base on the agreement from costomer and restaurant )
     type: Number,
     default: 1,
     required: true,
@@ -31,8 +43,9 @@ const restaurantSchema = new mongoose.Schema({
     },
   },
   notes: {
+    // can only be updated by restaurant staff when the status is PLACED ( base on the agreement from costomer and restaurant )
     type: String, // configuration, e.g lactose free
-    required: true,
+    required: false,
   },
   placedBy: {
     type: String, // ownership reference ID. e.g table number;
@@ -58,4 +71,4 @@ const restaurantSchema = new mongoose.Schema({
 
 const OrderItem = mongoose.model('OrderItem', restaurantSchema)
 
-module.exports = OrderItem
+module.exports = { OrderItem, allowedStatus }

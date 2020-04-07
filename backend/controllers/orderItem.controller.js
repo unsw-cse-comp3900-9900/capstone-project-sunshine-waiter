@@ -1,148 +1,117 @@
 const Joi = require('joi')
 const _ = require('lodash')
-
-const Order = require('../models/order.model')
+const mongoose = require('mongoose')
+const { OrderItem, allowedStatus } = require('../models/orderItem.model')
+const MenuItem = require('../models/menuItem.model')
 const { findMenu } = require('./menu.controller')
 
-// present data to client side
-const present = (obj) => {
-  const { __v, ...data } = obj._doc
-  return data
-}
-
-// create order { name, price, description, note  }
-createOrder = async (req, res, next) => {
+/*
+precond:
+- on every menuItemId from req.orderItemsData, exist menuItem in DB with such id 
+*/
+createOrderItems = async (req, res, next, order) => {
   try {
-    // validate input ( params, body )
-    const { error } = validateCreateDataFormat(req.body)
-    if (error) return res.status(400).json({ error: error.details[0].message })
-    const menu = await findMenu(req, res)
+    await validateOrderItemsData(req, res, next)
 
-    // create order
-    order = new Order({
-      ..._.pick(req.body, ['name', 'price', 'description', 'note']),
-      menu: menu._id,
+    const { orderItemsData, placedBy } = req.body
+    const docs = orderItemsData.map((orderItemData) => {
+      return {
+        ..._.pick(orderItemData, [
+          'menuItem',
+          'price',
+          'name',
+          'amount',
+          'notes',
+        ]),
+        order,
+        placedBy,
+      }
     })
-    await order.save()
+    const orderItems = await OrderItem.create(docs)
+    const orderItemIds = orderItems.map((o) => o._id)
 
-    res.status(201).json({ data: present(order) })
+    return orderItemIds
   } catch (error) {
     next(error)
   }
 }
 
-readOrder = async (req, res, next) => {
-  try {
-    // find
-    const orderId = req.params.orderId
-    const order = await Order.findById(orderId)
-    if (!order) return res.status(404).json({ error: 'Order does not exist' })
+validateOrderItemsData = async (req, res, next) => {
+  const { placedBy } = req.body
 
-    // res
-    res.status(201).json({ data: present(order) })
-  } catch (error) {
-    next(error)
-  }
-}
-
-readMany = async (req, res, next) => {
-  try {
-    const menu = await findMenu(req, res)
-    const orders = await Order.find({ menu: menu._id })
-
-    res.json({ data: orders.map((v) => present(v)) })
-  } catch (error) {
-    next(error)
-  }
-}
-
-// update scope: { name, description }
-updateOrder = async (req, res, next) => {
-  try {
-    // find
-    const orderId = req.params.orderId
-    const order = await Order.findById(orderId)
-    if (!order) return res.status(404).json({ error: 'Order does not exist' })
-
-    // validate new data
-    const { name, description } = req.body
-    const { error } = validateUpdateDataFormat({ name, description })
-    if (error) return res.status(400).json({ error: error.details[0].message })
-
-    // update
-    order.name = name || order.name
-    order.description = description || order.description
-    await order.save()
-
-    // res
-    return res.json({
-      success: true,
-      data: present(order),
-      message: 'Order updated.',
-    })
-  } catch (error) {
-    next(error)
-  }
-}
-
-deleteOrder = async (req, res, next) => {
-  try {
-    const orderId = req.params.orderId
-    const order = await Order.findById(orderId)
-    if (!order)
-      return res
-        .status(204)
-        .send('Order has been deleted or does not exist at all.')
-
-    await Order.findByIdAndDelete(orderId)
-
-    return res.json({
-      success: true,
-      data: present(order),
-      message: 'Order deleted.',
-    })
-  } catch (error) {
-    next(error)
-  }
-}
-
-deleteMany = async (req, res, next) => {
-  try {
-    const id_list = req.body.items
-    return res.json({
-      success: false,
-      message: `DeleteMany is not yet implemented. You can perform Delete on each id of ${id_list}`,
-    })
-  } catch (error) {
-    next(error)
-  }
-}
-
-function validateCreateDataFormat(order) {
-  const schema = {
+  // Incomplete, not including checkInteger(amount) , checkObjectId(menuItem)
+  const basicSchema = {
     name: Joi.string().max(50).required(),
     price: Joi.number().required(),
-    description: Joi.string().max(2047),
-    note: Joi.string().max(255),
+    amount: Joi.number().integer().positive().required(),
+    notes: Joi.string().max(255),
+    placedBy: Joi.string().max(255),
   }
 
-  return Joi.validate(order, schema)
-}
+  const validateBasic = (orderItemData) => {
+    const data = {
+      ..._.pick(orderItemData, ['price', 'name', 'amount', 'notes']),
+      placedBy,
+    }
+    const { error } = Joi.validate(data, basicSchema)
 
-function validateUpdateDataFormat(order) {
-  const schema = {
-    name: Joi.string().min(1).max(50),
-    description: Joi.string().min(1).max(2047),
+    if (error) {
+      throw {
+        resCode: 400,
+        message: error.details[0].message,
+        problematicData: orderItemData,
+      }
+    }
   }
 
-  return Joi.validate(order, schema)
+  const currentMenu = await findMenu(req, res)
+  const validateMenuItemRef = async (orderItemData) => {
+    const objectId = orderItemData.menuItem
+
+    const isValid = mongoose.Types.ObjectId.isValid
+    if (!isValid(objectId)) {
+      throw {
+        resCode: 400,
+        message: `${objectId} is not a valid objectId.`,
+        problematicData: orderItemData,
+      }
+    }
+
+    const menuItem = await MenuItem.findById(objectId)
+
+    if (!menuItem || !currentMenu._id.equals(menuItem.menu)) {
+      throw {
+        resCode: 400,
+        message: `Menuitem ${objectId} not found. It is not refering to an existing menuItem in target restaurant.`,
+        problematicData: orderItemData,
+      }
+    }
+  }
+
+  try {
+    const { orderItemsData } = req.body
+    if (!Array.isArray(orderItemsData) || !orderItemsData.length) {
+      throw {
+        resCode: 400,
+        message:
+          'Request body shall contain orderItemsData. It is an array containing data for creating orderItems.',
+      }
+    }
+
+    orderItemsData.forEach((orderItemData) => {
+      validateBasic(orderItemData)
+    })
+
+    const validatePromises = orderItemsData.map((orderItemData) =>
+      (async () => await validateMenuItemRef(orderItemData))()
+    )
+    await Promise.all(validatePromises)
+    return
+  } catch (error) {
+    next(error)
+  }
 }
 
 module.exports = {
-  createOrder,
-  readOrder,
-  updateOrder,
-  deleteOrder,
-  readMany,
-  deleteMany,
+  createOrderItems,
 }

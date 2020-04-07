@@ -10,7 +10,7 @@ const fakeData = {
       status: 'PLACED',
       order: {
         _id: 'o0',
-        createAt: '14:42:09',
+        createdAt: '14:42:09',
       },
     },
     {
@@ -23,7 +23,7 @@ const fakeData = {
       status: 'PLACED',
       order: {
         _id: 'o1',
-        createAt: '17:08:27',
+        createdAt: '17:08:27',
       },
     },
     {
@@ -36,7 +36,7 @@ const fakeData = {
       status: 'PLACED',
       order: {
         _id: 'o2',
-        createAt: '15:05:58',
+        createdAt: '15:05:58',
       },
     },
     {
@@ -49,7 +49,7 @@ const fakeData = {
       status: 'PLACED',
       order: {
         _id: 'o3',
-        createAt: '16:58:29',
+        createdAt: '16:58:29',
       },
     },
     {
@@ -62,7 +62,7 @@ const fakeData = {
       status: 'PLACED',
       order: {
         _id: 'o4',
-        createAt: '16:23:47',
+        createdAt: '16:23:47',
       },
     },
     {
@@ -75,7 +75,7 @@ const fakeData = {
       status: 'PLACED',
       order: {
         _id: 'o5',
-        createAt: '16:23:08',
+        createdAt: '16:23:08',
       },
     },
     {
@@ -88,7 +88,7 @@ const fakeData = {
       status: 'PLACED',
       order: {
         _id: 'o6',
-        createAt: '15:59:43',
+        createdAt: '15:59:43',
       },
     },
     {
@@ -101,7 +101,7 @@ const fakeData = {
       status: 'PLACED',
       order: {
         _id: 'o7',
-        createAt: '18:46:02',
+        createdAt: '18:46:02',
       },
     },
     {
@@ -114,7 +114,7 @@ const fakeData = {
       status: 'PLACED',
       order: {
         _id: 'o8',
-        createAt: '14:29:28',
+        createdAt: '14:29:28',
       },
     },
     {
@@ -127,7 +127,7 @@ const fakeData = {
       status: 'PLACED',
       order: {
         _id: 'o9',
-        createAt: '16:05:50',
+        createdAt: '16:05:50',
       },
     },
     {
@@ -140,7 +140,7 @@ const fakeData = {
       status: 'PLACED',
       order: {
         _id: 'o10',
-        createAt: '18:15:13',
+        createdAt: '18:15:13',
       },
     },
     {
@@ -153,7 +153,7 @@ const fakeData = {
       status: 'PLACED',
       order: {
         _id: 'o11',
-        createAt: '17:16:21',
+        createdAt: '17:16:21',
       },
     },
     {
@@ -166,7 +166,7 @@ const fakeData = {
       status: 'PLACED',
       order: {
         _id: 'o12',
-        createAt: '20:12:22',
+        createdAt: '20:12:22',
       },
     },
     {
@@ -179,7 +179,7 @@ const fakeData = {
       status: 'PLACED',
       order: {
         _id: 'o13',
-        createAt: '15:48:49',
+        createdAt: '15:48:49',
       },
     },
     {
@@ -192,7 +192,7 @@ const fakeData = {
       status: 'PLACED',
       order: {
         _id: 'o14',
-        createAt: '14:06:26',
+        createdAt: '14:06:26',
       },
     },
     {
@@ -205,7 +205,7 @@ const fakeData = {
       status: 'PLACED',
       order: {
         _id: 'o15',
-        createAt: '18:32:56',
+        createdAt: '18:32:56',
       },
     },
     {
@@ -218,7 +218,7 @@ const fakeData = {
       status: 'PLACED',
       order: {
         _id: 'o16',
-        createAt: '20:26:17',
+        createdAt: '20:26:17',
       },
     },
     {
@@ -231,7 +231,7 @@ const fakeData = {
       status: 'PLACED',
       order: {
         _id: 'o17',
-        createAt: '15:44:10',
+        createdAt: '15:44:10',
       },
     },
     {
@@ -244,7 +244,7 @@ const fakeData = {
       status: 'PLACED',
       order: {
         _id: 'o18',
-        createAt: '15:25:55',
+        createdAt: '15:25:55',
       },
     },
     {
@@ -257,7 +257,7 @@ const fakeData = {
       status: 'PLACED',
       order: {
         _id: 'o19',
-        createAt: '20:32:18',
+        createdAt: '20:32:18',
       },
     },
   ],

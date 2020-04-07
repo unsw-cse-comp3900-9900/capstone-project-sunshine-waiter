@@ -52,6 +52,8 @@ If you want to get error message, you can perform normal (single resource) reque
 
     >   No such resource. You can double check the URL, resource id.
 
+    >   URL missing parameter; [see more discussion here](https://stackoverflow.com/questions/3050518/what-http-status-response-code-should-i-use-if-the-request-is-missing-a-required)
+
 8.  `500` when server down/crash. 
 
     >   I wish you will never get this.
@@ -477,7 +479,7 @@ function setUsers(data) {
 
 >   credit to stackoverflow
 
-### Cannot read property `includes` of `undefined` 
+### Cannot read property `includes` of `undefined`
 
 >   This happened when calling `menuItem.categoryArray.includes()`
 
@@ -486,6 +488,86 @@ It's because `categoryArray` is not required in `menuItem`, and it wasn't initia
 This reminds me of formal method. What states every variable can be in their life circle? 
 
 I feel that, formalizing pre-condtion and post-condition in a expression of these state might help me to enumerate all the corner cases. 
+
+
+
+
+
+### Trying to nest async-await in Array.map()
+
+learned:
+
+`asyncFunction` v.s `promise`
+
+- When you excute an `asyncFunction`, it returns a promise.
+- You can `await` a `promise`
+- If you `await` a `asyncFunction`, it will return this `asyncFunction` without changing
+
+I did sth like
+
+```javascript
+const promise0 = new Promise(function (resolve, reject) {
+  setTimeout(resolve, 100, 'foo')
+})
+
+const arr = [
+  { menuItem: '1', price: 1 },
+  { menuItem: '2', price: 2 },
+  { menuItem: '3', price: 3 },
+]
+
+/*
+==========================================
+= the buggy way
+==========================================
+*/
+const wrongTasks = arr.map((e) => async () => {
+  await promise0
+  console.log('after await the async')
+  return { ...e, dummyNewValue: e.price }
+}) 
+
+console.log({ wrongTasks }) // it's a list of asyncFunction; which cannot use with await.
+
+const wrongDemoAsync = async () => {
+  console.log('wrongDemoAsync - 1 start')
+  const resultOfWrongOne = await Promise.all(wrongTasks)
+  console.log({ resultOfWrongOne })
+  console.log('wrongDemoAsync - 2 after asyncLogInput')
+  return 'wrongDemoAsync - what it returns'
+}
+
+
+/*
+==========================================
+= the right way
+==========================================
+*/
+const tasks = arr.map((element) =>
+  (async () => {
+    await promise0 // simulation doing sth on element
+    return { ...element, dummyNewValue: element.price }
+  })()
+)
+
+console.log({ tasks }) // it's a list of promises; which can be await.
+
+const demoAsync = async () => {
+  console.log('demoAsync - 1 start')
+  const resultOfRightOne = await Promise.all(tasks)
+  console.log({ resultOfRightOne })
+  console.log('demoAsync - 2 after asyncLogInput')
+  return 'demoAsync - what it returns'
+}
+
+demoAsync()
+```
+
+
+
+
+
+Also, I found that `mogoose` model has `create(docs)` function, which I didn't expected. That's one of the reason why I try to execute a list of async functions in such way.
 
 
 
