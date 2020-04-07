@@ -27,13 +27,14 @@ const dbErrorHandler = (err, req, res, next) => {
 }
 
 const resCodeErrorHandler = (err, req, res, next) => {
-
   if (err && err.resCode && err.message)
     res
       .status(err.resCode)
       .json({ error: err.message, problematicData: err.problematicData })
-  else res.status(500).json({ err })
-  return
+  else {
+    console.log(err)
+    next()
+  }
 }
 
 module.exports = { dbErrorHandler, resCodeErrorHandler }

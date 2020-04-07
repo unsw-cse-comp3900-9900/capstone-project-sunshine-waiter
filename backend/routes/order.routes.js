@@ -22,6 +22,7 @@ const {
 // public access ( customer dosen't need to login/register )
 router.post('/:restaurantId/orders/', createOrder)
 router.get('/:restaurantId/orders/:orderId', readOrder)
+router.get('/:restaurantId/orders/:orderId/items', readItemsInOrder)
 
 // owner/manager access
 router.get(

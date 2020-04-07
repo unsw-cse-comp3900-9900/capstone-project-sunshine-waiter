@@ -4,6 +4,8 @@ const mongoose = require('mongoose')
 const { OrderItem, allowedStatus } = require('../models/orderItem.model')
 const MenuItem = require('../models/menuItem.model')
 const { findMenu } = require('./menu.controller')
+const { findOrder } = require('./order.controller')
+const { present } = require('../util')
 
 /*
 precond:
@@ -23,14 +25,11 @@ createOrderItems = async (req, res, next, order) => {
           'amount',
           'notes',
         ]),
-        order,
+        order: order._id,
         placedBy,
       }
     })
-    const orderItems = await OrderItem.create(docs)
-    const orderItemIds = orderItems.map((o) => o._id)
-
-    return orderItemIds
+    await OrderItem.create(docs)
   } catch (error) {
     next(error)
   }
@@ -112,6 +111,17 @@ validateOrderItemsData = async (req, res, next) => {
   }
 }
 
+/*
+precond:
+exist order with req.params.orderId 
+*/
+readItemsInOrder = async (req, res, next) => {
+  const order = await findOrder(req, res, next)
+  const objs = await OrderItem.find({ order: order._id })
+  res.json({ data: objs.map((v) => present(v)) })
+}
+
 module.exports = {
   createOrderItems,
+  readItemsInOrder,
 }

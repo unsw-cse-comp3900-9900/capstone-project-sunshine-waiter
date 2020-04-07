@@ -2,8 +2,6 @@ const mongoose = require('mongoose')
 
 // require restaurant admin to update orderItems
 const restaurantSchema = new mongoose.Schema({
-  orderItems: [{ type: mongoose.Schema.Types.ObjectId, ref: 'OrderItem' }],
-
   isPaid: {
     type: Boolean,
     required: true,
