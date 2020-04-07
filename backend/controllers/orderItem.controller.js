@@ -1,6 +1,7 @@
 const Joi = require('joi')
 const _ = require('lodash')
 const mongoose = require('mongoose')
+const isValid = require('mongoose').Types.ObjectId.isValid
 const { OrderItem, allowedStatus } = require('../models/orderItem.model')
 const MenuItem = require('../models/menuItem.model')
 const { findMenu } = require('./menu.controller')
@@ -119,6 +120,35 @@ readItemsInOrder = async (req, res, next) => {
   const order = await findOrder(req, res, next)
   const objs = await OrderItem.find({ order: order._id })
   res.json({ data: objs.map((v) => present(v)) })
+}
+
+/*
+return 
+- { error: String } when fail
+- { success: true } when success
+*/
+updateItemStatus = async (restaurantId, itemId, newStatus) => {
+  if (!allowedStatus[newStatus])
+    return { error: `newStatus ${newStatus} is not valid` }
+
+  const item = await findItem(restaurantId, itemId)
+  item.status = newStatus
+  await item.save()
+  return { success: true }
+}
+
+findItem = async (restaurantId, itemId) => {
+  if (!itemId || !isValid(itemId))
+    return { error: `itemId ${itemId} is not valid` }
+  if (!restaurantId || !isValid(restaurantId))
+    return { error: `restaurantId ${restaurantId} is not valid` }
+  const item = await OrderItem.findById(itemId)
+  if (!item) return { error: `orderItem ${itemId} not found` }
+  const order = await Order.findById(item.order)
+  if (!order) return { error: `order not found` }
+  if (!order.restaurant.equals(restaurantId))
+    return { error: `item ${itemId} is not in current restaurant!` }
+  return item
 }
 
 module.exports = {
