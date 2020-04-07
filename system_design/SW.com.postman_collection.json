@@ -1257,7 +1257,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseURL}}/restaurants/{{restaurantId}}/orders/5e8c2a65d5bb7e0251993cd8",
+							"raw": "{{baseURL}}/restaurants/{{restaurantId}}/orders/{{orderId}}",
 							"host": [
 								"{{baseURL}}"
 							],
@@ -1265,10 +1265,96 @@
 								"restaurants",
 								"{{restaurantId}}",
 								"orders",
-								"5e8c2a65d5bb7e0251993cd8"
+								"{{orderId}}"
 							]
 						},
 						"description": "For usage of dashboard, order management"
+					},
+					"response": []
+				},
+				{
+					"name": "/restaurants/:rID/orders",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"type": "text",
+								"value": "{{active-jwt}}"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "javascript"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/restaurants/{{restaurantId}}/orders/",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"restaurants",
+								"{{restaurantId}}",
+								"orders",
+								""
+							]
+						},
+						"description": "For usage of dashboard, order management"
+					},
+					"response": []
+				},
+				{
+					"name": "/restaurants/:rID/orders/oId/payment",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"type": "text",
+								"value": "{{active-jwt}}"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"isPaid\": true\n}\n",
+							"options": {
+								"raw": {
+									"language": "javascript"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/restaurants/{{restaurantId}}/orders/{{orderId}}/payment",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"restaurants",
+								"{{restaurantId}}",
+								"orders",
+								"{{orderId}}",
+								"payment"
+							]
+						},
+						"description": "For usage of order update payment.\nIf success, will return 204. Else, error code should be delivered."
 					},
 					"response": []
 				}
