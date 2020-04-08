@@ -352,18 +352,33 @@ GET 'sw.com/api/restaurants/567813/categories/'
 
 ## Design Disccusion
 
-1.Why restaurant.name is `unique`?
+### Why restaurant.name is `unique`?
 
 It's a temporary solution for scam prevention. 
 In a more enriched version of this software, a restaurant will be verified by website admin on whether this restaurant is real, whether this user have the concent from the owner of the restaurant. 
 
 In that case, it's ok that sevearl restaurant have exactly same name (they might want to add address information to distinguish from eachother). 
 
-2.  Where to store our images. 
+### Where to store our images. 
 
 Currently decide to store images on serverside. Use `multer` to handle image upload. 
 
 Skip 3rd party service.
+
+### How to push new created data in existing websocket connection
+
+>   Say, customer placed a order. How to trigger this update action on existing websocket connection
+
+
+
+Polling with period adaptation. 
+
+-   In an existing connection, server query DB every `T` seconds.  `BOTTOM` <= `T` <=`TOP`
+-   Check if anything updated by checking `updatedAt` key on every object.
+    -   if new_updated, `T` := max(`T` / 2, `BOTTOM` )
+    -   if !new_updated, `T` := max(`T` * 2, `TOP` )
+
+
 
 
 

@@ -38,8 +38,7 @@ readCategory = async (req, res, next) => {
     // find
     const categoryId = req.params.categoryId
     const category = await Category.findById(categoryId)
-    if (!category)
-      return res.status(404).json({ error: 'Category does not exist' })
+    if (!category) return res.status(404).json({ error: 'Category not found' })
 
     // res
     res.status(201).json({ data: present(category) })
@@ -59,21 +58,53 @@ readMany = async (req, res, next) => {
   }
 }
 
+readCategoryPublicly = async (req, res, next) => {
+  try {
+    // find category
+    const categoryId = req.params.categoryId
+    const category = await Category.findById(categoryId)
+    if (!category || category.isArchived || category.isPrivate)
+      return res.status(404).json({ error: 'Category not found' })
+
+    // res
+    res.status(201).json({ data: present(category) })
+  } catch (error) {
+    next(error)
+  }
+}
+
+readManyPublicly = async (req, res, next) => {
+  try {
+    const menu = await findMenu(req, res)
+    const categories = await Category.find({
+      menu: menu._id,
+      isArchived: false,
+      isPrivate: false,
+    })
+
+    res.json({ data: categories.map((v) => present(v)) })
+  } catch (error) {
+    next(error)
+  }
+}
+
 // update scope: { name, description }
 updateCategory = async (req, res, next) => {
   try {
-    // find
+    // find category
     const categoryId = req.params.categoryId
     const category = await Category.findById(categoryId)
-    if (!category)
-      return res.status(404).json({ error: 'Category does not exist' })
+    if (!category) return res.status(404).send('Category not found.')
+    if (category.isArchived)
+      return res.status(403).send('archived document is immutable')
 
     // validate new data
     const { name, description } = req.body
     const { error } = validateUpdateDataFormat({ name, description })
     if (error) return res.status(400).json({ error: error.details[0].message })
 
-    // update
+    // snapshot -> update
+    await category.snapshot()
     category.name = name || category.name
     category.description = description || category.description
     await category.save()
@@ -89,34 +120,37 @@ updateCategory = async (req, res, next) => {
   }
 }
 
+// Instead of removing target object from DB, it will permanently archive it.
 deleteCategory = async (req, res, next) => {
   try {
-    const menu = await findMenu(req, res)
-
+    // 1. find category
     const categoryId = req.params.categoryId
     const category = await Category.findById(categoryId)
-    if (!category)
-      return res
-        .status(204)
-        .send('Category has been deleted or does not exist at all.')
+    if (!category) return res.status(404).send('Category not found.')
+    if (category.isArchived) return res.status(204).send()
 
-    // update menuItem reference
+    // 2. update menuItem reference
+    const menu = await findMenu(req, res)
     const allMenuItemsInRestaurant = await MenuItem.find({ menu: menu.id })
     allMenuItemsInRestaurant.forEach(async (menuItem) => {
+      if (menuItem.isArchived) return
+
       const { categoryArray: cArray } = menuItem
       if (Array.isArray(cArray) && cArray.includes(categoryId)) {
+        await menuItem.snapshot()
         menuItem.categoryArray = cArray.filter((id) => !id.equals(categoryId))
         await menuItem.save()
       }
     })
 
-    // delete
-    await Category.findByIdAndDelete(categoryId)
+    // 3. archive it
+    category.isArchived = true
+    await category.save()
 
     return res.json({
       success: true,
       data: present(category),
-      message: 'Category deleted.',
+      message: 'Category permanently archived.',
     })
   } catch (error) {
     next(error)
@@ -156,8 +190,9 @@ function validateUpdateDataFormat(category) {
 module.exports = {
   createCategory,
   readCategory,
+  readCategoryPublicly,
   updateCategory,
   deleteCategory,
   readMany,
-  deleteMany, // not yet implemented
+  readManyPublicly,
 }

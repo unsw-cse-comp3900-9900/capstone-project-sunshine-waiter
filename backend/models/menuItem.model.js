@@ -1,6 +1,16 @@
 const mongoose = require('mongoose')
 
-const restaurantSchema = new mongoose.Schema({
+const schema = new mongoose.Schema({
+  isArchived: {
+    type: Boolean,
+    required: true,
+    default: false,
+  },
+  isPrivate: {
+    type: Boolean,
+    required: true,
+    default: true,
+  },
   price: {
     type: Number,
     required: true,
@@ -43,8 +53,17 @@ const restaurantSchema = new mongoose.Schema({
       ref: 'Category',
     },
   ],
+  history: { type: Array, require: true, default: [] },
 })
 
-const MenuItem = mongoose.model('MenuItem', restaurantSchema)
+schema.methods.snapshot = async function () {
+  const { history, ...current } = this._doc
+  const snapshot = { ...current, updatedAt: Date() }
+  this.history.push(snapshot)
+
+  await this.save()
+}
+
+const MenuItem = mongoose.model('MenuItem', schema)
 
 module.exports = MenuItem

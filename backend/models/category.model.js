@@ -1,6 +1,16 @@
 const mongoose = require('mongoose')
 
 const schema = new mongoose.Schema({
+  isArchived: {
+    type: Boolean,
+    required: true,
+    default: false,
+  },
+  isPrivate: {
+    type: Boolean,
+    required: true,
+    default: false,
+  },
   name: {
     type: String,
     required: true,
@@ -22,7 +32,16 @@ const schema = new mongoose.Schema({
     ref: 'Menu',
     required: true,
   },
+  history: { type: Array, require: true, default: [] },
 })
+
+schema.methods.snapshot = async function () {
+  const { history, ...current } = this._doc
+  const snapshot = { ...current, updatedAt: Date() }
+  this.history.push(snapshot)
+
+  await this.save()
+}
 
 const Category = mongoose.model('Category', schema)
 
