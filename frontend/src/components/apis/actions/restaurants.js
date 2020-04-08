@@ -23,6 +23,28 @@ export const getRestaurants = (token, callback = () => {}) => {
   }
 }
 
+export const getSingleRestaurant = (token, id, callback = () => {}) => {
+  if (token !== undefined) {
+    const config = {
+      headers: {
+        'x-auth-token': token,
+        'Content-Type': 'application/json',
+      },
+    }
+    BaseProvider.get(`/restaurants/${id}`, config)
+      .then(res => {
+        callback(res.data.data)
+      })
+      .catch(err => {
+        if (err === undefined) {
+          alert('Backend server is dnow!')
+        } else {
+          alert(err.data.error)
+        }
+      })
+  }
+}
+
 export const createRestaurant = (token, param, callback = () => {}) => {
   if (token !== undefined) {
     const config = {
