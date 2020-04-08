@@ -1,6 +1,11 @@
 const mongoose = require('mongoose')
 
 const schema = new mongoose.Schema({
+  isArchived: {
+    type: Boolean,
+    required: true,
+    default: false,
+  },
   name: {
     type: String,
     required: true,

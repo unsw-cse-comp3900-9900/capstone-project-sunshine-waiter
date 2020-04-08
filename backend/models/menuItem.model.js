@@ -1,6 +1,11 @@
 const mongoose = require('mongoose')
 
-const restaurantSchema = new mongoose.Schema({
+const schema = new mongoose.Schema({
+  isArchived: {
+    type: Boolean,
+    required: true,
+    default: false,
+  },
   price: {
     type: Number,
     required: true,
@@ -45,6 +50,6 @@ const restaurantSchema = new mongoose.Schema({
   ],
 })
 
-const MenuItem = mongoose.model('MenuItem', restaurantSchema)
+const MenuItem = mongoose.model('MenuItem', schema)
 
 module.exports = MenuItem

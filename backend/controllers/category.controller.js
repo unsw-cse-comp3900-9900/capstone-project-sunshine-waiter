@@ -89,16 +89,15 @@ updateCategory = async (req, res, next) => {
   }
 }
 
+// Instead of removing target object from DB, it will permanently archive it.
 deleteCategory = async (req, res, next) => {
   try {
     const menu = await findMenu(req, res)
 
     const categoryId = req.params.categoryId
     const category = await Category.findById(categoryId)
-    if (!category)
-      return res
-        .status(204)
-        .send('Category has been deleted or does not exist at all.')
+    if (!category) return res.status(404).send('Category not found.')
+    if (category.isArchived) return res.status(204)
 
     // update menuItem reference
     const allMenuItemsInRestaurant = await MenuItem.find({ menu: menu.id })
@@ -110,13 +109,14 @@ deleteCategory = async (req, res, next) => {
       }
     })
 
-    // delete
-    await Category.findByIdAndDelete(categoryId)
+    // archive it
+    category.isArchived = true
+    await category.save()
 
     return res.json({
       success: true,
       data: present(category),
-      message: 'Category deleted.',
+      message: 'Category permanently archived.',
     })
   } catch (error) {
     next(error)

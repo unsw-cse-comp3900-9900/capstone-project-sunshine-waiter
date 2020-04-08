@@ -98,21 +98,22 @@ updateMenuItem = async (req, res, next) => {
   }
 }
 
+// Instead of removing target object from DB, it will permanently archive it.
 deleteMenuItem = async (req, res, next) => {
   try {
     const menuItemId = req.params.menuItemId
     const menuItem = await MenuItem.findById(menuItemId)
-    if (!menuItem)
-      return res
-        .status(204)
-        .send('MenuItem has been deleted or does not exist at all.')
+    if (!menuItem) return res.status(404).send('menuItem not found.')
+    if (menuItem.isArchived) return res.status(204)
 
-    await MenuItem.findByIdAndDelete(menuItemId)
+    // archive it
+    menuItem.isArchived = true
+    await menuItem.save()
 
     return res.json({
       success: true,
       data: present(menuItem),
-      message: 'MenuItem deleted.',
+      message: 'MenuItem permanently archived.',
     })
   } catch (error) {
     next(error)
