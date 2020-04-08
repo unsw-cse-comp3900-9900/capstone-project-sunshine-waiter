@@ -22,14 +22,12 @@ class App extends React.Component {
   }
 
   updateRestaurants = (restaurants = []) => {
-    // console.log(restaurants)
     this.setState({
       restaurants: restaurants,
     })
   }
 
   recordRestaurantsListUpdatedStatus = () => {
-    console.log('touched!')
     this.setState({
       restaurantsListUpdated: !this.state.restaurantsListUpdated,
     })
@@ -61,15 +59,7 @@ class App extends React.Component {
         <Route
           exact
           path="/restaurants/:id"
-          render={props => (
-            <Resturant
-              details={{
-                name: '',
-                description: '',
-              }}
-              {...props}
-            />
-          )}
+          render={props => <Resturant {...props} />}
         />
         <Route exact path="/restaurants/:id/waiter" children={<Waiter />} />
         <Route exact path="/restaurants/:id/cook" children={<Kitchen />} />
@@ -84,7 +74,6 @@ class App extends React.Component {
           children={<div>cashier</div>}
         />
         <Route exact path="/restaurants/:id/customer" children={<Customer />} />
-        {/* {this.renderRestaurantRoutes()} */}
         <Route path="/not-found" component={NotFound} />
         <Redirect to="/"></Redirect>
       </Switch>

@@ -2,13 +2,32 @@ import React from 'react'
 
 import Nivagation from './Navigation'
 import './Resturant.css'
+import { getSingleRestaurant } from './apis/actions/restaurants'
+import { getCookie } from './authenticate/Cookies'
 
 class Restaurant extends React.Component {
-  render() {
-    const { details } = this.props
-    const { name, description } = details
+  state = {
+    currentRestaurant: {
+      name: '',
+      description: '',
+    },
+  }
+
+  onSetState = data => {
+    this.setState({
+      currentRestaurant: data,
+    })
+  }
+
+  UNSAFE_componentWillMount = () => {
     const { id } = this.props.match.params
-    console.log('sds', details)
+    getSingleRestaurant(getCookie('token'), id, this.onSetState)
+  }
+
+  render() {
+    const { id } = this.props.match.params
+    const { name, description } = this.state.currentRestaurant
+
     return (
       <div className="restaurant">
         <img src={require('../resturant.jpg')} alt="" />
