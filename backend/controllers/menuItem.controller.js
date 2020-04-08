@@ -79,12 +79,12 @@ updateMenuItem = async (req, res, next) => {
     const { name, description, categoryArray, note, price } = req.body
 
     // update
+    await menuItem.snapshot()
     menuItem.name = name || menuItem.name
     menuItem.price = price || menuItem.price
     menuItem.description = description || menuItem.description
     menuItem.categoryArray = categoryArray || menuItem.categoryArray
     menuItem.note = note || menuItem.note
-
     await menuItem.save()
 
     // res
@@ -104,7 +104,7 @@ deleteMenuItem = async (req, res, next) => {
     const menuItemId = req.params.menuItemId
     const menuItem = await MenuItem.findById(menuItemId)
     if (!menuItem) return res.status(404).send('menuItem not found.')
-    if (menuItem.isArchived) return res.status(204)
+    if (menuItem.isArchived) return res.status(204).send()
 
     // archive it
     menuItem.isArchived = true

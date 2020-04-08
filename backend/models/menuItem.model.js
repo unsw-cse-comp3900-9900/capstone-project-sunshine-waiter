@@ -48,7 +48,16 @@ const schema = new mongoose.Schema({
       ref: 'Category',
     },
   ],
+  history: { type: Array, require: true, default: [] },
 })
+
+schema.methods.snapshot = async function () {
+  const { history, ...current } = this._doc
+  const snapshot = { ...current, updatedAt: Date() }
+  this.history.push(snapshot)
+
+  await this.save()
+}
 
 const MenuItem = mongoose.model('MenuItem', schema)
 

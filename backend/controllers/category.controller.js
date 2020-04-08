@@ -73,7 +73,8 @@ updateCategory = async (req, res, next) => {
     const { error } = validateUpdateDataFormat({ name, description })
     if (error) return res.status(400).json({ error: error.details[0].message })
 
-    // update
+    // snapshot -> update
+    await category.snapshot()
     category.name = name || category.name
     category.description = description || category.description
     await category.save()
@@ -92,18 +93,21 @@ updateCategory = async (req, res, next) => {
 // Instead of removing target object from DB, it will permanently archive it.
 deleteCategory = async (req, res, next) => {
   try {
+    console.log('\n\n\ndeleteCategory\n\n\n')
+
     const menu = await findMenu(req, res)
 
     const categoryId = req.params.categoryId
     const category = await Category.findById(categoryId)
     if (!category) return res.status(404).send('Category not found.')
-    if (category.isArchived) return res.status(204)
+    if (category.isArchived) return res.status(204).send()
 
     // update menuItem reference
     const allMenuItemsInRestaurant = await MenuItem.find({ menu: menu.id })
     allMenuItemsInRestaurant.forEach(async (menuItem) => {
       const { categoryArray: cArray } = menuItem
       if (Array.isArray(cArray) && cArray.includes(categoryId)) {
+        await menuItem.snapshot()
         menuItem.categoryArray = cArray.filter((id) => !id.equals(categoryId))
         await menuItem.save()
       }
