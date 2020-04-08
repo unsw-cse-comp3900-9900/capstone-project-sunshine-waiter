@@ -565,8 +565,6 @@ demoAsync()
 
 
 
-
-
 Also, I found that `mogoose` model has `create(docs)` function, which I didn't expected. That's one of the reason why I try to execute a list of async functions in such way.
 
 
