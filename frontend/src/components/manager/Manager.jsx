@@ -106,7 +106,6 @@ class Manager extends React.Component {
   }
 
   handleMenuItemEdit = () => {
-    // this.onOpenChange(clickId)
     this.setState({
       showMenuItemModal: true,
     })
