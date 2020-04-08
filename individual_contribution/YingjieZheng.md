@@ -124,3 +124,26 @@ BackEnd framework Setup **week2** `Jason`
 
 >   This are relatively complicate as well. Cause these functions are inevitably more coupled with other modules.
 
+*   [ ] critical history record for `menuItem` and `category` ; 
+    *   [ ] replace `delete` to `archive`
+    *   [ ] record a change history
+    *   [ ] validate !isArchive before update data (treat archived docs like deleted)
+    *   [ ] discrimnate read-menu api between public and private
+
+    
+
+*   [ ] API for Stuff management
+    *   Invitation
+        -   Manger can invite user (by email adress) 
+            -   invite api
+                -   JWT for auth;
+                -   [ {email, role} ]
+                -   validate.then(record to db).catch(send error)
+                    -   record invitation to user
+        -   GET user will have a key "invitation" { restaurantId, role }
+        -   user profile page can `confirm`
+
+*   [ ] Populate data for dashboard usage
+
+*   [ ] `picture upload`
+
