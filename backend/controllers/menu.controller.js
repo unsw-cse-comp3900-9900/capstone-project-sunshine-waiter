@@ -25,6 +25,28 @@ readMenu = async (req, res, next) => {
   }
 }
 
+readMenuPublicly = async (req, res, next) => {
+  try {
+    const obj = await findMenu(req, res)
+    const menuItems =
+      (await MenuItem.find({
+        menu: obj._id,
+        isArchived: false,
+        isPrivate: false,
+      })) || []
+    const categories =
+      (await Category.find({
+        menu: obj._id,
+        isArchived: false,
+        isPrivate: false,
+      })) || []
+
+    res.json({ data: { menuItems, categories, ...present(obj) } })
+  } catch (error) {
+    next(error)
+  }
+}
+
 // update scope: { name, description }
 updateMenu = async (req, res, next) => {
   try {
@@ -86,6 +108,7 @@ function validateUpdateDataFormat(menu) {
 
 module.exports = {
   readMenu,
+  readMenuPublicly,
   updateMenu,
 
   findMenu, // Note that it's not a req handler.

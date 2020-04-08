@@ -64,6 +64,35 @@ readMany = async (req, res, next) => {
   }
 }
 
+readMenuItemPublicly = async (req, res, next) => {
+  try {
+    // find menuItem
+    const menuItemId = req.params.menuItemId
+    const menuItem = await MenuItem.findById(menuItemId)
+    if (!menuItem || menuItem.isArchived || menuItem.isPrivate)
+      return res.status(404).json({ error: `MenuItem ${menuItemId} not found` })
+
+    // res
+    res.status(201).json({ data: present(menuItem) })
+  } catch (error) {
+    next(error)
+  }
+}
+
+readManyPublicly = async (req, res, next) => {
+  try {
+    const menu = await findMenu(req, res)
+    const menuItems = await MenuItem.find({
+      menu: menu._id,
+      isArchived: false,
+      isPrivate: false,
+    })
+    res.json({ data: menuItems.map((v) => present(v)) })
+  } catch (error) {
+    next(error)
+  }
+}
+
 // update scope: { name, description }
 updateMenuItem = async (req, res, next) => {
   try {
@@ -169,8 +198,9 @@ function validateUpdateDataFormat(menuItem) {
 module.exports = {
   createMenuItem,
   readMenuItem,
+  readMenuItemPublicly,
   updateMenuItem,
   deleteMenuItem,
   readMany,
-  deleteMany,
+  readManyPublicly,
 }

@@ -38,8 +38,7 @@ readCategory = async (req, res, next) => {
     // find
     const categoryId = req.params.categoryId
     const category = await Category.findById(categoryId)
-    if (!category)
-      return res.status(404).json({ error: 'Category does not exist' })
+    if (!category) return res.status(404).json({ error: 'Category not found' })
 
     // res
     res.status(201).json({ data: present(category) })
@@ -52,6 +51,36 @@ readMany = async (req, res, next) => {
   try {
     const menu = await findMenu(req, res)
     const categories = await Category.find({ menu: menu._id })
+
+    res.json({ data: categories.map((v) => present(v)) })
+  } catch (error) {
+    next(error)
+  }
+}
+
+readCategoryPublicly = async (req, res, next) => {
+  try {
+    // find category
+    const categoryId = req.params.categoryId
+    const category = await Category.findById(categoryId)
+    if (!category || category.isArchived || category.isPrivate)
+      return res.status(404).json({ error: 'Category not found' })
+
+    // res
+    res.status(201).json({ data: present(category) })
+  } catch (error) {
+    next(error)
+  }
+}
+
+readManyPublicly = async (req, res, next) => {
+  try {
+    const menu = await findMenu(req, res)
+    const categories = await Category.find({
+      menu: menu._id,
+      isArchived: false,
+      isPrivate: false,
+    })
 
     res.json({ data: categories.map((v) => present(v)) })
   } catch (error) {
@@ -161,8 +190,9 @@ function validateUpdateDataFormat(category) {
 module.exports = {
   createCategory,
   readCategory,
+  readCategoryPublicly,
   updateCategory,
   deleteCategory,
   readMany,
-  deleteMany, // not yet implemented
+  readManyPublicly,
 }

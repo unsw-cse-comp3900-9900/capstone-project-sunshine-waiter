@@ -6,6 +6,11 @@ const schema = new mongoose.Schema({
     required: true,
     default: false,
   },
+  isPrivate: {
+    type: Boolean,
+    required: true,
+    default: true,
+  },
   price: {
     type: Number,
     required: true,
