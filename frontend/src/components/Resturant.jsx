@@ -6,7 +6,8 @@ import './Resturant.css'
 class Restaurant extends React.Component {
   render() {
     const { details } = this.props
-    const { _id, name, description } = details
+    const { name, description } = details
+    const { id } = this.props.match.params
     console.log('sds', details)
     return (
       <div className="restaurant">
@@ -18,7 +19,7 @@ class Restaurant extends React.Component {
           <small>{description}</small>
         </div>
         <div className="buttons">
-          <Nivagation id={_id} />
+          <Nivagation id={id} />
         </div>
       </div>
     )
