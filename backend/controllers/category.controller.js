@@ -62,11 +62,12 @@ readMany = async (req, res, next) => {
 // update scope: { name, description }
 updateCategory = async (req, res, next) => {
   try {
-    // find
+    // find category
     const categoryId = req.params.categoryId
     const category = await Category.findById(categoryId)
-    if (!category)
-      return res.status(404).json({ error: 'Category does not exist' })
+    if (!category) return res.status(404).send('Category not found.')
+    if (category.isArchived)
+      return res.status(403).send('archived document is immutable')
 
     // validate new data
     const { name, description } = req.body
@@ -93,18 +94,18 @@ updateCategory = async (req, res, next) => {
 // Instead of removing target object from DB, it will permanently archive it.
 deleteCategory = async (req, res, next) => {
   try {
-    console.log('\n\n\ndeleteCategory\n\n\n')
-
-    const menu = await findMenu(req, res)
-
+    // 1. find category
     const categoryId = req.params.categoryId
     const category = await Category.findById(categoryId)
     if (!category) return res.status(404).send('Category not found.')
     if (category.isArchived) return res.status(204).send()
 
-    // update menuItem reference
+    // 2. update menuItem reference
+    const menu = await findMenu(req, res)
     const allMenuItemsInRestaurant = await MenuItem.find({ menu: menu.id })
     allMenuItemsInRestaurant.forEach(async (menuItem) => {
+      if (menuItem.isArchived) return
+
       const { categoryArray: cArray } = menuItem
       if (Array.isArray(cArray) && cArray.includes(categoryId)) {
         await menuItem.snapshot()
@@ -113,7 +114,7 @@ deleteCategory = async (req, res, next) => {
       }
     })
 
-    // archive it
+    // 3. archive it
     category.isArchived = true
     await category.save()
 

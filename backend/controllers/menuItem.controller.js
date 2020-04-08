@@ -67,11 +67,12 @@ readMany = async (req, res, next) => {
 // update scope: { name, description }
 updateMenuItem = async (req, res, next) => {
   try {
-    // find
+    // find menuItem
     const menuItemId = req.params.menuItemId
     const menuItem = await MenuItem.findById(menuItemId)
-    if (!menuItem)
-      return res.status(404).json({ error: 'MenuItem does not exist' })
+    if (!menuItem) return res.status(404).send('menuItem not found.')
+    if (menuItem.isArchived)
+      return res.status(403).send('archived document is immutable')
 
     // validate new data
     const { error } = validateUpdateDataFormat(req.body)

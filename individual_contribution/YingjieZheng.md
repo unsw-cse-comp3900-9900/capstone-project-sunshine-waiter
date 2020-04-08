@@ -125,9 +125,9 @@ BackEnd framework Setup **week2** `Jason`
 >   This are relatively complicate as well. Cause these functions are inevitably more coupled with other modules.
 
 *   [ ] critical history record for `menuItem` and `category` ; 
-    *   [ ] replace `delete` to `archive`
-    *   [ ] record a change history
-    *   [ ] validate !isArchive before update data (treat archived docs like deleted)
+    *   [x] replace `delete` to `archive`
+    *   [x] record a change history
+    *   [x] validate !isArchive before update data (treat archived docs like deleted)
     *   [ ] discrimnate read-menu api between public and private
 
     
