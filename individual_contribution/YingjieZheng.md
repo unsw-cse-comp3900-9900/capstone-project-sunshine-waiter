@@ -95,9 +95,14 @@ BackEnd framework Setup **week2** `Jason`
 >   3.29-4.4
 
 -   Category CRUD
+
 -   help Zitong Li ( Steve ) to implement websocket 
+
 -   help Jiangyuan ( Annie ) to implement customer page
+
 -   upgrade/fix reference on menu <=> menuItem 
+
+    
 
 ### Week 8
 
@@ -108,6 +113,8 @@ BackEnd framework Setup **week2** `Jason`
     -   Read by Id
     -   ReadMany 
     -   payment status update
+    
+    ![image-20200408091659071](YingjieZheng.assets/image-20200408091659071.png)
 
 >   This one is relatively complicate. Bug report / reflection is writen in API design document.
 
