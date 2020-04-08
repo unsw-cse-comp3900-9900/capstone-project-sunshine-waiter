@@ -14,7 +14,7 @@ export const getRestaurants = (token, callback = () => {}) => {
         callback(res.data.data)
       })
       .catch(err => {
-        if (err !== undefined) {
+        if (err === undefined) {
           alert('Backend server is dnow!')
         } else {
           alert(err.data.error)

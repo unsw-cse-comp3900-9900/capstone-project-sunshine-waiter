@@ -17,7 +17,7 @@ export const getUser = (token, callback = () => {}) => {
         callback(res.data.data)
       })
       .catch(({ response }) => {
-        if (response !== undefined) {
+        if (response === undefined) {
           alert('Backend server is dnow!')
         } else {
           alert(response.data.error)
