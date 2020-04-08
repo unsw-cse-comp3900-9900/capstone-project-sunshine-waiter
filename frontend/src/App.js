@@ -18,24 +18,16 @@ class App extends React.Component {
     //true or false of the value does not matter, just to record it updated
     //and then can trigger the ComponentDidUpdate
     restaurantsListUpdated: false,
-    restaurants: [
-      {
-        _id: 1,
-        name: 'Hello World',
-        description: 'We serve you well!',
-      },
-    ],
+    restaurants: [],
   }
 
   updateRestaurants = (restaurants = []) => {
-    // console.log(restaurants)
     this.setState({
       restaurants: restaurants,
     })
   }
 
   recordRestaurantsListUpdatedStatus = () => {
-    console.log('touched!')
     this.setState({
       restaurantsListUpdated: !this.state.restaurantsListUpdated,
     })
@@ -49,52 +41,39 @@ class App extends React.Component {
     }
   }
 
-  renderRestaurantRoutes = () => {
-    if (this.state.restaurants.length > 0) {
-      return this.state.restaurants.map(({ _id, name, description }) => (
-        <div key={_id}>
-          <Route exact path={'/restaurants/' + _id}>
-            <Resturant
-              details={{
-                _id: _id,
-                name: name,
-                description: description,
-              }}
-            />
-          </Route>
-          <Route exact path={'/restaurants/' + _id + '/waiter'}>
-            <Waiter />
-          </Route>
-          <Route exact path={'/restaurants/' + _id + '/cook'}>
-            <Kitchen />
-          </Route>
-          <Route exact path={'/restaurants/' + _id + '/manager'}>
-            <Manager restaurantId={_id} />
-          </Route>
-          <Route exact path={'/restaurants/' + _id + '/cashier'}>
-            <div>cashier</div>
-          </Route>
-          <Route exact path={'/restaurants/' + _id + '/customer'}>
-            <Customer />
-          </Route>
-        </div>
-      ))
-    }
-    return null
-  }
-
   render() {
     return (
       <Switch>
-        <Route exact path="/">
-          <Homepage
-            recordRestaurantsListUpdatedStatus={
-              this.recordRestaurantsListUpdatedStatus
-            }
-            restaurants={this.state.restaurants}
-          />
-        </Route>
-        {this.renderRestaurantRoutes()}
+        <Route
+          exact
+          path="/"
+          children={
+            <Homepage
+              recordRestaurantsListUpdatedStatus={
+                this.recordRestaurantsListUpdatedStatus
+              }
+              restaurants={this.state.restaurants}
+            />
+          }
+        />
+        <Route
+          exact
+          path="/restaurants/:id"
+          render={props => <Resturant {...props} />}
+        />
+        <Route exact path="/restaurants/:id/waiter" children={<Waiter />} />
+        <Route exact path="/restaurants/:id/cook" children={<Kitchen />} />
+        <Route
+          exact
+          path="/restaurants/:id/manager"
+          render={props => <Manager {...props} />}
+        />
+        <Route
+          exact
+          path="/restaurants/:id/cashier"
+          children={<div>cashier</div>}
+        />
+        <Route exact path="/restaurants/:id/customer" children={<Customer />} />
         <Route path="/not-found" component={NotFound} />
         <Redirect to="/"></Redirect>
       </Switch>

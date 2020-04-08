@@ -37,7 +37,8 @@ class Manager extends React.Component {
   }
 
   onFetchCurrentMenu = async () => {
-    await fetchMenuApi(this.props.restaurantId, this.onSetCurrentMenu)
+    const { id } = this.props.match.params
+    await fetchMenuApi(id, this.onSetCurrentMenu)
   }
 
   renderMenuItem = category => {
@@ -105,7 +106,6 @@ class Manager extends React.Component {
   }
 
   handleMenuItemEdit = () => {
-    // this.onOpenChange(clickId)
     this.setState({
       showMenuItemModal: true,
     })
@@ -118,10 +118,10 @@ class Manager extends React.Component {
   }
 
   onDeleteMenuItem = async menuItemId => {
-    const { restaurantId } = this.props
+    const { id } = this.props.match.params
     await deleteMenuItem(
       getCookie('token'),
-      restaurantId,
+      id,
       menuItemId,
       this.onFetchCurrentMenu
     )
@@ -140,10 +140,10 @@ class Manager extends React.Component {
   }
 
   onDeleteCategory = async categoryId => {
-    const { restaurantId } = this.props
+    const { id } = this.props.match.params
     await deleteCategoryItem(
       getCookie('token'),
-      restaurantId,
+      id,
       categoryId,
       this.onFetchCurrentMenu
     )
@@ -263,13 +263,13 @@ class Manager extends React.Component {
   }
 
   render() {
-    const { restaurantId } = this.props
+    const { id } = this.props.match.params
     return (
       <Layout>
         <MenuItemModal
           visible={this.state.showMenuItemModal}
           onCancel={this.onCloseMenuItemModal}
-          restaurantId={restaurantId}
+          restaurantId={id}
           currentParam={this.state.currentMenuItemParam}
           onFetchCurrentMenu={this.onFetchCurrentMenu}
           currentMenu={this.state.currentMenu}
@@ -277,7 +277,7 @@ class Manager extends React.Component {
         <CategoryModal
           visible={this.state.showCategoryModal}
           onCancel={this.onCloseCategoryModal}
-          restaurantId={restaurantId}
+          restaurantId={id}
           currentParam={this.state.currentCategoryParam}
           onFetchCurrentMenu={this.onFetchCurrentMenu}
         />

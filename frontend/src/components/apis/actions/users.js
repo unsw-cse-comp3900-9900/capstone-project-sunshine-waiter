@@ -16,7 +16,13 @@ export const getUser = (token, callback = () => {}) => {
       .then(res => {
         callback(res.data.data)
       })
-      .catch(({ response }) => alert(response.data.error))
+      .catch(({ response }) => {
+        if (response === undefined) {
+          alert('Backend server is dnow!')
+        } else {
+          alert(response.data.error)
+        }
+      })
   }
 }
 
