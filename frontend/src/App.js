@@ -73,7 +73,11 @@ class App extends React.Component {
           path="/restaurants/:id/cashier"
           children={<div>cashier</div>}
         />
-        <Route exact path="/restaurants/:id/customer" children={<Customer />} />
+        <Route
+          exact
+          path="/restaurants/:id/customer"
+          render={props => <Customer {...props} />}
+        ></Route>
         <Route path="/not-found" component={NotFound} />
         <Redirect to="/"></Redirect>
       </Switch>

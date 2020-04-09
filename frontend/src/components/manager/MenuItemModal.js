@@ -56,7 +56,7 @@ class MenuItemModal extends React.Component {
     const categoryArray = this.state.categoryArray.filter(
       ca => ca !== removedTagId
     )
-    console.log(categoryArray)
+    console.log('menuitemaodal.js' + categoryArray)
     this.setState({ categoryArray: categoryArray })
   }
 

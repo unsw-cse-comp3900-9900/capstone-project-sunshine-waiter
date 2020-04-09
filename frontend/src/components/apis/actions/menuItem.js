@@ -16,7 +16,7 @@ export const createMenuItem = (
     const URL = `/restaurants/${restaurantId}/menuItems/`
     BaseProvider.post(URL, param, config)
       .then(res => {
-        console.log({ res })
+        console.log('menuitem.js' + { res })
         callback()
       })
       .catch(err => console.log({ err }))
@@ -40,7 +40,7 @@ export const updateMenuItem = (
     const URL = `/restaurants/${restaurantId}/menuItems/${menuItemId}`
     BaseProvider.put(URL, param, config)
       .then(res => {
-        console.log({ res })
+        console.log('menuitem.js' + { res })
         callback()
       })
       .catch(err => console.log({ err }))
@@ -63,7 +63,7 @@ export const deleteMenuItem = (
     const URL = `/restaurants/${restaurantId}/menuItems/${menuItemId}`
     BaseProvider.delete(URL, config)
       .then(res => {
-        console.log({ res })
+        console.log('menuitem.js' + { res })
         callback()
       })
       .catch(err => console.log({ err }))

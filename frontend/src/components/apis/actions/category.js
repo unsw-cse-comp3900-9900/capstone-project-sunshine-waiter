@@ -16,7 +16,7 @@ export const createCategoryItem = (
     const URL = `/restaurants/${restaurantId}/categories`
     BaseProvider.post(URL, param, config)
       .then(res => {
-        console.log({ res })
+        console.log('category.js' + { res })
         callback()
       })
       .catch(err => console.log({ err }))
@@ -40,7 +40,7 @@ export const updateCategoryItem = (
     const URL = `/restaurants/${restaurantId}/categories/${categoryId}`
     BaseProvider.put(URL, param, config)
       .then(res => {
-        console.log({ res })
+        console.log('category.js' + { res })
         callback()
       })
       .catch(err => console.log({ err }))
@@ -58,7 +58,7 @@ export const getCategoryItems = (token, restaurantId, callback = () => {}) => {
     const URL = `/restaurants/${restaurantId}/categories`
     BaseProvider.get(URL, config)
       .then(res => {
-        console.log({ res })
+        console.log('category.js' + { res })
         callback()
       })
       .catch(err => console.log({ err }))
@@ -81,7 +81,7 @@ export const deleteCategoryItem = (
     const URL = `/restaurants/${restaurantId}/categories/${categoryId}`
     BaseProvider.delete(URL, config)
       .then(res => {
-        console.log({ res })
+        console.log('category.js' + { res })
         callback()
       })
       .catch(err => console.log({ err }))

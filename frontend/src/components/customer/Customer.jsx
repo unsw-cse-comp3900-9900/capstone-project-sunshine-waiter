@@ -18,20 +18,45 @@ import 'antd-mobile/dist/antd-mobile.css'
 //import 'antd/dist/antd.css'
 import { ShoppingCartOutlined } from '@ant-design/icons'
 
+import { fetchMenuApi } from '../apis/actions/menus'
+import { createMenuItem, updateMenuItem } from '../apis/actions/menuItem'
+// import MenuItemModal from './MenuItemModal'
+// import CategoryModal from './CategoryModal'
+
+//const restaurantID = '5e8af479f5a5f100287914a2'
+
 class Customer extends Component {
   state = {
     selectedTab: '1',
     hidden: false,
     fullScreen: false,
     menus: getMenus(),
-    //currentDisplayCatogory: '1',
-    //colorlist: ['0', '1', '2'], //写死的，要改
     //open: true
     docked: false,
     orderlist: [], // put the order
-    //num_of_dishes: 1, // dishes in the cart
-
     dic_order: new Map(), //store dishes,count
+    currentMenu: null,
+  }
+
+  //fetch data before rendering the component
+
+  UNSAFE_componentWillMount = () => {
+    console.log('will mount')
+    this.onFetchCurrentMenu()
+    console.log('run for fetch data')
+  }
+
+  onSetCurrentMenu = data => {
+    console.log('data' + data)
+    this.setState({
+      currentMenu: data,
+    })
+    console.log('currentmenus' + this.state.currentMenu)
+  }
+
+  onFetchCurrentMenu = async () => {
+    const { id } = this.props.match.params
+    await fetchMenuApi(id, this.onSetCurrentMenu)
   }
 
   onDock = d => {
@@ -145,6 +170,12 @@ class Customer extends Component {
   renderContent = displayIndex => {
     console.log('paole ' + displayIndex)
 
+    // this.state.currentMenu.menuItems.map(item =>
+    //   item.categoryArray.map(caId => {
+    //     console.log('getmenus' + caId)
+    //   })
+    // )
+
     return (
       <div>
         <div>
@@ -185,6 +216,14 @@ class Customer extends Component {
   )
 
   render() {
+    console.log('render', this.state.currentMenu)
+    if (this.state.currentMenu !== null) {
+      console.log('getmenus  ready' + this.state.currentMenu._id)
+    }
+
+    // if (this.state.currentMenu.menuItems.length !== 0) {
+    //   console.log('great')
+    // }
     var l = this.getCategories()
     var tabs = []
     for (var i = 0; i < l.length; i++) {
@@ -208,7 +247,6 @@ class Customer extends Component {
                   delete
                 </Button>
               }
-              //thumb="https://zos.alipayobjects.com/rmsportal/eOZidTabPoEbPeU.png"
             >
               {item} {this.state.dic_order.get(item)}
             </List.Item>
@@ -235,7 +273,6 @@ class Customer extends Component {
           }
           rightContent={[
             <Icon key="0" type="search" style={{ marginRight: '16px' }} />,
-            // <Icon key="1" type="ellipsis" />,
           ]}
         >
           Sunshine-waiter

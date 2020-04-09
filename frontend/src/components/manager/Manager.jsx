@@ -52,7 +52,7 @@ class Manager extends React.Component {
       <div>
         {this.state.currentMenu.menuItems.map(item =>
           item.categoryArray.map(caId => {
-            console.log(caId, category)
+            console.log('manager.js' + caId, category)
             if (caId === category._id) {
               return (
                 <li key={item._id}>

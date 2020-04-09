@@ -31,7 +31,7 @@ export const updateMenuApi = (
     const URL = `/restaurants/${restaurantId}/menus`
     BaseProvider.put(URL, param, config)
       .then(res => {
-        console.log({ res })
+        console.log('menus.js' + { res })
         callback()
       })
       .catch(err => console.log({ err }))
