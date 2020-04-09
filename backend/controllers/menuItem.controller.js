@@ -16,6 +16,13 @@ createMenuItem = async (req, res, next) => {
     // validate input ( params, body )
     const { error } = validateCreateDataFormat(req.body)
     if (error) return res.status(400).json({ error: error.details[0].message })
+    // validate categoryArray
+    await req.body.categoryArray.forEach(async (categoryId) => {
+      const category = await Category.findById(categoryId)
+      if (!category || category.isArchived)
+        return res.status(404).send('Category not found.')
+    })
+
     const menu = await findMenu(req, res)
 
     // create menuItem
@@ -26,9 +33,11 @@ createMenuItem = async (req, res, next) => {
         'description',
         'note',
         'categoryArray',
+        'isPrivate',
       ]),
       menu: menu._id,
     })
+
     menuItem.categoryArray = menuItem.categoryArray || []
     await menuItem.save()
 
@@ -106,7 +115,14 @@ updateMenuItem = async (req, res, next) => {
     // validate new data
     const { error } = validateUpdateDataFormat(req.body)
     if (error) return res.status(400).json({ error: error.details[0].message })
-    const { name, description, categoryArray, note, price } = req.body
+    const {
+      name,
+      description,
+      categoryArray,
+      note,
+      price,
+      isPrivate,
+    } = req.body
 
     // update
     await menuItem.snapshot()
@@ -115,6 +131,8 @@ updateMenuItem = async (req, res, next) => {
     menuItem.description = description || menuItem.description
     menuItem.categoryArray = categoryArray || menuItem.categoryArray
     menuItem.note = note || menuItem.note
+    menuItem.nisPrivateote = isPrivate || menuItem.isPrivate
+
     await menuItem.save()
 
     // res
@@ -188,10 +206,8 @@ function validateUpdateDataFormat(menuItem) {
     note: Joi.string().min(1).max(2047),
     price: Joi.number().min(0),
     categoryArray: Joi.array(),
+    isPrivate: Joi.boolean(),
   }
-
-  // TODO: menuItem.categoryArray.foreach: validate(categoryId)
-
   return Joi.validate(menuItem, schema)
 }
 
