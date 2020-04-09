@@ -22,7 +22,7 @@ createCategory = async (req, res, next) => {
 
     // create category
     category = new Category({
-      ..._.pick(req.body, ['name', 'description']),
+      ..._.pick(req.body, ['name', 'description', 'isPrivate']),
       menu: menu._id,
     })
     await category.save()
@@ -100,13 +100,14 @@ updateCategory = async (req, res, next) => {
 
     // validate new data
     const { name, description } = req.body
-    const { error } = validateUpdateDataFormat({ name, description })
+    const { error } = validateUpdateDataFormat({ name, description, isPrivate })
     if (error) return res.status(400).json({ error: error.details[0].message })
 
     // snapshot -> update
     await category.snapshot()
     category.name = name || category.name
     category.description = description || category.description
+    category.isPrivate = isPrivate || category.isPrivate
     await category.save()
 
     // res
