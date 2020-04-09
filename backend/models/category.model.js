@@ -9,7 +9,7 @@ const schema = new mongoose.Schema({
   isPrivate: {
     type: Boolean,
     required: true,
-    default: false,
+    default: true,
   },
   name: {
     type: String,
