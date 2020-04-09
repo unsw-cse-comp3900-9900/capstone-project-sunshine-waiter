@@ -38,7 +38,7 @@ class Manager extends React.Component {
 
   onFetchCurrentMenu = async () => {
     const { id } = this.props.match.params
-    await fetchMenuApi(id, this.onSetCurrentMenu)
+    await fetchMenuApi(getCookie('token'), id, this.onSetCurrentMenu)
   }
 
   renderMenuItem = category => {
@@ -209,8 +209,12 @@ class Manager extends React.Component {
   }
 
   renderMenuBuilder = () => {
-    if (this.state.currentMenu === {}) {
-      return <div>Create your menu</div>
+    if (this.state.currentMenu === null) {
+      return (
+        <div className="ui red message">
+          The menu is null, pls contact the admin!
+        </div>
+      )
     }
     return (
       <div className="menu-builder">
