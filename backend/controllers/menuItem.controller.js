@@ -131,7 +131,9 @@ updateMenuItem = async (req, res, next) => {
     menuItem.description = description || menuItem.description
     menuItem.categoryArray = categoryArray || menuItem.categoryArray
     menuItem.note = note || menuItem.note
-    menuItem.nisPrivateote = isPrivate || menuItem.isPrivate
+
+    menuItem.isPrivate =
+      typeof isPrivate === 'boolean' ? isPrivate : menuItem.isPrivate
 
     await menuItem.save()
 
@@ -187,6 +189,7 @@ function validateCreateDataFormat(menuItem) {
     description: Joi.string().max(2047),
     note: Joi.string().max(255),
     categoryArray: Joi.array(),
+    isPrivate: Joi.boolean(),
   }
 
   return Joi.validate(menuItem, schema)

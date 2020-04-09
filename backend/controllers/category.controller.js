@@ -99,7 +99,7 @@ updateCategory = async (req, res, next) => {
       return res.status(403).send('archived document is immutable')
 
     // validate new data
-    const { name, description } = req.body
+    const { name, description, isPrivate } = req.body
     const { error } = validateUpdateDataFormat({ name, description, isPrivate })
     if (error) return res.status(400).json({ error: error.details[0].message })
 
@@ -107,7 +107,8 @@ updateCategory = async (req, res, next) => {
     await category.snapshot()
     category.name = name || category.name
     category.description = description || category.description
-    category.isPrivate = isPrivate || category.isPrivate
+    category.isPrivate =
+      typeof isPrivate === 'boolean' ? isPrivate : category.isPrivate
     await category.save()
 
     // res
@@ -174,6 +175,7 @@ function validateCreateDataFormat(category) {
   const schema = {
     name: Joi.string().max(50).required(),
     description: Joi.string().max(2047),
+    isPrivate: Joi.boolean(),
   }
 
   return Joi.validate(category, schema)
@@ -183,6 +185,7 @@ function validateUpdateDataFormat(category) {
   const schema = {
     name: Joi.string().min(1).max(50),
     description: Joi.string().min(1).max(2047),
+    isPrivate: Joi.boolean(),
   }
 
   return Joi.validate(category, schema)
