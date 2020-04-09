@@ -456,9 +456,8 @@
 						"header": [
 							{
 								"key": "x-auth-token",
-								"value": "asdf",
-								"type": "text",
-								"disabled": true
+								"value": "{{active-jwt}}",
+								"type": "text"
 							},
 							{
 								"key": "Content-Type",
@@ -476,14 +475,59 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseURL}}/restaurants/{{restaurantId}}/menus",
+							"raw": "{{baseURL}}/restaurants/{{restaurantId}}/menus/",
 							"host": [
 								"{{baseURL}}"
 							],
 							"path": [
 								"restaurants",
 								"{{restaurantId}}",
-								"menus"
+								"menus",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/restaurants/:restaurantId/menus/public",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"type": "text",
+								"value": "asdf",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "javascript"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/restaurants/{{restaurantId}}/menus/public",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"restaurants",
+								"{{restaurantId}}",
+								"menus",
+								"public"
 							]
 						}
 					},
@@ -602,14 +646,59 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseURL}}/restaurants/{{restaurantId}}/categories",
+							"raw": "{{baseURL}}/restaurants/{{restaurantId}}/categories/",
 							"host": [
 								"{{baseURL}}"
 							],
 							"path": [
 								"restaurants",
 								"{{restaurantId}}",
-								"categories"
+								"categories",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/restaurants/:rID/categories/public",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"type": "text",
+								"value": "{{active-jwt}}",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "javascript"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/restaurants/{{restaurantId}}/categories/public",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"restaurants",
+								"{{restaurantId}}",
+								"categories",
+								"public"
 							]
 						}
 					},
@@ -644,7 +733,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseURL}}/restaurants/{{restaurantId}}/categories/{{categoryId\n}}",
+							"raw": "{{baseURL}}/restaurants/{{restaurantId}}/categories/5e8d4b79b1828f06a2e4b9e8",
 							"host": [
 								"{{baseURL}}"
 							],
@@ -652,7 +741,51 @@
 								"restaurants",
 								"{{restaurantId}}",
 								"categories",
-								"{{categoryId\n}}"
+								"5e8d4b79b1828f06a2e4b9e8"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/restaurants/:rID/categories/:cID/public",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "{{active-jwt}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "javascript"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/restaurants/{{restaurantId}}/categories/5e8d4b79b1828f06a2e4b9e8/public",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"restaurants",
+								"{{restaurantId}}",
+								"categories",
+								"5e8d4b79b1828f06a2e4b9e8",
+								"public"
 							]
 						}
 					},
@@ -676,7 +809,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n      \"name\": \"河粉\",\n      \"description\": \"现在流行叫河粉\"\n}",
+							"raw": "{\n      \"name\": \"nuddle version 2\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -684,7 +817,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseURL}}/restaurants/{{restaurantId}}/categories/{{categoryId\n}}",
+							"raw": "{{baseURL}}/restaurants/{{restaurantId}}/categories/5e8d4b79b1828f06a2e4b9e8",
 							"host": [
 								"{{baseURL}}"
 							],
@@ -692,7 +825,7 @@
 								"restaurants",
 								"{{restaurantId}}",
 								"categories",
-								"{{categoryId\n}}"
+								"5e8d4b79b1828f06a2e4b9e8"
 							]
 						}
 					},
@@ -724,7 +857,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseURL}}/restaurants/{{restaurantId}}/categories/{{categoryId\n}}",
+							"raw": "{{baseURL}}/restaurants/{{restaurantId}}/categories/5e8d48123638ce051cb91065",
 							"host": [
 								"{{baseURL}}"
 							],
@@ -732,7 +865,7 @@
 								"restaurants",
 								"{{restaurantId}}",
 								"categories",
-								"{{categoryId\n}}"
+								"5e8d48123638ce051cb91065"
 							]
 						}
 					},
@@ -832,184 +965,7 @@
 					"response": []
 				},
 				{
-					"name": "/restaurants/:rID/menuItems/:mID",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "x-auth-token",
-								"value": "{{active-jwt}}",
-								"type": "text"
-							},
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "javascript"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:8000/restaurants/{{restaurantId}}/menuItems/",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8000",
-							"path": [
-								"restaurants",
-								"{{restaurantId}}",
-								"menuItems",
-								""
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "/restaurants/:rID/menuItems/:mID",
-					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "x-auth-token",
-								"type": "text",
-								"value": "{{active-jwt}}"
-							},
-							{
-								"key": "Content-Type",
-								"type": "text",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"categoryArray\": [\"5e846a3e911f7601583e466e\"],\n\t\"name\": \"牛肉粿条汤 小\",\n    \"price\": 20,\n    \"description\": \"郑英杰最爱的潮式粿条\",\n    \"note\": \"Available after 10:30am at participating restaurants\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:8000/restaurants/{{restaurantId}}/menuItems/5e8328ed4f142f027f83e18c",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8000",
-							"path": [
-								"restaurants",
-								"{{restaurantId}}",
-								"menuItems",
-								"5e8328ed4f142f027f83e18c"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "/restaurants/:rID/menuItems/:mID",
-					"request": {
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "x-auth-token",
-								"type": "text",
-								"value": "{{active-jwt}}"
-							},
-							{
-								"key": "Content-Type",
-								"type": "text",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n\t\"title\":\"new new Roseberry Sandwich\",\n\t\"description\": \"With roseberry and jam\",\n\t\"note\": \"Available after 10:30am at participating restaurants\",\n\t\"cost\": 20,\n\t\"add-categories\":[\"ghskdlfuoieqrj248039ueiojsdk\", \"8yrewiughfdsajbnvc84279rwyeiuafsdhjb\"],\n\t\"remove-categories\":[\"ghskdlfuoieqrj248039ueiojsdk\", \"8yrewiughfdsajbnvc84279rwyeiuafsdhjb\"]\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:8000/restaurants/{{restaurantId}}/menuItems/{{menuItemId}}",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8000",
-							"path": [
-								"restaurants",
-								"{{restaurantId}}",
-								"menuItems",
-								"{{menuItemId}}"
-							]
-						}
-					},
-					"response": []
-				}
-			],
-			"protocolProfileBehavior": {}
-		},
-		{
-			"name": "/restaurants/:rID/orderItems",
-			"item": [
-				{
-					"name": "/restaurants/:rID/menuItems/",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "x-auth-token",
-								"value": "{{active-jwt}}",
-								"type": "text"
-							},
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n\t\"name\":\"牛肉粿条汤 大\",\n\t\"description\": \"郑英杰最爱的潮式粿条\",\n\t\"note\": \"Available after 10:30am at participating restaurants\",\n\t\"price\": 40\n}",
-							"options": {
-								"raw": {
-									"language": "javascript"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:8000/restaurants/{{restaurantId}}/menuItems/",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8000",
-							"path": [
-								"restaurants",
-								"{{restaurantId}}",
-								"menuItems",
-								""
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "/restaurants/:rID/menuItems/",
+					"name": "/restaurants/:rID/menuItems/public",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
@@ -1037,17 +993,15 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8000/restaurants/{{restaurantId}}/menuItems/",
-							"protocol": "http",
+							"raw": "{{baseURL}}/restaurants/{{restaurantId}}/menuItems/public",
 							"host": [
-								"localhost"
+								"{{baseURL}}"
 							],
-							"port": "8000",
 							"path": [
 								"restaurants",
 								"{{restaurantId}}",
 								"menuItems",
-								""
+								"public"
 							]
 						}
 					},
@@ -1082,7 +1036,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8000/restaurants/{{restaurantId}}/menuItems/",
+							"raw": "http://localhost:8000/restaurants/{{restaurantId}}/menuItems/5e8bf29ba173ac06caf3b5f0",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -1092,7 +1046,53 @@
 								"restaurants",
 								"{{restaurantId}}",
 								"menuItems",
-								""
+								"5e8bf29ba173ac06caf3b5f0"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/restaurants/:rID/menuItems/:mID/public",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"type": "text",
+								"value": "{{active-jwt}}"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "javascript"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/restaurants/{{restaurantId}}/menuItems/5e8bf29ba173ac06caf3b5f0/public",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"restaurants",
+								"{{restaurantId}}",
+								"menuItems",
+								"5e8bf29ba173ac06caf3b5f0",
+								"public"
 							]
 						}
 					},
@@ -1116,7 +1116,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"categoryArray\": [\"5e832cf7aafb0704885fca7c\", \"5e832cf7aafb0704885fca7d\"],\n\t\"name\": \"牛肉粿条汤 小\",\n    \"price\": 20,\n    \"description\": \"郑英杰最爱的潮式粿条\",\n    \"note\": \"Available after 10:30am at participating restaurants\"\n}",
+							"raw": "{\n    \"categoryArray\": [\"5e8d48123638ce051cb91065\"],\n\t\"name\": \"牛肉粿条汤 小\",\n    \"price\": 20,\n    \"description\": \"郑英杰最爱的潮式粿条\",\n    \"note\": \"Available after 10:30am at participating restaurants\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1124,7 +1124,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8000/restaurants/{{restaurantId}}/menuItems/5e8328ed4f142f027f83e18c",
+							"raw": "http://localhost:8000/restaurants/{{restaurantId}}/menuItems/5e8bf29ba173ac06caf3b5f0",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -1134,7 +1134,7 @@
 								"restaurants",
 								"{{restaurantId}}",
 								"menuItems",
-								"5e8328ed4f142f027f83e18c"
+								"5e8bf29ba173ac06caf3b5f0"
 							]
 						}
 					},
@@ -1166,7 +1166,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8000/restaurants/{{restaurantId}}/menuItems/{{menuItemId}}",
+							"raw": "http://localhost:8000/restaurants/{{restaurantId}}/menuItems/5e86c158b16672002fca91aa",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -1176,7 +1176,7 @@
 								"restaurants",
 								"{{restaurantId}}",
 								"menuItems",
-								"{{menuItemId}}"
+								"5e86c158b16672002fca91aa"
 							]
 						}
 					},
@@ -1257,7 +1257,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseURL}}/restaurants/{{restaurantId}}/orders/5e8c5f677960d90ce7039b91",
+							"raw": "{{baseURL}}/restaurants/{{restaurantId}}/orders/{{orderId}}",
 							"host": [
 								"{{baseURL}}"
 							],
@@ -1265,7 +1265,7 @@
 								"restaurants",
 								"{{restaurantId}}",
 								"orders",
-								"5e8c5f677960d90ce7039b91"
+								"{{orderId}}"
 							]
 						},
 						"description": "For usage of dashboard, order management"
