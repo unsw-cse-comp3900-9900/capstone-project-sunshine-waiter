@@ -11,7 +11,6 @@ class CategoryModal extends React.Component {
   state = {
     name: '',
     description: '',
-    isArchived: null,
     isPrivate: null,
   }
 
@@ -47,7 +46,6 @@ class CategoryModal extends React.Component {
       this.setState({
         name: currentParam.name,
         description: currentParam.description,
-        isArchived: currentParam.isArchived,
         isPrivate: currentParam.isPrivate,
       })
     } else {
@@ -55,7 +53,6 @@ class CategoryModal extends React.Component {
       this.setState({
         name: '',
         description: '',
-        isArchived: null,
         isPrivate: null,
       })
     }
@@ -93,30 +90,6 @@ class CategoryModal extends React.Component {
               }
             />
             <small>The description has to be more than 5 letters?</small>
-          </div>
-          <div className="field">
-            <label htmlFor="isArchived">isArchived</label>
-            <Select
-              size="small"
-              style={{ width: 100 }}
-              value={
-                this.state.isArchived === null
-                  ? this.state.isArchived
-                  : this.state.isArchived
-                  ? 'true'
-                  : 'false'
-              }
-              onChange={e => {
-                //convert string boolean to boolean
-                const val = e === 'true'
-                this.setState({
-                  isArchived: val,
-                })
-              }}
-            >
-              <Select.Option key="true">true</Select.Option>
-              <Select.Option key="false">false</Select.Option>
-            </Select>
           </div>
           <div className="field">
             <label htmlFor="isPrivate">isPrivate</label>
