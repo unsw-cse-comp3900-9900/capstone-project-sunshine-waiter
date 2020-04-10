@@ -1,7 +1,9 @@
 const Joi = require('joi')
-const bcrypt = require('bcrypt')
 const User = require('../models/user.model')
-const { generateAuthToken } = require('../auth/authentication')
+const {
+  generateAuthToken,
+  generateHashedPassword,
+} = require('../auth/authentication')
 const _ = require('lodash')
 
 // create user,
@@ -15,7 +17,7 @@ createUser = async (req, res, next) => {
     if (user) return res.status(400).json({ error: 'User already registered.' })
 
     user = new User(_.pick(req.body, ['name', 'email', 'password']))
-    user.password = await hashPassword(user.password)
+    user.password = await generateHashedPassword(user.password)
 
     await user.save()
 
@@ -41,11 +43,6 @@ function validateSignUpDataFormat(user) {
   }
 
   return Joi.validate(user, schema)
-}
-
-async function hashPassword(password) {
-  const salt = await bcrypt.genSalt(10)
-  return await bcrypt.hash(password, salt)
 }
 
 readUser = async (req, res, next) => {
@@ -76,7 +73,9 @@ updateUser = async (req, res, next) => {
 
     // update
     user.name = name || user.name
-    user.password = password ? await hashPassword(password) : user.password
+    user.password = password
+      ? await generateHashedPassword(password)
+      : user.password
     await user.save()
 
     // res
