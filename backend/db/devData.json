@@ -1,0 +1,38 @@
+{
+  "objectIdPlaceHolder": "5e90160d81b42d00aa9baf54",
+
+  "userData": [
+    {
+      "name": "Restaurant owner - Annie",
+      "email": "annie@sw.com",
+      "password": "password_of_Annie"
+    },
+    {
+      "name": "Waiter - Steve",
+      "email": "steve@sw.com",
+      "password": "password_of_Steve"
+    },
+    {
+      "name": "Cook - Jason",
+      "email": "jason@sw.com",
+      "password": "password_of_Jason"
+    },
+    {
+      "name": "Manager - Jeren",
+      "email": "jeren@sw.com",
+      "password": "password_of_Jeren"
+    }
+  ],
+  "restaurantData": [
+    {
+      "name": "beef nuddle",
+      "description": "Good beef, good nuddle."
+    },
+    {
+      "name": "Korean BBQ",
+      "description": "Beer and chiken Saigo!"
+    }
+  ],
+
+  "orderData": [{}]
+}

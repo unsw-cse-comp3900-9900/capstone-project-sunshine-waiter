@@ -42,6 +42,11 @@ app.use('/restaurants', menuItems)
 app.use('/restaurants', categories)
 app.use('/restaurants', orders)
 
+if (config.get('MODE') !== 'PRODUCTION') {
+  const { dbInit } = require('./db/dbInit')
+  app.get('/dbinit', dbInit)
+}
+
 app.use(dbErrorHandler)
 app.use(resCodeErrorHandler)
 
