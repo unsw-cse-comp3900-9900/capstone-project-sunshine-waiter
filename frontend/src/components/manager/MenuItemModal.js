@@ -15,7 +15,6 @@ class MenuItemModal extends React.Component {
     description: '',
     note: '',
     price: 0,
-    isArchived: null,
     isPrivate: null,
   }
 
@@ -32,7 +31,6 @@ class MenuItemModal extends React.Component {
         description,
         note,
         price,
-        isArchived,
         isPrivate,
       } = currentParam
 
@@ -43,7 +41,6 @@ class MenuItemModal extends React.Component {
         description,
         note,
         price,
-        isArchived,
         isPrivate,
       })
     } else {
@@ -54,7 +51,6 @@ class MenuItemModal extends React.Component {
         description: '',
         note: '',
         price: 0,
-        isArchived: null,
         isPrivate: null,
       })
     }
@@ -191,7 +187,6 @@ class MenuItemModal extends React.Component {
       'description',
       'note',
       'price',
-      'isArchived',
       'isPrivate',
     ])
 
@@ -271,30 +266,6 @@ class MenuItemModal extends React.Component {
               }
             />
             <small>The price has to be more than 0?</small>
-          </div>
-          <div className="field">
-            <label htmlFor="isArchived">isArchived</label>
-            <Select
-              size="small"
-              style={{ width: 100 }}
-              value={
-                this.state.isArchived === null
-                  ? this.state.isArchived
-                  : this.state.isArchived
-                  ? 'true'
-                  : 'false'
-              }
-              onChange={e => {
-                //convert string boolean to boolean
-                const val = e === 'true'
-                this.setState({
-                  isArchived: val,
-                })
-              }}
-            >
-              <Select.Option key="true">true</Select.Option>
-              <Select.Option key="false">false</Select.Option>
-            </Select>
           </div>
           <div className="field">
             <label htmlFor="isPrivate">isPrivate</label>
