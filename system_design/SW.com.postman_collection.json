@@ -22,7 +22,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\":\"Jason\",\n\t\"email\":\"JasonZheng1@sunshine-waiter.com\",\n\t\"password\":\"newa-password\"\n}",
+							"raw": "{\n  \"name\": \"Cook - Jason\",\n  \"email\": \"jason@sw.com\",\n  \"password\": \"password_of_Jason\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -55,7 +55,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\":\"Jason\",\n\t\"email\":\"JasonZheng1@sunshine-waiter.com\",\n\t\"password\":\"newa-password\"\n}",
+							"raw": "{\n  \"name\": \"Cook - Jason\",\n  \"email\": \"jason@sw.com\",\n  \"password\": \"password_of_Jason\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -112,7 +112,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\":\"Jason Dên\",\n\t\n\t\"password\":\"pwofsdfasfsff\"\n}",
+							"raw": "{\n  \"name\": \"Cook - Jason\",\n  \n  \"password\": \"aapassword_of_Jason\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -263,7 +263,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\":\"Beef rice nuddle 5\",\n\t\"description\":\"Gogogo\"\n}",
+							"raw": "{\n\t\"name\":\"Beef rice nuddle 10\",\n\t\"description\":\"Gogogo\"\n}",
 							"options": {
 								"raw": {
 									"language": "javascript"
@@ -596,7 +596,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\":\"炒粉\",\n\t\"description\": \"各种油腻炒粉\"\n}",
+							"raw": "{\n\t\"name\":\"汤粉\",\n\t\"description\": \"各种好吃汤粉\",\n\t\"isPrivate\": false\n}",
 							"options": {
 								"raw": {
 									"language": "javascript"
@@ -809,7 +809,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n      \"name\": \"nuddle version 2\"\n}",
+							"raw": "{\n      \"name\": \"nuddle version 2\",\n      \"isPrivate\": true\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -817,7 +817,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseURL}}/restaurants/{{restaurantId}}/categories/5e8d4b79b1828f06a2e4b9e8",
+							"raw": "{{baseURL}}/restaurants/{{restaurantId}}/categories/5e8d48123638ce051cb91065",
 							"host": [
 								"{{baseURL}}"
 							],
@@ -825,7 +825,7 @@
 								"restaurants",
 								"{{restaurantId}}",
 								"categories",
-								"5e8d4b79b1828f06a2e4b9e8"
+								"5e8d48123638ce051cb91065"
 							]
 						}
 					},
@@ -895,7 +895,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\n\t\"categoryArray\":[\"5e86c14fb16672002fca91a9\"], \n\t\"name\":\"牛肉粿条汤 大\",\n\t\"description\": \"郑英杰最爱的潮式粿条\",\n\t\"note\": \"Available after 10:30am at participating restaurants\",\n\t\"price\": 25\n}",
+							"raw": "{\n\t\n\t\"categoryArray\":[\"5e86c14fb16672002fca91a9\"], \n\t\"name\":\"牛肉粿条汤 大\",\n\t\"description\": \"郑英杰最爱的潮式粿条\",\n\t\"note\": \"Available after 10:30am at participating restaurants\",\n\t\"price\": 25,\n\t\"isPrivate\": true\n}",
 							"options": {
 								"raw": {
 									"language": "javascript"
@@ -1116,7 +1116,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"categoryArray\": [\"5e8d48123638ce051cb91065\"],\n\t\"name\": \"牛肉粿条汤 小\",\n    \"price\": 20,\n    \"description\": \"郑英杰最爱的潮式粿条\",\n    \"note\": \"Available after 10:30am at participating restaurants\"\n}",
+							"raw": "{\n    \"categoryArray\": [\"5e8d48123638ce051cb91065\"],\n\t\"name\": \"牛肉粿条汤 小\",\n    \"price\": 20,\n    \"description\": \"郑英杰最爱的潮式粿条\",\n    \"note\": \"Available after 10:30am at participating restaurants\",\n    \"isPrivate\": false\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1370,6 +1370,24 @@
 			"name": "/restaurants/:rID/dashboard",
 			"item": [],
 			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "dbinit",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/dbinit",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"dbinit"
+					]
+				},
+				"description": "Populate DB with initial data. Talk with Steve & Jason to add more."
+			},
+			"response": []
 		}
 	],
 	"protocolProfileBehavior": {}
