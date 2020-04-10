@@ -6,43 +6,22 @@ const {
 } = require('../auth/authentication')
 const _ = require('lodash')
 
+// Route Handlers
+
 // create user,
 createUser = async (req, res, next) => {
   try {
-    const { error } = validateSignUpDataFormat(req.body)
-    if (error) {
-      return res.status(400).json({ error: error.details[0].message })
-    }
-    let user = await User.findOne({ email: req.body.email })
-    if (user) return res.status(400).json({ error: 'User already registered.' })
+    await validateOnCreateUser(req.body)
 
-    user = new User(_.pick(req.body, ['name', 'email', 'password']))
-    user.password = await generateHashedPassword(user.password)
-
-    await user.save()
-
-    const accessToken = generateAuthToken(user)
+    user = await dbCreateUser(req.body)
 
     res.status(201).json({
       data: _.pick(user, ['_id', 'name', 'email']),
-      accessToken,
+      accessToken: generateAuthToken(user),
     })
   } catch (error) {
     next(error)
   }
-}
-
-function validateSignUpDataFormat(user) {
-  const schema = {
-    name: Joi.string().min(1).max(50).required(),
-    email: Joi.string().min(1).max(255).email().required(),
-    password: Joi.string()
-      .min(10)
-      .max(255) // unhashed password, the one user inputs
-      .required(),
-  }
-
-  return Joi.validate(user, schema)
 }
 
 readUser = async (req, res, next) => {
@@ -65,18 +44,12 @@ updateUser = async (req, res, next) => {
     const userId = req.params.userId
     const user = await User.findById(userId)
     if (!user) return res.status(404).json({ error: 'User does not exist' })
-
     // validate new data
-    const { name, password } = req.body
-    const { error } = validateUpdateDataFormat({ name, password })
+    const { error } = validateUpdateDataFormat(req.body)
     if (error) return res.status(400).json({ error: error.details[0].message })
 
     // update
-    user.name = name || user.name
-    user.password = password
-      ? await generateHashedPassword(password)
-      : user.password
-    await user.save()
+    await dbUpdateUser(req.body, user)
 
     // res
     return res.json({
@@ -110,6 +83,16 @@ deleteUser = async (req, res, next) => {
   }
 }
 
+async function dbUpdateUser(data, user) {
+  const { name, password } = data
+  user.name = name || user.name
+  user.password = password
+    ? await generateHashedPassword(password)
+    : user.password
+  await user.save()
+}
+
+// Util functions
 function validateUpdateDataFormat(user) {
   const schema = {
     name: Joi.string().min(1).max(50),
@@ -120,9 +103,39 @@ function validateUpdateDataFormat(user) {
   return Joi.validate(user, schema)
 }
 
+/*
+if invalid: throw { message, httpCode }
+if valid: do nothing
+*/
+const validateOnCreateUser = async (data) => {
+  const schema = {
+    name: Joi.string().min(1).max(50).required(),
+    email: Joi.string().min(1).max(255).email().required(),
+    password: Joi.string().min(10).max(255).required(),
+  }
+
+  const { error } = Joi.validate(data, schema)
+  if (error) throw { message: error.details[0].message, httpCode: 400 }
+
+  let existingUser = await User.findOne({ email: data.email })
+  if (existingUser) throw { message: 'User already registered.', httpCode: 400 }
+}
+
+const dbCreateUser = async (data) => {
+  const { name, email, password: plainPassword } = data
+  const password = await generateHashedPassword(plainPassword)
+  const user = new User({ name, email, password })
+  await user.save()
+  return user
+}
+
 module.exports = {
+  // route handlers
   createUser, // aka signup
   readUser,
   updateUser,
   deleteUser,
+
+  // Util functions interact with DB
+  dbCreateUser,
 }
