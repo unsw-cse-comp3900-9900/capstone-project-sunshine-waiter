@@ -17,7 +17,7 @@ export const getRestaurants = (token, callback = () => {}) => {
         if (err === undefined) {
           alert('Backend server is dnow!')
         } else {
-          alert(err.data.error)
+          alert(err.response.data.error)
         }
       })
   }
@@ -77,9 +77,9 @@ export const deleteRestaurant = (token, id, callback = () => {}) => {
       },
     }
     BaseProvider.delete('/restaurants/' + id, config)
-      .then(res => {
-        callback()
-        console.log('done', { res })
+      .then(async res => {
+        await callback()
+
         alert(res.data.message)
       })
       .catch(err => console.log({ err }))

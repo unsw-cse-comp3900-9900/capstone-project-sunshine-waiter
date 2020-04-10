@@ -15,9 +15,6 @@ class App extends React.Component {
   //I think reason is when using a tag, it freshes when hitting the page url, so state got freshed back to init
   //prolem is I used a tag in Myprofile
   state = {
-    //true or false of the value does not matter, just to record it updated
-    //and then can trigger the ComponentDidUpdate
-    restaurantsListUpdated: false,
     restaurants: [],
   }
 
@@ -25,20 +22,6 @@ class App extends React.Component {
     this.setState({
       restaurants: restaurants,
     })
-  }
-
-  recordRestaurantsListUpdatedStatus = () => {
-    this.setState({
-      restaurantsListUpdated: !this.state.restaurantsListUpdated,
-    })
-  }
-
-  componentDidUpdate = (prevProps, prevState) => {
-    if (
-      prevState.restaurantsListUpdated !== this.state.restaurantsListUpdated
-    ) {
-      getRestaurants(getCookie('token'), this.updateRestaurants)
-    }
   }
 
   render() {
@@ -49,9 +32,7 @@ class App extends React.Component {
           path="/"
           children={
             <Homepage
-              recordRestaurantsListUpdatedStatus={
-                this.recordRestaurantsListUpdatedStatus
-              }
+              updateRestaurants={this.updateRestaurants}
               restaurants={this.state.restaurants}
             />
           }

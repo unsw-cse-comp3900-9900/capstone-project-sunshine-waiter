@@ -16,6 +16,13 @@ createMenuItem = async (req, res, next) => {
     // validate input ( params, body )
     const { error } = validateCreateDataFormat(req.body)
     if (error) return res.status(400).json({ error: error.details[0].message })
+    // validate categoryArray
+    await req.body.categoryArray.forEach(async (categoryId) => {
+      const category = await Category.findById(categoryId)
+      if (!category || category.isArchived)
+        return res.status(404).send('Category not found.')
+    })
+
     const menu = await findMenu(req, res)
 
     // create menuItem
@@ -26,9 +33,11 @@ createMenuItem = async (req, res, next) => {
         'description',
         'note',
         'categoryArray',
+        'isPrivate',
       ]),
       menu: menu._id,
     })
+
     menuItem.categoryArray = menuItem.categoryArray || []
     await menuItem.save()
 
@@ -64,26 +73,67 @@ readMany = async (req, res, next) => {
   }
 }
 
+readMenuItemPublicly = async (req, res, next) => {
+  try {
+    // find menuItem
+    const menuItemId = req.params.menuItemId
+    const menuItem = await MenuItem.findById(menuItemId)
+    if (!menuItem || menuItem.isArchived || menuItem.isPrivate)
+      return res.status(404).json({ error: `MenuItem ${menuItemId} not found` })
+
+    // res
+    res.status(201).json({ data: present(menuItem) })
+  } catch (error) {
+    next(error)
+  }
+}
+
+readManyPublicly = async (req, res, next) => {
+  try {
+    const menu = await findMenu(req, res)
+    const menuItems = await MenuItem.find({
+      menu: menu._id,
+      isArchived: false,
+      isPrivate: false,
+    })
+    res.json({ data: menuItems.map((v) => present(v)) })
+  } catch (error) {
+    next(error)
+  }
+}
+
 // update scope: { name, description }
 updateMenuItem = async (req, res, next) => {
   try {
-    // find
+    // find menuItem
     const menuItemId = req.params.menuItemId
     const menuItem = await MenuItem.findById(menuItemId)
-    if (!menuItem)
-      return res.status(404).json({ error: 'MenuItem does not exist' })
+    if (!menuItem) return res.status(404).send('menuItem not found.')
+    if (menuItem.isArchived)
+      return res.status(403).send('archived document is immutable')
 
     // validate new data
     const { error } = validateUpdateDataFormat(req.body)
     if (error) return res.status(400).json({ error: error.details[0].message })
-    const { name, description, categoryArray, note, price } = req.body
+    const {
+      name,
+      description,
+      categoryArray,
+      note,
+      price,
+      isPrivate,
+    } = req.body
 
     // update
+    await menuItem.snapshot()
     menuItem.name = name || menuItem.name
     menuItem.price = price || menuItem.price
     menuItem.description = description || menuItem.description
     menuItem.categoryArray = categoryArray || menuItem.categoryArray
     menuItem.note = note || menuItem.note
+
+    menuItem.isPrivate =
+      typeof isPrivate === 'boolean' ? isPrivate : menuItem.isPrivate
 
     await menuItem.save()
 
@@ -98,21 +148,22 @@ updateMenuItem = async (req, res, next) => {
   }
 }
 
+// Instead of removing target object from DB, it will permanently archive it.
 deleteMenuItem = async (req, res, next) => {
   try {
     const menuItemId = req.params.menuItemId
     const menuItem = await MenuItem.findById(menuItemId)
-    if (!menuItem)
-      return res
-        .status(204)
-        .send('MenuItem has been deleted or does not exist at all.')
+    if (!menuItem) return res.status(404).send('menuItem not found.')
+    if (menuItem.isArchived) return res.status(204).send()
 
-    await MenuItem.findByIdAndDelete(menuItemId)
+    // archive it
+    menuItem.isArchived = true
+    await menuItem.save()
 
     return res.json({
       success: true,
       data: present(menuItem),
-      message: 'MenuItem deleted.',
+      message: 'MenuItem permanently archived.',
     })
   } catch (error) {
     next(error)
@@ -138,6 +189,7 @@ function validateCreateDataFormat(menuItem) {
     description: Joi.string().max(2047),
     note: Joi.string().max(255),
     categoryArray: Joi.array(),
+    isPrivate: Joi.boolean(),
   }
 
   return Joi.validate(menuItem, schema)
@@ -157,18 +209,17 @@ function validateUpdateDataFormat(menuItem) {
     note: Joi.string().min(1).max(2047),
     price: Joi.number().min(0),
     categoryArray: Joi.array(),
+    isPrivate: Joi.boolean(),
   }
-
-  // TODO: menuItem.categoryArray.foreach: validate(categoryId)
-
   return Joi.validate(menuItem, schema)
 }
 
 module.exports = {
   createMenuItem,
   readMenuItem,
+  readMenuItemPublicly,
   updateMenuItem,
   deleteMenuItem,
   readMany,
-  deleteMany,
+  readManyPublicly,
 }

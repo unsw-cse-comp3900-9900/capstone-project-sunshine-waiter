@@ -15,6 +15,7 @@ class MenuItemModal extends React.Component {
     description: '',
     note: '',
     price: 0,
+    isPrivate: null,
   }
 
   _id = ''
@@ -30,6 +31,7 @@ class MenuItemModal extends React.Component {
         description,
         note,
         price,
+        isPrivate,
       } = currentParam
 
       this._id = _id
@@ -39,6 +41,7 @@ class MenuItemModal extends React.Component {
         description,
         note,
         price,
+        isPrivate,
       })
     } else {
       this._id = ''
@@ -48,6 +51,7 @@ class MenuItemModal extends React.Component {
         description: '',
         note: '',
         price: 0,
+        isPrivate: null,
       })
     }
   }
@@ -183,6 +187,7 @@ class MenuItemModal extends React.Component {
       'description',
       'note',
       'price',
+      'isPrivate',
     ])
 
     if (this._id) {
@@ -261,6 +266,30 @@ class MenuItemModal extends React.Component {
               }
             />
             <small>The price has to be more than 0?</small>
+          </div>
+          <div className="field">
+            <label htmlFor="isPrivate">isPrivate</label>
+            <Select
+              size="small"
+              style={{ width: 100 }}
+              value={
+                this.state.isPrivate === null
+                  ? this.state.isPrivate
+                  : this.state.isPrivate
+                  ? 'true'
+                  : 'false'
+              }
+              onChange={e => {
+                //convert string boolean to boolean
+                const val = e === 'true'
+                this.setState({
+                  isPrivate: val,
+                })
+              }}
+            >
+              <Select.Option key="true">true</Select.Option>
+              <Select.Option key="false">false</Select.Option>
+            </Select>
           </div>
         </form>
       </Modal>

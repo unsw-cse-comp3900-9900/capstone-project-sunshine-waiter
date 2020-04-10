@@ -12,17 +12,19 @@ const {
 
 const {
   createMenuItem,
-  readMenuItem,
+  readMenuItem, // for restauratn staff
+  readMenuItemPublicly,
   updateMenuItem,
   deleteMenuItem,
   readMany,
+  readManyPublicly,
 } = require('../controllers/menuItem.controller')
 
 // menuItem CRUD
 
 // public access
-router.get('/:restaurantId/menuitems/:menuItemId', readMenuItem)
-router.get('/:restaurantId/menuitems/', readMany)
+router.get('/:restaurantId/menuitems/:menuItemId/public/', readMenuItemPublicly)
+router.get('/:restaurantId/menuitems/public/', readManyPublicly)
 
 // owner/manager access
 router.post(
@@ -31,6 +33,20 @@ router.post(
   allowIfLoggedin,
   requestAccess(scopes.restaurant, actions.create, resources.menu),
   createMenuItem
+)
+router.get(
+  '/:restaurantId/menuitems/:menuItemId',
+  verifyAuthToken,
+  allowIfLoggedin,
+  requestAccess(scopes.restaurant, actions.read, resources.menu),
+  readMenuItem
+)
+router.get(
+  '/:restaurantId/menuitems',
+  verifyAuthToken,
+  allowIfLoggedin,
+  requestAccess(scopes.restaurant, actions.read, resources.menu),
+  readMany
 )
 router.put(
   '/:restaurantId/menuitems/:menuItemId',

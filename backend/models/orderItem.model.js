@@ -20,10 +20,18 @@ const restaurantSchema = new mongoose.Schema({
     ref: 'MenuItem',
     required: true,
   },
+
   price: {
     type: Number,
     required: true,
   },
+
+  categoryArray: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Category',
+    },
+  ],
 
   name: {
     // init with menuItem.name; shall not be updated.

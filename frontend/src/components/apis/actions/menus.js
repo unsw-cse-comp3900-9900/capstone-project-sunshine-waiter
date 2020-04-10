@@ -1,8 +1,10 @@
 import BaseProvider from '../BaseProvider'
 
-export const fetchMenuApi = (restaurantId, callback = () => {}) => {
+//This is the api to fetch private menus
+export const fetchMenuApi = (token, restaurantId, callback = () => {}) => {
   const config = {
     headers: {
+      'x-auth-token': token,
       'Content-Type': 'application/json',
     },
   }
@@ -12,7 +14,7 @@ export const fetchMenuApi = (restaurantId, callback = () => {}) => {
       console.log('did fetch menus: ', { res })
       callback(res.data.data)
     })
-    .catch(err => console.log({ err }))
+    .catch(err => console.log('fetch', { err }))
 }
 
 export const updateMenuApi = (
