@@ -14,7 +14,7 @@ Design base
 2. Considering discount, the real price can be different from order.menuItem.price.
 */
 
-const restaurantSchema = new mongoose.Schema({
+const schema = new mongoose.Schema({
   menuItem: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'MenuItem',
@@ -77,6 +77,6 @@ const restaurantSchema = new mongoose.Schema({
   },
 })
 
-const OrderItem = mongoose.model('OrderItem', restaurantSchema)
+const OrderItem = mongoose.model('OrderItem', schema)
 
 module.exports = { OrderItem, allowedStatus }

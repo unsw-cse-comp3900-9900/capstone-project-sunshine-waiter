@@ -57,7 +57,7 @@ validateOrderItemsData = async (req, res, next) => {
 
     if (error) {
       throw {
-        resCode: 400,
+        httpCode: 400,
         message: error.details[0].message,
         problematicData: orderItemData,
       }
@@ -71,7 +71,7 @@ validateOrderItemsData = async (req, res, next) => {
     const isValid = mongoose.Types.ObjectId.isValid
     if (!isValid(objectId)) {
       throw {
-        resCode: 400,
+        httpCode: 400,
         message: `${objectId} is not a valid objectId.`,
         problematicData: orderItemData,
       }
@@ -81,7 +81,7 @@ validateOrderItemsData = async (req, res, next) => {
 
     if (!menuItem || !currentMenu._id.equals(menuItem.menu)) {
       throw {
-        resCode: 400,
+        httpCode: 400,
         message: `Menuitem ${objectId} not found. It is not refering to an existing menuItem in target restaurant.`,
         problematicData: orderItemData,
       }
@@ -92,7 +92,7 @@ validateOrderItemsData = async (req, res, next) => {
     const { orderItemsData } = req.body
     if (!Array.isArray(orderItemsData) || !orderItemsData.length) {
       throw {
-        resCode: 400,
+        httpCode: 400,
         message:
           'Request body shall contain orderItemsData. It is an array containing data for creating orderItems.',
       }

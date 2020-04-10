@@ -6,7 +6,12 @@ const config = require('config')
 
 const User = require('../models/user.model')
 
-const generateAuthToken = user => {
+async function generateHashedPassword(password) {
+  const salt = await bcrypt.genSalt(10)
+  return await bcrypt.hash(password, salt)
+}
+
+const generateAuthToken = (user) => {
   const token = jwt.sign({ _id: user._id }, config.get('JWT_SECRET'), {
     expiresIn: '1d',
   })
@@ -33,15 +38,8 @@ const login = async (req, res) => {
 
 function validateLoginDataFormat(data) {
   const schema = {
-    email: Joi.string()
-      .min(5)
-      .max(255)
-      .email()
-      .required(),
-    password: Joi.string()
-      .min(10)
-      .max(255)
-      .required(),
+    email: Joi.string().min(5).max(255).email().required(),
+    password: Joi.string().min(10).max(255).required(),
   }
 
   return Joi.validate(data, schema)
@@ -83,4 +81,9 @@ const verifyAuthToken = async (req, res, next) => {
   }
 }
 
-module.exports = { login, verifyAuthToken, generateAuthToken }
+module.exports = {
+  login,
+  verifyAuthToken,
+  generateAuthToken,
+  generateHashedPassword,
+}

@@ -28,7 +28,7 @@ createOrder = async (req, res, next) => {
   try {
     const { placedBy } = req.body
     if (!placedBy)
-      throw { resCode: 400, message: 'Request body miss key: placedBy' }
+      throw { httpCode: 400, message: 'Request body miss key: placedBy' }
     const restaurant = await findRestaurant(req, res, next)
 
     const order = new Order({
