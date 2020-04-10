@@ -7,7 +7,10 @@ import { getCookie } from '../../authenticate/Cookies'
 import { deleteUser, updateUser } from '../../apis/actions/users'
 import { MODE } from './constant'
 import RestaurantModal from './RestaurantModal'
-import { deleteRestaurant } from '../../apis/actions/restaurants'
+import {
+  deleteRestaurant,
+  getRestaurants,
+} from '../../apis/actions/restaurants'
 
 class MyProfile extends React.Component {
   state = {
@@ -103,11 +106,15 @@ class MyProfile extends React.Component {
     )
   }
 
+  onFetchNewRestaurantsList = async () => {
+    getRestaurants(getCookie('token'), this.props.updateRestaurants)
+  }
+
   onDeleteRestaurant = async id => {
     await deleteRestaurant(
       getCookie('token'),
       id,
-      this.props.recordRestaurantsListUpdatedStatus()
+      this.onFetchNewRestaurantsList
     )
   }
 
@@ -140,11 +147,7 @@ class MyProfile extends React.Component {
   }
 
   render() {
-    const {
-      profile,
-      updateState,
-      recordRestaurantsListUpdatedStatus,
-    } = this.props
+    const { profile, updateState, updateRestaurants } = this.props
     if (profile.user === null) {
       return null
     }
@@ -177,9 +180,7 @@ class MyProfile extends React.Component {
         <RestaurantModal
           visible={this.state.modalVisible}
           onCancel={this.handleModalCancel}
-          recordRestaurantsListUpdatedStatus={
-            recordRestaurantsListUpdatedStatus
-          }
+          updateRestaurants={updateRestaurants}
           editingRestaurant={this.state.editingRestaurant}
         />
         <div className="my-restaurant">

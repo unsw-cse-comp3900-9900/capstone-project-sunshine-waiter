@@ -8,14 +8,14 @@ const SiderBar = ({
   profile,
   restaurants,
   updateState,
-  recordRestaurantsListUpdatedStatus,
+  updateRestaurants,
 }) => {
   return (
     <div className={visible ? 'ui right visible sidebar' : 'ui right sidebar'}>
       <MyProfile
         profile={profile}
         updateState={updateState}
-        recordRestaurantsListUpdatedStatus={recordRestaurantsListUpdatedStatus}
+        updateRestaurants={updateRestaurants}
         restaurants={restaurants}
       />
     </div>

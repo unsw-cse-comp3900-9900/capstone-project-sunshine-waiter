@@ -6,6 +6,7 @@ import SiderBar from './profile/SiderBar'
 import { getCookie, deleteCookie } from '../authenticate/Cookies'
 import './default.css'
 import { getUser } from '../apis/actions/users'
+import { getRestaurants } from '../apis/actions/restaurants'
 // import { getRestaurants } from '../apis/actions/restaurants'
 
 class Homepage extends React.Component {
@@ -57,14 +58,14 @@ class Homepage extends React.Component {
     getUser(currentCookie, this.updateState)
   }
 
-  componentDidUpdate = (prevProps, prevState) => {
+  componentDidUpdate = async (prevProps, prevState) => {
     if (
       prevState.isAuthenticated !== this.state.isAuthenticated &&
       this.state.isAuthenticated
     ) {
-      getUser(getCookie('token'), this.updateState)
+      await getUser(getCookie('token'), this.updateState)
       // getRestaurants(getCookie('token'), this.updateRestaurants)
-      this.props.recordRestaurantsListUpdatedStatus()
+      await getRestaurants(getCookie('token'), this.props.updateRestaurants)
     }
 
     // if (prevState.profile.restaurants !== this.state.profile.restaurants) {
@@ -171,7 +172,7 @@ class Homepage extends React.Component {
   }
 
   render() {
-    const { recordRestaurantsListUpdatedStatus, restaurants } = this.props
+    const { updateRestaurants, restaurants } = this.props
     return (
       <div className="pusher">
         <div className="ui inverted vertical masthead center aligned segment">
@@ -280,9 +281,7 @@ class Homepage extends React.Component {
               visible={this.state.showProfile}
               profile={this.state.profile}
               updateState={this.updateState}
-              recordRestaurantsListUpdatedStatus={
-                recordRestaurantsListUpdatedStatus
-              }
+              updateRestaurants={updateRestaurants}
               restaurants={restaurants}
             />
           )}
