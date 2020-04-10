@@ -584,3 +584,51 @@ Also, I found that `mogoose` model has `create(docs)` function, which I didn't e
 
 
 
+
+
+### Try-Catch fail on async code throw`
+
+```javascript
+try {
+
+    // .....
+    await req.body.categoryArray.forEach(async (categoryId) => {
+      const category = await Category.findById(categoryId)
+      if (!category || category.menu != menuId || category.isArchived)
+        throw { httpCode: 404, message: 'Category not found.' }
+		// Above line cannot be catched
+    })
+
+	// .....
+	// .....
+	
+    res.status(201).json({ data: present(menuItem) })
+  } catch (error) {
+    next(error)
+  }
+```
+
+```javascript
+try {
+
+    // .....
+    await req.body.categoryArray.forEach(async (categoryId) => {
+      try {
+        const category = await Category.findById(categoryId)
+        if (!category || category.menu != menuId || category.isArchived)
+          throw { httpCode: 404, message: 'Category not found.' }
+      } catch (error) {
+        next(error)
+      }
+    })
+
+	// .....
+	// .....
+    res.status(201).json({ data: present(menuItem) })
+  } catch (error) {
+    next(error)
+  }
+```
+
+I fixed it by the way above. Though I'm tired of this try-catch hell. It lower the readability of the codes. 
+
