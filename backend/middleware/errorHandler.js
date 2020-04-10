@@ -27,9 +27,9 @@ const dbErrorHandler = (err, req, res, next) => {
 }
 
 const resCodeErrorHandler = (err, req, res, next) => {
-  if (err && err.resCode && err.message)
+  if (err && err.httpCode && err.message)
     res
-      .status(err.resCode)
+      .status(err.httpCode)
       .json({ error: err.message, problematicData: err.problematicData })
   else {
     console.log(err)
