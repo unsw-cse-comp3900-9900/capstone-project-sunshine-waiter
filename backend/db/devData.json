@@ -1,34 +1,160 @@
 {
   "userData": [
     {
-      "name": "Restaurant owner - Annie",
-      "email": "annie@sw.com",
-      "password": "password_of_Annie"
+      "name": "Alexis Kelsey",
+      "email": "alexis.kelsey@airconix.gov",
+      "password": "password_of_Juliana"
     },
     {
-      "name": "Waiter - Steve",
-      "email": "steve@sw.com",
-      "password": "password_of_Steve"
+      "name": "Jenette Carter",
+      "email": "jenette.carter@skycenta.club",
+      "password": "password_of_Ian"
     },
     {
-      "name": "Cook - Jason",
-      "email": "jason@sw.com",
+      "name": "Susana Goudy",
+      "email": "susana.goudy@mediadime.com",
+      "password": "password_of_Dannielle"
+    },
+    {
+      "name": "Haydee Hollis",
+      "email": "haydee.hollis@ulogica.gov",
+      "password": "password_of_Haydee"
+    },
+    {
+      "name": "Myong Woodrum",
+      "email": "myong.woodrum@logico.org",
       "password": "password_of_Jason"
     },
     {
-      "name": "Manager - Jeren",
-      "email": "jeren@sw.com",
-      "password": "password_of_Jeren"
+      "name": "Vernon Charley",
+      "email": "vernon.charley@optiplex.xyz",
+      "password": "password_of_Ivan"
+    },
+    {
+      "name": "Erik Bourne",
+      "email": "erik.bourne@galcom.me",
+      "password": "password_of_Yuri"
+    },
+    {
+      "name": "Vernon Starck",
+      "email": "vernon.starck@galcom.gov",
+      "password": "password_of_Adam"
+    },
+    {
+      "name": "Jenna Matzen",
+      "email": "jenna.matzen@skycenta.biz",
+      "password": "password_of_Andy"
+    },
+    {
+      "name": "Aiden Rikard",
+      "email": "aiden.rikard@bellgate.eu",
+      "password": "password_of_Rolf"
+    },
+    {
+      "name": "Hannah Dampier",
+      "email": "hannah.dampier@grafixmedia.com",
+      "password": "password_of_Ian"
+    },
+    {
+      "name": "Travis Pettey",
+      "email": "travis.pettey@corerobotics.info",
+      "password": "password_of_Michael"
+    },
+    {
+      "name": "Austin Cumbie",
+      "email": "austin.cumbie@triosys.biz",
+      "password": "password_of_Grace"
+    },
+    {
+      "name": "Rickey Brier",
+      "email": "rickey.brier@terralabs.org",
+      "password": "password_of_Theo"
+    },
+    {
+      "name": "Miles Remus",
+      "email": "miles.remus@creatonix.name",
+      "password": "password_of_Roselyn"
+    },
+    {
+      "name": "Vernon Paquette",
+      "email": "vernon.paquette@qualcore.name",
+      "password": "password_of_Lloyd"
+    },
+    {
+      "name": "Layla Bradbury",
+      "email": "layla.bradbury@galcom.club",
+      "password": "password_of_Francis"
+    },
+    {
+      "name": "Anton Bradbury",
+      "email": "anton.bradbury@citisys.org",
+      "password": "password_of_Shea"
+    },
+    {
+      "name": "Dori Charley",
+      "email": "dori.charley@anaplex.club",
+      "password": "password_of_Michael"
+    },
+    {
+      "name": "Aiden Castleman",
+      "email": "aiden.castleman@pancast.org",
+      "password": "password_of_Theo"
+    },
+    {
+      "name": "Benito Garling",
+      "email": "benito.garling@seelogic.com",
+      "password": "password_of_Hannah"
+    },
+    {
+      "name": "Susana Cadena",
+      "email": "susana.cadena@corptek.info",
+      "password": "password_of_Vernon"
+    },
+    {
+      "name": "Benito Lenihan",
+      "email": "benito.lenihan@haltheon.net",
+      "password": "password_of_Susana"
+    },
+    {
+      "name": "Madelyn Remus",
+      "email": "madelyn.remus@sunopia.com",
+      "password": "password_of_Katelin"
+    },
+    {
+      "name": "Rico Higgins",
+      "email": "rico.higgins@coolinga.club",
+      "password": "password_of_Lynetta"
+    },
+    {
+      "name": "Tyler Luck",
+      "email": "tyler.luck@quadtek.edu",
+      "password": "password_of_Hannah"
+    },
+    {
+      "name": "Maisha Higgins",
+      "email": "maisha.higgins@foretrust.me",
+      "password": "password_of_Danny"
+    },
+    {
+      "name": "Heath Backer",
+      "email": "heath.backer@unilogic.info",
+      "password": "password_of_Rickey"
+    },
+    {
+      "name": "Rico Wallis",
+      "email": "rico.wallis@fortyfour.net",
+      "password": "password_of_Rolf"
+    },
+    {
+      "name": "Janett Woodrum",
+      "email": "janett.woodrum@dynalab.biz",
+      "password": "password_of_Roselyn"
     }
   ],
   "restaurantData": [
     {
-      "name": "beef nuddle",
-      "description": "Good beef, good nuddle."
-    },
-    {
-      "name": "Korean BBQ",
-      "description": "Beer and chiken Saigo!"
+      "name": "Old Town Hong Kong Cuisine",
+      "description": "Chinese Noodles Dim Sum Dumplings Seafood Dessert Open until 23:59 $15.00 delivery"
     }
   ],
 

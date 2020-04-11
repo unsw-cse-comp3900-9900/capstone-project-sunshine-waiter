@@ -26,12 +26,23 @@ var fs = require('fs')
 
 // console.log(result)
 
-//fake orders
+//users orders
 var template = fs.readFileSync(PATH + 'dummyOrderTemplate.hbs', {
   encoding: 'utf8',
 })
 var result = dummyjson.parse(template)
 fs.writeFile(PATH + 'dummyOrders.json', result, function (err) {
+  if (err) {
+    console.log(err)
+  }
+})
+
+// dummy users
+var template = fs.readFileSync(PATH + 'dummyUserTemplate.hbs', {
+  encoding: 'utf8',
+})
+var result = dummyjson.parse(template)
+fs.writeFile(PATH + 'dummyUsers.json', result, function (err) {
   if (err) {
     console.log(err)
   }

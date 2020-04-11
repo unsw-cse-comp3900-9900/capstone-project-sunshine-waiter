@@ -21,13 +21,7 @@ router.post('/login', login)
 
 router.post('/', createUser)
 
-router.get(
-  '/:userId',
-  verifyAuthToken,
-  allowIfLoggedin,
-  requestAccess(scopes.website_admin, actions.read, resources.profile),
-  readUser
-)
+router.get('/:userId', readUser)
 
 router.put(
   '/:userId',

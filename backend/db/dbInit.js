@@ -10,13 +10,24 @@ const { OrderItem } = require('../models/orderItem.model')
 
 const { dbCreateUser } = require('../controllers/user.controller')
 const { dbCreateRestaurant } = require('../controllers/restaurant.controller')
-const {
-  userData,
-  restaurantData,
-  categoryData,
-  menuItemData,
-  orderData,
-} = require('./devData.json')
+const { restaurantData, categoryData, menuItemData } = require('./devData.json')
+
+const { userData } = require('../dummyData/dummyUsers.json')
+const { orderData } = require('../dummyData/dummyOrders.json')
+
+function getRandom(arr, n) {
+  var result = new Array(n),
+    len = arr.length,
+    taken = new Array(len)
+  if (n > len)
+    throw new RangeError('getRandom: more elements taken than available')
+  while (n--) {
+    var x = Math.floor(Math.random() * len)
+    result[n] = arr[x in taken ? taken[x] : x]
+    taken[x] = --len in taken ? taken[len] : len
+  }
+  return result
+}
 
 const dbCreateCategories = async (data, menuId) => {
   const category = new Category({
@@ -59,6 +70,10 @@ const dbCreateOrderItem = async (order, menuItems, users) => {
     let serveTime = new Date(
       readyTime.getTime() + Math.random() * 7 * 60 * 1000
     ) // order items may be served after ready up to 7 minuts
+    let selected = getRandom(users, 2)
+    let cookedBy = selected[0]._id
+    let servedBy = selected[1]._id
+
     const orderItem = new OrderItem({
       menuItem: menuItem._id,
       ..._.pick(menuItem, ['name', 'price', 'categoryArray']),
@@ -67,6 +82,8 @@ const dbCreateOrderItem = async (order, menuItems, users) => {
       placedBy: order.placedBy,
       readyTime: readyTime,
       serveTime: serveTime,
+      cookedBy: cookedBy,
+      servedBy: servedBy,
     })
     await orderItem.save()
     orderItems.push(orderItem)
