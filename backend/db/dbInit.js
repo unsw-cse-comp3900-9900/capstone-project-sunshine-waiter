@@ -3,12 +3,17 @@ const _ = require('lodash')
 
 const User = require('../models/user.model')
 const Restaurant = require('../models/restaurant.model')
-const Menu = require('../models/menu.model')
 const Category = require('../models/category.model')
+const MenuItem = require('../models/menuItem.model')
 
 const { dbCreateUser } = require('../controllers/user.controller')
 const { dbCreateRestaurant } = require('../controllers/restaurant.controller')
-const { userData, restaurantData, categoryData } = require('./devData.json')
+const {
+  userData,
+  restaurantData,
+  categoryData,
+  menuItemData,
+} = require('./devData.json')
 
 const dbCreateCategories = async (data) => {
   const category = new Category({
@@ -17,6 +22,17 @@ const dbCreateCategories = async (data) => {
   })
   await category.save()
   return category
+}
+
+const dbCreateMenuItem = async (data) => {
+  let randomInt = Math.floor(Math.random() * data.catogoryIds.length)
+  const menuItem = new MenuItem({
+    ..._.pick(data, ['name', 'isArchived', 'isPrivate', 'price']),
+    menu: data.menuId,
+    categoryArray: [data.catogoryIds[randomInt]],
+  })
+  await menuItem.save()
+  return menuItem
 }
 
 // no idea how to add category progmatically without calling readCategory
@@ -44,7 +60,6 @@ exports.dbInit = async (req, res, next) => {
 
     // 3. create categories
     await Category.remove({})
-    const restaurantId = restaurants[0]._id
     const menuId = restaurants[0].menu._id
     const createCategoryTasks = categoryData.map((data) =>
       (async () => {
@@ -53,23 +68,20 @@ exports.dbInit = async (req, res, next) => {
     )
     const categories = await Promise.all(createCategoryTasks)
 
-    // create menuItems  (10 items, top 5)
-
-    // perpare order data for creating order
-
-    //      menuItems =>
-    // create orderItems
-    //    for each orderItem,
-
-    // manuly orderItem . servetime, cooktime,
-    //
-
-    // 4. create menuItems
+    // 4. create menuItems  (10 items, top 5)
+    await MenuItem.remove({})
+    const catogoryIds = categories.map((cat) => cat._id)
+    const createMenuItemsTasks = menuItemData.map((data) =>
+      (async () => {
+        return await dbCreateMenuItem({ ...data, menuId, catogoryIds })
+      })()
+    )
+    const menuItems = await Promise.all(createMenuItemsTasks)
 
     // 5. create order
     // 6. setup fake "servedBy", "cookedBy", "serveTime", "cookTime"
 
-    res.send({ users, restaurants, categories })
+    res.send({ users, restaurants, categories, menuItems })
   } catch (error) {
     next(error)
   }
