@@ -1,17 +1,22 @@
 const mongoose = require('mongodb')
+const _ = require('lodash')
+
 const User = require('../models/user.model')
 const Restaurant = require('../models/restaurant.model')
+const Menu = require('../models/menu.model')
+const Category = require('../models/category.model')
 
 const { dbCreateUser } = require('../controllers/user.controller')
 const { dbCreateRestaurant } = require('../controllers/restaurant.controller')
-const { userData, restaurantData } = require('./devData.json')
+const { userData, restaurantData, categoryData } = require('./devData.json')
 
-const dbCreateCategories = async (dataArray) => {
-  category = new Category({
-    ..._.pick(req.body, ['name', 'description', 'isPrivate']),
-    menu: menu._id,
+const dbCreateCategories = async (data) => {
+  const category = new Category({
+    ..._.pick(data, ['name', 'isArchived', 'isPrivate']),
+    menu: data.menuId,
   })
   await category.save()
+  return category
 }
 
 // no idea how to add category progmatically without calling readCategory
@@ -38,13 +43,15 @@ exports.dbInit = async (req, res, next) => {
     const restaurants = await Promise.all(creatRstrTasks)
 
     // 3. create categories
-    // const categories = await dbCreateCategories(categoriesData)
-
-    // // link categories with menu
-    // const menuId = restaurants[0].menu
-    // categories.forEach((c) => {
-    //   c.menu = menuId
-    // })
+    await Category.remove({})
+    const restaurantId = restaurants[0]._id
+    const menuId = restaurants[0].menu._id
+    const createCategoryTasks = categoryData.map((data) =>
+      (async () => {
+        return await dbCreateCategories({ ...data, menuId })
+      })()
+    )
+    const categories = await Promise.all(createCategoryTasks)
 
     // create menuItems  (10 items, top 5)
 
@@ -62,7 +69,7 @@ exports.dbInit = async (req, res, next) => {
     // 5. create order
     // 6. setup fake "servedBy", "cookedBy", "serveTime", "cookTime"
 
-    res.send({ users, restaurants })
+    res.send({ users, restaurants, categories })
   } catch (error) {
     next(error)
   }

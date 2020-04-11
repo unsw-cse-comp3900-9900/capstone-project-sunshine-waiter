@@ -1,6 +1,4 @@
 {
-  "objectIdPlaceHolder": "5e90160d81b42d00aa9baf54",
-
   "userData": [
     {
       "name": "Restaurant owner - Annie",
@@ -34,5 +32,48 @@
     }
   ],
 
-  "orderData": [{}]
+  "categoryData": [
+    {
+      "name": "Meal Deals",
+      "isArchived": false,
+      "isPrivate": false
+    },
+    {
+      "name": "Appetizers",
+      "isArchived": false,
+      "isPrivate": false
+    },
+    {
+      "name": "Soup",
+      "isArchived": false,
+      "isPrivate": false
+    },
+    {
+      "name": "BBQ Selection",
+      "isArchived": false,
+      "isPrivate": false
+    },
+    {
+      "name": "Noodles",
+      "isArchived": false,
+      "isPrivate": false
+    },
+    {
+      "name": "Seafood",
+      "isArchived": false,
+      "isPrivate": false
+    },
+    {
+      "name": "Beaf/Pork/Lamb",
+      "isArchived": false,
+      "isPrivate": false
+    },
+    {
+      "name": "Vegetarian Selection",
+      "isArchived": false,
+      "isPrivate": false
+    }
+  ],
+
+  "menuItemData": []
 }
