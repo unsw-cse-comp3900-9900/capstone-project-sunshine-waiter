@@ -38,7 +38,7 @@ const schema = new mongoose.Schema({
     // keep this record because menuItem can be modified/deleted in future.
     type: String,
     required: true,
-    maxlength: 50,
+    maxlength: 100,
   },
   amount: {
     // can only be updated by restaurant staff ( base on the agreement from costomer and restaurant )
