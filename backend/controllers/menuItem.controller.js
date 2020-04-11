@@ -2,6 +2,7 @@ const Joi = require('joi')
 const _ = require('lodash')
 
 const MenuItem = require('../models/menuItem.model')
+const Category = require('../models/category.model')
 const { findMenu } = require('./menu.controller')
 
 // present data to client side
@@ -16,11 +17,16 @@ createMenuItem = async (req, res, next) => {
     // validate input ( params, body )
     const { error } = validateCreateDataFormat(req.body)
     if (error) return res.status(400).json({ error: error.details[0].message })
+    const menuId = (await findMenu(req, res))._id
     // validate categoryArray
     await req.body.categoryArray.forEach(async (categoryId) => {
-      const category = await Category.findById(categoryId)
-      if (!category || category.isArchived)
-        return res.status(404).send('Category not found.')
+      try {
+        const category = await Category.findById(categoryId)
+        if (!category || category.menu != menuId || category.isArchived)
+          throw { httpCode: 404, message: 'Category not found.' }
+      } catch (error) {
+        next(error)
+      }
     })
 
     const menu = await findMenu(req, res)
