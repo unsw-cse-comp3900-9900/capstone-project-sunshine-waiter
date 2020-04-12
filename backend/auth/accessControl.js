@@ -40,7 +40,7 @@ const accessGranted = {
       'update:own': ['*'],
       'delete:own': ['*'],
     },
-    stuff: {
+    staff: {
       'create:own': ['*'],
       'read:own': ['*'],
       'update:own': ['*'],
@@ -61,7 +61,7 @@ const accessGranted = {
       'update:own': ['*'],
     },
     dashboard: {
-      // including stuff management; order history; menu update
+      // including staff management; order history; menu update
       'read:own': ['*'],
       'update:own': ['*'],
     },
@@ -78,7 +78,7 @@ const accessGranted = {
       'update:own': ['*'],
       'delete:own': ['*'],
     },
-    stuff: {
+    staff: {
       'create:own': ['*'],
       'read:own': ['*'],
       'update:own': ['*'],
@@ -98,7 +98,7 @@ const accessGranted = {
       'update:own': ['*'],
     },
     dashboard: {
-      // including stuff management; order history; menu update
+      // including staff management; order history; menu update
       'read:own': ['*'],
       'update:own': ['*'],
     },

@@ -33,7 +33,7 @@ const resources = Object.freeze({
   dashboard: 'dashboard',
   restaurant: 'restaurant',
   menu: 'menu',
-  stuff: 'stuff',
+  staff: 'staff',
   cooking_queue: 'cooking_queue',
   serving_queue: 'serving_queue',
 })
