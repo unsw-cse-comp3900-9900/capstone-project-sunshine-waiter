@@ -55,7 +55,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "    {\n      \"name\": \"Jenette Carter\",\n      \"email\": \"jenette.carter@skycenta.club\",\n      \"password\": \"password_of_Ian\"\n    }",
+							"raw": "{\n      \"name\": \"Jenette Carter\",\n      \"email\": \"jenette.carter@skycenta.club\",\n      \"password\": \"password_of_Ian\"\n    }",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -108,6 +108,12 @@
 								"key": "x-auth-token",
 								"type": "text",
 								"value": "{{second-jwt}}"
+							},
+							{
+								"key": "x-auth-token",
+								"value": "{{active-jwt}}",
+								"type": "text",
+								"disabled": true
 							}
 						],
 						"url": {
@@ -1425,7 +1431,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n        \"restaurant\": \"5e91b040f572540484669301\",\n        \"role\": \"manager\"\n}",
+							"raw": "{\n        \"restaurant\": \"5e91b040f572540484669301\",\n        \"role\": \"cook\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1433,13 +1439,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseURL}}/users/{{scd-userId}}/roles",
+							"raw": "{{baseURL}}/users/{{secondUserId}}/roles",
 							"host": [
 								"{{baseURL}}"
 							],
 							"path": [
 								"users",
-								"{{scd-userId}}",
+								"{{secondUserId}}",
 								"roles"
 							]
 						}
@@ -1459,7 +1465,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{        \"restaurant\": \"5e91b040f572540484669301\",\n        \"role\": \"manager\"}",
+							"raw": "{   \n\t\"restaurant\": \"5e91b040f572540484669301\",\n        \"role\": \"cook\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1467,13 +1473,13 @@
 							}
 						},
 						"url": {
-							"raw": "{{baseURL}}/users/{{scd-userId}}/roles",
+							"raw": "{{baseURL}}/users/{{secondUserId}}/roles",
 							"host": [
 								"{{baseURL}}"
 							],
 							"path": [
 								"users",
-								"{{scd-userId}}",
+								"{{secondUserId}}",
 								"roles"
 							],
 							"query": [
