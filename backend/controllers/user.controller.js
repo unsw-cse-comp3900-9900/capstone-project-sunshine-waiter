@@ -132,6 +132,21 @@ const dbCreateUser = async (data) => {
   return user
 }
 
+const findByEmail = async (email) => {
+  const { error } = Joi.validate(email, {
+    email: Joi.string().min(1).max(255).email(),
+  })
+  if (error) throw { message: error.details[0].message, httpCode: 400 }
+
+  const user = await User.findOne({ email })
+  if (!user)
+    throw {
+      message: `user with email ${email} not found`,
+      httpCode: 404,
+    }
+  return user
+}
+
 module.exports = {
   // route handlers
   createUser, // aka signup
@@ -141,4 +156,5 @@ module.exports = {
 
   // Util functions interact with DB
   dbCreateUser,
+  findByEmail,
 }
