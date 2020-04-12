@@ -33,7 +33,7 @@ const resCodeErrorHandler = (err, req, res, next) => {
       .json({ error: err.message, problematicData: err.problematicData })
   else {
     console.log(err)
-    next()
+    res.status(500).send(err.message)
   }
 }
 
