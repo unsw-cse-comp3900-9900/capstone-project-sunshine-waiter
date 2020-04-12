@@ -3,20 +3,6 @@ const Restaurant = require('../models/restaurant.model')
 const Menu = require('../models/menu.model')
 const _ = require('lodash')
 
-// designed for inside consumption. not for route handling.
-const findRestaurant = async (req) => {
-  const { restaurantId } = req.params
-  if (!restaurantId)
-    throw { httpCode: 400, message: 'URI params missing restaurantId ' }
-  const restaurant = await Restaurant.findById(restaurantId)
-  if (!restaurant)
-    throw {
-      httpCode: 404,
-      message: `Restaurant with ${restaurantId} not found. Might never exist or be deleted.`,
-    }
-  return restaurant
-}
-
 // present data to client side
 const present = (obj) => {
   const { __v, createdBy, ...data } = obj._doc
@@ -71,17 +57,28 @@ dbCreateRestaurant = async (data) => {
 
 readRestaurant = async (req, res, next) => {
   try {
-    // find
-    const restaurantId = req.params.restaurantId
-    const restaurant = await Restaurant.findById(restaurantId)
-    if (!restaurant)
-      return res.status(404).json({ error: 'Restaurant does not exist' })
-
-    // res
+    const restaurant = await findRestaurant(req)
     res.json({ data: present(restaurant) })
   } catch (error) {
     next(error)
   }
+}
+
+// designed for inside consumption. not for route handling.
+const findRestaurant = async (req) => {
+  const { restaurantId } = req.params
+  if (!restaurantId)
+    throw { httpCode: 400, message: 'URI params missing restaurantId ' }
+  const restaurant = await findById(restaurantId)
+
+  return restaurant
+}
+
+findById = async (id) => {
+  const restaurant = await Restaurant.findById(id)
+  if (!restaurant)
+    return res.status(404).json({ error: `Restaurant ${id} does not exist.` })
+  return restaurant
 }
 
 /*
@@ -174,5 +171,6 @@ module.exports = {
   deleteRestaurant,
 
   findRestaurant,
+  findById,
   dbCreateRestaurant,
 }
