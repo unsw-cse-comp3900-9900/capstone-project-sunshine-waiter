@@ -27,7 +27,7 @@ const userSchema = new mongoose.Schema({
     maxlength: 1023,
   },
   // restaurant serving
-  servingRoles: {
+  currentJobs: {
     type: [
       {
         restaurant: {
@@ -46,7 +46,7 @@ const userSchema = new mongoose.Schema({
     required: true,
     default: [],
   },
-  servingInvitations: {
+  pendingJobs: {
     type: [
       {
         restaurant: {

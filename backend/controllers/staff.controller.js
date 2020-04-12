@@ -1,6 +1,5 @@
-const { isValidObjectId } = require('../util')
-const { roles, isValidRole } = require('../auth/authorization')
-const { findRestaurant } = require('./restaurant.controller')
+const { findById: findRestaurantById } = require('./restaurant.controller')
+const { validateObjectId, validateRole } = require('../util')
 
 /*
 Bis: User can accept invitation
@@ -13,16 +12,16 @@ precond
 postcond
   - if(inputValid) then 
     - targetRestaurant.userGroups[role].includes(req.user._id)
-    - user.servingRoles.includes({restaurantId, role})
-    - !user.servingInvitations.includes({restaurantId, role})
+    - user.currentJobs.includes({restaurantId, role})
+    - !user.pendingJobs.includes({restaurantId, role})
   - if(!inputValid) then 
     - nothing change on DB
     - res.data.message: a proper error message
 
   - inputValid
-    - isValidObjectId(restaurantId) && targetObjectExist(restaurantId)
+    - validateObjectId(restaurantId) && targetObjectExist(restaurantId)
     - isValidRole(role)
-    - req.user.servingInvitations.includes({restaurantId, role})
+    - req.user.pendingJobs.includes({restaurantId, role})
 */
 acceptJob = async (req, res, next) => {
   console.log(req.body)
@@ -39,21 +38,21 @@ precond:
 postcond:
   - if(inputValid) then 
     - !targetRestaurant.userGroups[role].includes(req.user._id)
-    - !user.servingRoles.includes({restaurantId, role})
+    - !user.currentJobs.includes({restaurantId, role})
   - else: 
     - nothing change on DB
     - res.data.message: a proper error message
 
   - inputValid:
     - req.user 
-    - isValidObjectId(restaurantId) && targetObjectExist(restaurantId)
+    - validateObjectId(restaurantId) && targetObjectExist(restaurantId)
     - isValidRole(role)
 */
 resignJob = async (req, res, next) => {
   try {
-    const { resaurant, role, user } = validateOnResignJob(req)
-    await dbUserResignJob(resaurant, role, user)
-    res.send(ok)
+    const { restaurant, role, user } = await validateOnResignJob(req)
+    await dbUserResignJob(restaurant, role, user)
+    res.send(user)
   } catch (error) {
     next(error)
   }
@@ -63,21 +62,21 @@ validateOnResignJob = async (req) => {
   if (!user)
     throw { httpCode: 500, message: 'Precondition failed: req.user not exist!' }
 
-  const { resaurantId, role } = req.body
-  if (!isValidRole(role) || role === roles.owner)
-    throw {
-      httpCode: 400,
-      message: `${role} is not a valid role.`,
-    }
+  const { restaurant: restaurantId, role } = req.body
 
-  const resaurant = await findRestaurant(resaurantId)
+  validateRole(role)
+  validateObjectId(restaurantId)
+  const restaurant = await findRestaurantById(restaurantId)
 
-  return { resaurant, role, user }
+  return { restaurant, role, user }
 }
-dbUserResignJob = async (resaurant, role, user) => {
-  resaurant.userGroups[role].filter((id) => !id.equals(user._id))
-  user.servingRoles.filter()
-  await resaurant.save()
+dbUserResignJob = async (restaurant, role, user) => {
+  restaurant.userGroups[role].filter((id) => !id.equals(user._id))
+  user.currentJobs.filter(
+    (serving) =>
+      !serving.restaurant.equals(restaurant._id) || serving.role != role
+  )
+  await restaurant.save()
 }
 
 /* 
@@ -102,7 +101,7 @@ readStaff = async (req, res, next) => {
     *   [ ] Post '/restaurants/restaurantId/staff/'
         { email, role }
           => validate( User.find({email:email}) exists )
-              .then( user.servingInvitations.push(role)  )
+              .then( user.pendingJobs.push(role)  )
               .catch(send error)
     > manager cannot cancel invitation. but invitation will be expired in 1 d.
 */
