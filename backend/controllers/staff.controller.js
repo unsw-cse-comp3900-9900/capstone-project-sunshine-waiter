@@ -16,22 +16,22 @@ const { roles, isValidRole } = require('../auth/authorization')
 acceptJob = async (req, res, next) => {}
 
 /*
+Bis: User can resign
+API: Delete '/users/userId/roles/'
 
-*   [ ] User can resign
-  Delete '/users/userId/roles/'
-    precond: 
-      - req.user exists;
-      - req.body: { "restaurantId": "123423411234125254", "role": "cook"}
-    postcond:
-      - if(inputValid) then !targetRestaurant.userGroups[role].includes(req.user._id)
-      - else: 
-        - nothing change on DB
-        - res.data.message: a proper error message
+precond: 
+  - req.user exists;
+  - req.body: { "restaurantId": "123423411234125254", "role": "cook"}
+postcond:
+  - if(inputValid) then !targetRestaurant.userGroups[role].includes(req.user._id)
+  - else: 
+    - nothing change on DB
+    - res.data.message: a proper error message
 
-      inputValid:
-        - req.user 
-        - isValidObjectId(restaurantId) && targetObjectExist(restaurantId)
-        - isValidRole(role)
+  inputValid:
+    - req.user 
+    - isValidObjectId(restaurantId) && targetObjectExist(restaurantId)
+    - isValidRole(role)
 */
 resignJob = async (req, res, next) => {
   try {
