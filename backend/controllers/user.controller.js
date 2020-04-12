@@ -24,7 +24,7 @@ createUser = async (req, res, next) => {
   }
 }
 
-readUser = async (req, res, next) => {
+readById = async (req, res, next) => {
   try {
     const userId = req.params.userId
     const user = await User.findById(userId)
@@ -33,6 +33,20 @@ readUser = async (req, res, next) => {
     res.json({
       data: present(user),
     })
+  } catch (error) {
+    next(error)
+  }
+}
+readMe = async (req, res, next) => {
+  try {
+    const { user } = req
+    if (!user)
+      throw {
+        httpCode: 400,
+        message: 'User must login!',
+      }
+
+    res.json({ data: present(user) })
   } catch (error) {
     next(error)
   }
@@ -83,7 +97,6 @@ deleteUser = async (req, res, next) => {
   }
 }
 
-
 // Util functions
 present = (user) => _.omit(user, ['isAdmin', 'password'])
 
@@ -133,9 +146,12 @@ const dbCreateUser = async (data) => {
 }
 
 const findByEmail = async (email) => {
-  const { error } = Joi.validate(email, {
-    email: Joi.string().min(1).max(255).email(),
-  })
+  const { error } = Joi.validate(
+    { email },
+    {
+      email: Joi.string().min(1).max(255).email(),
+    }
+  )
   if (error) throw { message: error.details[0].message, httpCode: 400 }
 
   const user = await User.findOne({ email })
@@ -147,12 +163,16 @@ const findByEmail = async (email) => {
   return user
 }
 
+readCollection = async (req, res, next) => res.json(await User.find())
+
 module.exports = {
   // route handlers
   createUser, // aka signup
-  readUser,
+  readById,
+  readMe,
   updateUser,
   deleteUser,
+  readCollection,
 
   // Util functions interact with DB
   dbCreateUser,

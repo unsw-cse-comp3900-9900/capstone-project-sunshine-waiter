@@ -12,16 +12,19 @@ const {
 
 const {
   createUser,
-  readUser,
+  readById,
   updateUser,
   deleteUser,
+  readMe,
 } = require('../controllers/user.controller')
 
 router.post('/login', login)
 
 router.post('/', createUser)
 
-router.get('/:userId', readUser)
+router.get('/me', verifyAuthToken, allowIfLoggedin, readMe)
+
+router.get('/:userId', readById)
 
 router.put(
   '/:userId',
