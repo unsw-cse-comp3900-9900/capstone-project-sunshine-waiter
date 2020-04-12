@@ -1,5 +1,9 @@
-const { findById: findRestaurantById } = require('./restaurant.controller')
+const {
+  findRestaurant,
+  findById: findRestaurantById,
+} = require('./restaurant.controller')
 const { validateObjectId, validateRole } = require('../util')
+const { findByEmail: findUserByEmail } = require('./user.controller')
 
 /*
 Bis: User can accept invitation
@@ -114,7 +118,7 @@ basic design:
 */
 
 /*
-* [ ] manager can read his staff's basic infomation. such as name, picture etc.
+* [ ] All staff in a restaurant can read other staff's basic infomation. such as name, picture etc.
       Get '/restaurants/restaurantId/staff/'
 */
 readStaff = async (req, res, next) => {
@@ -122,46 +126,97 @@ readStaff = async (req, res, next) => {
   res.send('not yet implemented')
 }
 
-// Post '/restaurants/restaurantId/staff/'
+//
 /*
 *   [ ] Manger can send invitation to user (by email adress)
-    *   [ ] Post '/restaurants/restaurantId/staff/'
-        { email, role }
+
+        
           => validate( User.find({email:email}) exists )
               .then( user.pendingJobs.push(role)  )
               .catch(send error)
     > manager cannot cancel invitation. but invitation will be expired in 1 d.
 */
+
+/*
+Bis: User can accept invitation
+API:  Post '/restaurants/:restaurantId/staff/'
+      req.body: { email, role }
+precond ( and validation )
+  - restaurant  (restaurantId) exist
+  - targetUser = User.findOne({email}); targetUser !== undifine
+  - isValidRole(role)
+postcond
+  - targetUser.pendingJobs.includes({restaurantId, role})
+*/
 inviteStaff = async (req, res, next) => {
-  console.log(req.body)
-  res.send('not yet implemented')
+  const { restaurant, role, user } = await validationOnStaff(req)
+  const result = dbInviteStaff({ restaurant, role, user })
+  res.json(result)
+}
+const dbInviteStaff = async ({ restaurant, role, user }) => {
+  user.pendingJobs.push({ restaurant, role })
+  user.save()
+  return { message: 'Your invitation is sent' }
+}
+
+const validationOnStaff = async (req) => {
+  const restaurant = findRestaurant(req)
+  const { email, role } = req.body
+  validateRole(role)
+
+  const isGranted =
+    (restaurant.userGroups['owner'].includes(req.user._id) &&
+      role !== 'owner') ||
+    (restaurant.userGroups['manager'].includes(req.user._id) &&
+      role !== 'owner' &&
+      role !== 'manager')
+  if (!isGranted)
+    throw {
+      httpCode: 403,
+      message: `Your role in restaurant ${restaurant._id} does not have enough permission to operate on staff of role ${role}.`,
+    }
+
+  const user = await findUserByEmail(email)
+  return { restaurant, role, user }
 }
 
 /*
-  *   [ ] manager can remove staff
-    *   [ ] Delete '/restaurants/restaurantId/staff/'
-         *   - role is not manager, nor owner    
-    *   [ ] Delete '/restaurants/restaurantId/manager/'
-        *   - role is manager
-        { userId, role }
-          => validate( 
-              - User.find({_id:userId}) exists 
-              - check url with role
-            )
-            .then(
-              if (!restaurant.userGroups[role].includes(user._id)) {
-                restaurant.userGroups[role].remove(user._id)
-              })
-            .catch(blabla)
+Bis: manager can remove staff
+API:  Delete '/restaurants/:restaurantId/staff/'
+      req.body: { email, role }
+
+precond ( and validation )
+  - restaurant  (restaurantId) exist
+  - targetUser = User.findOne({email}); targetUser !== undifine
+  - isValidRole(role)
+  - permission: 
+    (
+      restaurant.userGroups[owner].includes(req.user._id) 
+      && role !== owner 
+    ) || (
+      restaurant.userGroups[manager].includes(req.user._id) 
+      && role !== owner && role !== manager 
+    )
 */
-deleteStaff = async (req, res, next) => {
-  console.log(req.body)
-  res.send('not yet implemented')
+removeStaff = async (req, res, next) => {
+  const { restaurant, role, user } = await validationOnStaff(req)
+  const result = dbDeleteStaff({ restaurant, role, user })
+  res.json(result)
+}
+const dbDeleteStaff = async ({ restaurant, role, user }) => {
+  user.currentJobs.filter(
+    (job) => !(job.restaurant.equals(restaurant._id) && job.role === role)
+  )
+  user.save()
+  restaurant.userGroups[role].filter((userId) => userId !== user._id)
+  return {
+    message: `Successfully removed user ( email: ${user.email}) from ${role} group of restaurant ${restaurant._id}.`,
+  }
 }
 
 module.exports = {
   acceptJob,
   resignJob,
   inviteStaff,
-  deleteStaff,
+  removeStaff,
 }

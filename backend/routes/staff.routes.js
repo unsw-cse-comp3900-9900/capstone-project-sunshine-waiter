@@ -4,7 +4,7 @@ const {
   acceptJob,
   resignJob,
   inviteStaff,
-  deleteStaff,
+  removeStaff,
 } = require('../controllers/staff.controller')
 
 const { verifyAuthToken } = require('../auth/authentication')
@@ -47,7 +47,7 @@ router.delete(
   verifyAuthToken,
   allowIfLoggedin,
   requestAccess(scopes.restaurant, actions.update, resources.staff),
-  deleteStaff
+  removeStaff
 )
 
 module.exports = router
