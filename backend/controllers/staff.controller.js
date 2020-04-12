@@ -24,8 +24,35 @@ postcond
     - req.user.pendingJobs.includes({restaurantId, role})
 */
 acceptJob = async (req, res, next) => {
-  console.log(req.body)
-  res.send('not yet implemented')
+  try {
+    const { restaurant, role, user } = await validateBasicOnJob(req)
+    if (!user.pendingJobs.includes({ restaurant, role }))
+      throw {
+        httpCode: 404,
+        message: `user.pendingJobs does not includes target job `,
+        problematicData: req.body,
+      }
+
+    await dbUserAcceptJob(restaurant, role, user)
+    res.send(user)
+  } catch (error) {
+    next(error)
+  }
+}
+
+// - targetRestaurant.userGroups[role].includes(req.user._id)
+// - user.currentJobs.includes({restaurantId, role})
+// - !user.pendingJobs.includes({restaurantId, role})
+dbUserAcceptJob = async (restaurant, role, user) => {
+  // TODO: make it transaction
+  user.pendingJobs = user.pendingJobs.filter(
+    (job) => !(job.restaurant.equals(restaurant._id) && job.role === role)
+  )
+  user.currentJobs.push({ restaurant, role })
+  await user.save()
+
+  restaurant.userGroups[role].push(user._id)
+  await restaurant.save()
 }
 
 /*
@@ -50,14 +77,14 @@ postcond:
 */
 resignJob = async (req, res, next) => {
   try {
-    const { restaurant, role, user } = await validateOnResignJob(req)
+    const { restaurant, role, user } = await validateBasicOnJob(req)
     await dbUserResignJob(restaurant, role, user)
     res.send(user)
   } catch (error) {
     next(error)
   }
 }
-validateOnResignJob = async (req) => {
+validateBasicOnJob = async (req) => {
   const user = req.user
   if (!user)
     throw { httpCode: 500, message: 'Precondition failed: req.user not exist!' }
