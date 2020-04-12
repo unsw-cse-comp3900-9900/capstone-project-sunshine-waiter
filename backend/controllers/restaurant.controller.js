@@ -77,7 +77,7 @@ const findRestaurant = async (req) => {
 findById = async (id) => {
   const restaurant = await Restaurant.findById(id)
   if (!restaurant)
-    return res.status(404).json({ error: `Restaurant ${id} does not exist.` })
+    throw { httpCode: 404, message: `Restaurant "${id}" does not exist.` }
   return restaurant
 }
 
