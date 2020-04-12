@@ -55,7 +55,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"name\": \"Cook - Jason\",\n  \"email\": \"jason@sw.com\",\n  \"password\": \"password_of_Jason\"\n}",
+							"raw": "    {\n      \"name\": \"Jenette Carter\",\n      \"email\": \"jenette.carter@skycenta.club\",\n      \"password\": \"password_of_Ian\"\n    }",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -94,6 +94,54 @@
 							"path": [
 								"users",
 								"{{userId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user read \"me\"",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"type": "text",
+								"value": "{{second-jwt}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/users/me",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "developer read all user",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"type": "text",
+								"value": "{{active-jwt}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/admin/users",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"admin",
+								"users"
 							]
 						}
 					},
@@ -1206,7 +1254,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"placedBy\": \"17-a\",\n\t\t\"orderItemsData\": [\n\t\t\t{\n\t\t\t\t\"menuItem\": \"5e8bf29ba173ac06caf3b5f0\", \n\t        \t\"price\": 44,\n\t        \t\"notes\": \"no spicy\",\n\t            \"name\": \"牛肉粿条汤 中\",\n            \t\"amount\": 1\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"menuItem\": \"5e8bf2a2a173ac06caf3b5f1\", \n\t        \t\"price\": 50,\n\t        \t\"notes\": \"no spicy\",\n\t            \"name\": \"牛肉粿条汤 大\",\n            \t\"amount\": 2\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"menuItem\": \"5e8bf29ba173ac06caf3b5f0\", \n\t        \t\"price\": 44,\n\t        \t\"notes\": \"no spicy\",\n\t            \"name\": \"牛肉粿条汤 中\",\n            \t\"amount\": 3\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"menuItem\": \"5e8bf2a2a173ac06caf3b5f1\", \n\t        \t\"price\": 50,\n\t        \t\"notes\": \"no spicy\",\n\t            \"name\": \"牛肉粿条汤 大\",\n            \t\"amount\": 4\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"menuItem\": \"5e8bf29ba173ac06caf3b5f0\", \n\t        \t\"price\": 44,\n\t        \t\"notes\": \"no spicy\",\n\t            \"name\": \"牛肉粿条汤 中\",\n            \t\"amount\": 5\n\t\t\t},\n\t\t\t{\n\t\t\t\t\"menuItem\": \"5e8bf2a2a173ac06caf3b5f1\", \n\t        \t\"price\": 50,\n\t        \t\"notes\": \"no spicy\",\n\t            \"name\": \"牛肉粿条汤 大\",\n            \t\"amount\": 6\n\t\t\t}\n\t\t\t\n\t\t]\n}",
+							"raw": "{\n\t\"placedBy\": \"17-a\",\n\t\"orderItemsData\": [\n\t\t{\n\t\t\t        \"menuItem\": \"5e91b040f57254048466930b\",\n        \"name\": \"Old Town BBQ Combo\",\n        \"price\": 58,\n\t    \t\"notes\": \"no spicy\",\n\t    \t\"amount\": 1\n\t\t},\n\t\t{\n\t\t\t        \"menuItem\": \"5e91b040f57254048466930b\",\n        \"name\": \"Old Town BBQ Combo\",\n        \"price\": 58,\n\t    \t\"notes\": \"no spicy\",\n\t    \t\"amount\": 1\n\t\t}\n\t]\n}",
 							"options": {
 								"raw": {
 									"language": "javascript"
@@ -1363,7 +1411,193 @@
 		},
 		{
 			"name": "/restaurants/:rID/staff",
-			"item": [],
+			"item": [
+				{
+					"name": "user accpet a role",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "{{second-jwt}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n        \"restaurant\": \"5e91b040f572540484669301\",\n        \"role\": \"manager\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/users/{{scd-userId}}/roles",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"{{scd-userId}}",
+								"roles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user resign a role",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "{{second-jwt}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{        \"restaurant\": \"5e91b040f572540484669301\",\n        \"role\": \"manager\"}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/users/{{scd-userId}}/roles",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"{{scd-userId}}",
+								"roles"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user resign a role invalid body",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"type": "text",
+								"value": "{{active-jwt}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"role\": \"cook\",\n\t\"restaurant\": \"ghjk\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/users/{{userId}}/roles",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"{{userId}}",
+								"roles"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "manager invite staff",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "{{active-jwt}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"role\": \"manager\",\n\t\"email\": \"jenette.carter@skycenta.club\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/restaurants/{{restaurantId}}/staff",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"restaurants",
+								"{{restaurantId}}",
+								"staff"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "manager remove staff",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "{{active-jwt}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"role\": \"manager\",\n\t\"email\": \"jenette.carter@skycenta.club\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/restaurants/{{restaurantId}}/staff/",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"restaurants",
+								"{{restaurantId}}",
+								"staff",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			],
 			"protocolProfileBehavior": {}
 		},
 		{

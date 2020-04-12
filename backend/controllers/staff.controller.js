@@ -30,7 +30,12 @@ postcond
 acceptJob = async (req, res, next) => {
   try {
     const { restaurant, role, user } = await validateBasicOnJob(req)
-    if (!user.pendingJobs.includes({ restaurant, role }))
+
+    if (
+      !user.pendingJobs.find(
+        (job) => job.restaurant.equals(restaurant._id) && job.role === role
+      )
+    )
       throw {
         httpCode: 404,
         message: `user.pendingJobs does not includes target job `,
@@ -38,7 +43,11 @@ acceptJob = async (req, res, next) => {
       }
 
     await dbUserAcceptJob(restaurant, role, user)
-    res.send(user)
+    res.json({
+      message: 'Successfully accept job.',
+      job: { restaurant: restaurant._id, role },
+      user,
+    })
   } catch (error) {
     next(error)
   }
@@ -50,7 +59,7 @@ acceptJob = async (req, res, next) => {
 dbUserAcceptJob = async (restaurant, role, user) => {
   // TODO: make it transaction
   user.pendingJobs = user.pendingJobs.filter(
-    (job) => !(job.restaurant.equals(restaurant._id) && job.role === role)
+    (job) => !compareJob(job, { restaurant, role })
   )
   user.currentJobs.push({ restaurant, role })
   await user.save()
@@ -82,8 +91,19 @@ postcond:
 resignJob = async (req, res, next) => {
   try {
     const { restaurant, role, user } = await validateBasicOnJob(req)
+    // check currentJob
+    const isFound = user.currentJobs.find((job) =>
+      compareJob(job, { restaurant, role })
+    )
+    if (!isFound) throw { httpCode: 204, message: '' }
+
     await dbUserResignJob(restaurant, role, user)
-    res.send(user)
+
+    res.json({
+      message: 'Successfully resign job.',
+      job: { restaurant: restaurant._id, role },
+      user,
+    })
   } catch (error) {
     next(error)
   }
@@ -102,12 +122,14 @@ validateBasicOnJob = async (req) => {
   return { restaurant, role, user }
 }
 dbUserResignJob = async (restaurant, role, user) => {
-  restaurant.userGroups[role].filter((id) => !id.equals(user._id))
-  user.currentJobs.filter(
-    (serving) =>
-      !serving.restaurant.equals(restaurant._id) || serving.role != role
+  restaurant.userGroups[role] = restaurant.userGroups[role].filter(
+    (id) => !id.equals(user._id)
   )
   await restaurant.save()
+  user.currentJobs = user.currentJobs.filter(
+    (job) => !compareJob(job, { restaurant, role })
+  )
+  await user.save()
 }
 
 /* 
@@ -149,18 +171,27 @@ postcond
   - targetUser.pendingJobs.includes({restaurantId, role})
 */
 inviteStaff = async (req, res, next) => {
-  const { restaurant, role, user } = await validationOnStaff(req)
-  const result = dbInviteStaff({ restaurant, role, user })
-  res.json(result)
+  try {
+    const { restaurant, role, staff } = await validationOnStaff(req)
+    const result = await dbInviteStaff({ restaurant, role, staff })
+    res.json(result)
+  } catch (error) {
+    next(error)
+  }
 }
-const dbInviteStaff = async ({ restaurant, role, user }) => {
-  user.pendingJobs.push({ restaurant, role })
-  user.save()
-  return { message: 'Your invitation is sent' }
+const dbInviteStaff = async ({ restaurant, role, staff }) => {
+  staff.pendingJobs = staff.pendingJobs.filter(
+    (job) => !compareJob(job, { restaurant, role })
+  )
+  staff.pendingJobs.push({ restaurant: restaurant._id, role })
+  staff.save()
+  return {
+    message: `Your invitation of role ${role} is sent to ${staff.email}.`,
+  }
 }
 
 const validationOnStaff = async (req) => {
-  const restaurant = findRestaurant(req)
+  const restaurant = await findRestaurant(req)
   const { email, role } = req.body
   validateRole(role)
 
@@ -176,8 +207,8 @@ const validationOnStaff = async (req) => {
       message: `Your role in restaurant ${restaurant._id} does not have enough permission to operate on staff of role ${role}.`,
     }
 
-  const user = await findUserByEmail(email)
-  return { restaurant, role, user }
+  const staff = await findUserByEmail(email)
+  return { restaurant, role, staff }
 }
 
 /*
@@ -199,20 +230,39 @@ precond ( and validation )
     )
 */
 removeStaff = async (req, res, next) => {
-  const { restaurant, role, user } = await validationOnStaff(req)
-  const result = dbDeleteStaff({ restaurant, role, user })
-  res.json(result)
-}
-const dbDeleteStaff = async ({ restaurant, role, user }) => {
-  user.currentJobs.filter(
-    (job) => !(job.restaurant.equals(restaurant._id) && job.role === role)
-  )
-  user.save()
-  restaurant.userGroups[role].filter((userId) => userId !== user._id)
-  return {
-    message: `Successfully removed user ( email: ${user.email}) from ${role} group of restaurant ${restaurant._id}.`,
+  try {
+    const validation = async (req) => {
+      const { restaurant, role, staff } = await validationOnStaff(req)
+      const isFound = restaurant.userGroups[role].find((id) =>
+        id.equals(staff._id)
+      )
+      if (!isFound) throw { httpCode: 204, message: '' }
+      return { restaurant, role, staff }
+    }
+
+    const input = await validation(req)
+    const result = await dbDeleteStaff(input)
+    res.json(result)
+  } catch (error) {
+    next(error)
   }
 }
+const dbDeleteStaff = async ({ restaurant, role, staff }) => {
+  staff.currentJobs = staff.currentJobs.filter(
+    (job) => !compareJob(job, { restaurant, role })
+  )
+  await staff.save()
+  restaurant.userGroups[role] = restaurant.userGroups[role].filter(
+    (userId) => !userId.equals(staff._id)
+  )
+  await restaurant.save()
+  return {
+    message: `Successfully removed user ( email: ${staff.email}) from ${role} group of restaurant ${restaurant._id}.`,
+  }
+}
+
+compareJob = (job, { restaurant, role }) =>
+  job.restaurant.equals(restaurant._id) && job.role === role
 
 module.exports = {
   acceptJob,
