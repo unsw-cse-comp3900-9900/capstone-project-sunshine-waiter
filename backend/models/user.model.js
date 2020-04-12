@@ -26,6 +26,46 @@ const userSchema = new mongoose.Schema({
     minlength: 10,
     maxlength: 1023,
   },
+  // restaurant serving
+  servingRoles: {
+    type: [
+      {
+        restaurant: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'Restaurant',
+          required: true,
+        },
+        role: {
+          type: String,
+          // TODO: validate function
+          // must be one of the allowed roles.
+          required: true,
+        },
+      },
+    ],
+    required: true,
+    default: [],
+  },
+  servingInvitations: {
+    type: [
+      {
+        restaurant: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'Restaurant',
+          required: true,
+        },
+        role: {
+          type: String,
+          // TODO: validate function
+          // must be one of the allowed roles.
+          required: true,
+        },
+      },
+    ],
+    required: true,
+    default: [],
+  },
+
   // website admin; not restaurant
   isAdmin: {
     type: Boolean,

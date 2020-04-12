@@ -18,6 +18,8 @@ const roles = Object.freeze({
   admin: 'admin',
 })
 
+const isValidRole = (role) => roles[role] !== undefined
+
 const actions = Object.freeze({
   create: 'create',
   read: 'read',
@@ -171,6 +173,7 @@ const requestAccessOnRestaurant = function (action, resource) {
 
 module.exports = {
   roles,
+  isValidRole,
   scopes,
   actions,
   resources,
