@@ -44,12 +44,6 @@ createOrder = async (req, res, next) => {
     await createOrderItems(req, res, next, order)
 
     res.status(201).json({ data: await present(order) })
-
-    /*
-    TODO: emit event of new order placement
-    const orderPlacedEvent = new Event("new order placed", order}) restaurant._id
-    orderPlacedEvent.emit()
-    */
   } catch (error) {
     next(error)
   }
