@@ -4,21 +4,17 @@ const Menu = require('../models/menu.model')
 const _ = require('lodash')
 
 // designed for inside consumption. not for route handling.
-const findRestaurant = async (req, res, next) => {
-  try {
-    const { restaurantId } = req.params
-    if (!restaurantId)
-      throw { httpCode: 400, message: 'URI params missing restaurantId ' }
-    const restaurant = await Restaurant.findById(restaurantId)
-    if (!restaurant)
-      throw {
-        httpCode: 404,
-        message: `Restaurant with ${restaurantId} not found. Might never exist or be deleted.`,
-      }
-    return restaurant
-  } catch (error) {
-    next(error)
-  }
+const findRestaurant = async (req) => {
+  const { restaurantId } = req.params
+  if (!restaurantId)
+    throw { httpCode: 400, message: 'URI params missing restaurantId ' }
+  const restaurant = await Restaurant.findById(restaurantId)
+  if (!restaurant)
+    throw {
+      httpCode: 404,
+      message: `Restaurant with ${restaurantId} not found. Might never exist or be deleted.`,
+    }
+  return restaurant
 }
 
 // present data to client side

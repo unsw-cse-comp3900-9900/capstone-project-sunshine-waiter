@@ -29,7 +29,7 @@ createOrder = async (req, res, next) => {
     const { placedBy } = req.body
     if (!placedBy)
       throw { httpCode: 400, message: 'Request body miss key: placedBy' }
-    const restaurant = await findRestaurant(req, res, next)
+    const restaurant = await findRestaurant(req)
 
     const order = new Order({
       placedBy,
@@ -66,7 +66,7 @@ readOrder = async (req, res, next) => {
 
 readMany = async (req, res, next) => {
   try {
-    const restaurant = await findRestaurant(req, res, next)
+    const restaurant = await findRestaurant(req)
     const objs = await Order.find({ restaurant: restaurant._id })
 
     const tasks = objs.map((o) => (async () => await present(o))())
