@@ -112,17 +112,26 @@ const accessGranted = {
       'read:own': ['*'],
       'update:own': ['*'],
     },
+    restaurant: {
+      'read:own': ['*'],
+    },
   },
   waiter: {
     serving_queue: {
       'read:own': ['*'],
       'update:own': ['*'],
     },
+    restaurant: {
+      'read:own': ['*'],
+    },
   },
   cashier: {
     order: {
       'read:own': ['*'],
       'update:own': ['*'],
+    },
+    restaurant: {
+      'read:own': ['*'],
     },
   },
 
