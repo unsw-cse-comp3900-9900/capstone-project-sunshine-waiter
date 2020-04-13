@@ -1431,7 +1431,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n        \"restaurant\": \"5e91b040f572540484669301\",\n        \"role\": \"cook\"\n}",
+							"raw": "{\n       \"restaurant\": \"5e93c677d2ff77031719f650\",\n        \"role\": \"waiter\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1465,7 +1465,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{   \n\t\"restaurant\": \"5e91b040f572540484669301\",\n        \"role\": \"cook\"\n}",
+							"raw": "{   \n       \"restaurant\": \"5e93c677d2ff77031719f650\",\n        \"role\": \"manager\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1494,47 +1494,6 @@
 					"response": []
 				},
 				{
-					"name": "user resign a role invalid body",
-					"request": {
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "x-auth-token",
-								"type": "text",
-								"value": "{{active-jwt}}"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n\t\"role\": \"cook\",\n\t\"restaurant\": \"ghjk\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseURL}}/users/{{userId}}/roles",
-							"host": [
-								"{{baseURL}}"
-							],
-							"path": [
-								"users",
-								"{{userId}}",
-								"roles"
-							],
-							"query": [
-								{
-									"key": "",
-									"value": "",
-									"disabled": true
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "manager invite staff",
 					"request": {
 						"method": "POST",
@@ -1547,7 +1506,44 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"role\": \"manager\",\n\t\"email\": \"jenette.carter@skycenta.club\"\n}",
+							"raw": "{\n\t\"role\": \"waiter\",\n\t\"email\": \"jenette.carter@skycenta.club\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/restaurants/{{restaurantId}}/staff",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"restaurants",
+								"{{restaurantId}}",
+								"staff"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "manager read all staff",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"type": "text",
+								"value": "{{active-jwt}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"role\": \"cook\",\n\t\"email\": \"jenette.carter@skycenta.club\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1581,7 +1577,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"role\": \"manager\",\n\t\"email\": \"jenette.carter@skycenta.club\"\n}",
+							"raw": "{\n\t\"role\": \"waiter\",\n\t\"email\": \"jenette.carter@skycenta.club\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
