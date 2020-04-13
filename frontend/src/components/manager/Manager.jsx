@@ -1,5 +1,5 @@
 import React from 'react'
-import { Layout, Menu, Button, Tooltip } from 'antd'
+import { Layout, Menu, Button, Tooltip, Row, Col } from 'antd'
 import 'antd/dist/antd.css'
 
 import './default.css'
@@ -42,7 +42,7 @@ class Manager extends React.Component {
     await fetchMenuApi(getCookie('token'), id, this.onSetCurrentMenu)
   }
 
-  renderMenuItem = category => {
+  renderActiveMenuItem = category => {
     if (
       this.state.currentMenu === null ||
       this.state.currentMenu.menuItems.length === 0
@@ -51,10 +51,71 @@ class Manager extends React.Component {
     }
     return (
       <div>
-        {this.state.currentMenu.menuItems.map(item =>
-          item.categoryArray.map(caId => {
-            console.log(caId, category)
-            if (caId === category._id) {
+        {this.state.currentMenu.menuItems.map(item => {
+          if (!item.isArchived) {
+            return item.categoryArray.map(caId => {
+              if (caId === category._id) {
+                return (
+                  <li key={item._id}>
+                    <Tooltip
+                      placement="topLeft"
+                      title={`price is ${item.price}`}
+                      arrowPointAtCenter
+                    >
+                      {item.name}
+                    </Tooltip>
+                    <Tooltip
+                      placement="topLeft"
+                      title="modify the menuItem"
+                      arrowPointAtCenter
+                    >
+                      <span
+                        className="right"
+                        onClick={() => {
+                          this.setState({ currentMenuItemParam: item })
+                          this.handleMenuItemEdit()
+                        }}
+                      >
+                        <i className="clickable pencil alternate icon"></i>
+                      </span>
+                    </Tooltip>
+                    <Tooltip
+                      placement="topLeft"
+                      title="delete the menuItem"
+                      arrowPointAtCenter
+                    >
+                      <span
+                        className="right"
+                        onClick={() => this.onDeleteMenuItem(item._id)}
+                      >
+                        <i className="clickable trash icon"></i>
+                      </span>
+                    </Tooltip>
+                  </li>
+                )
+              }
+            })
+          }
+        })}
+      </div>
+    )
+  }
+
+  renderArchivedMenuItem = () => {
+    if (
+      this.state.currentMenu === null ||
+      this.state.currentMenu.menuItems.length === 0
+    ) {
+      return null
+    }
+    return (
+      <div className="menu-builder">
+        <div>
+          <h1>Archived MenuItems</h1>
+        </div>
+        <div className="menu-segment">
+          {this.state.currentMenu.menuItems.map(item => {
+            if (item.isArchived) {
               return (
                 <li key={item._id}>
                   <Tooltip
@@ -64,38 +125,11 @@ class Manager extends React.Component {
                   >
                     {item.name}
                   </Tooltip>
-                  <Tooltip
-                    placement="topLeft"
-                    title="modify the menuItem"
-                    arrowPointAtCenter
-                  >
-                    <span
-                      className="right"
-                      onClick={() => {
-                        this.setState({ currentMenuItemParam: item })
-                        this.handleMenuItemEdit()
-                      }}
-                    >
-                      <i className="clickable pencil alternate icon"></i>
-                    </span>
-                  </Tooltip>
-                  <Tooltip
-                    placement="topLeft"
-                    title="delete the menuItem"
-                    arrowPointAtCenter
-                  >
-                    <span
-                      className="right"
-                      onClick={() => this.onDeleteMenuItem(item._id)}
-                    >
-                      <i className="clickable trash icon"></i>
-                    </span>
-                  </Tooltip>
                 </li>
               )
             }
-          })
-        )}
+          })}
+        </div>
       </div>
     )
   }
@@ -150,7 +184,7 @@ class Manager extends React.Component {
     )
   }
 
-  renderCategories = () => {
+  renderActiveCategories = () => {
     if (
       this.state.currentMenu === null ||
       this.state.currentMenu.categories.length === 0
@@ -161,55 +195,81 @@ class Manager extends React.Component {
         </div>
       )
     }
-    return this.state.currentMenu.categories.map(item => (
-      <div className="menu-content" key={item._id}>
-        <label>{item.name}</label>
-        <Tooltip
-          placement="topLeft"
-          title="display all menu items"
-          arrowPointAtCenter
-        >
-          <span className="right" onClick={() => this.onOpenChange(item._id)}>
-            {this.state.openCategoryId === item._id ? (
-              <i className="clickable chevron up icon" />
-            ) : (
-              <i className="clickable chevron down icon" />
-            )}
-          </span>
-        </Tooltip>
-        <Tooltip
-          placement="topLeft"
-          title="modify the category"
-          arrowPointAtCenter
-        >
-          <span
-            className="right"
-            onClick={() => {
-              this.setState({ currentCategoryParam: item })
-              this.handleCategoryEdit()
-            }}
-          >
-            <i className="clickable pencil alternate icon"></i>
-          </span>
-        </Tooltip>
-        <Tooltip
-          placement="topLeft"
-          title="delete the category"
-          arrowPointAtCenter
-        >
-          <span
-            className="right"
-            onClick={() => this.onDeleteCategory(item._id)}
-          >
-            <i className="clickable trash icon"></i>
-          </span>
-        </Tooltip>
-        {this.state.openCategoryId === item._id && this.renderMenuItem(item)}
-      </div>
-    ))
+    return this.state.currentMenu.categories.map(item => {
+      if (!item.isArchived) {
+        return (
+          <div className="menu-content" key={item._id}>
+            <label>{item.name}</label>
+            <Tooltip
+              placement="topLeft"
+              title="display all menu items"
+              arrowPointAtCenter
+            >
+              <span
+                className="right"
+                onClick={() => this.onOpenChange(item._id)}
+              >
+                {this.state.openCategoryId === item._id ? (
+                  <i className="clickable chevron up icon" />
+                ) : (
+                  <i className="clickable chevron down icon" />
+                )}
+              </span>
+            </Tooltip>
+            <Tooltip
+              placement="topLeft"
+              title="modify the category"
+              arrowPointAtCenter
+            >
+              <span
+                className="right"
+                onClick={() => {
+                  this.setState({ currentCategoryParam: item })
+                  this.handleCategoryEdit()
+                }}
+              >
+                <i className="clickable pencil alternate icon"></i>
+              </span>
+            </Tooltip>
+            <Tooltip
+              placement="topLeft"
+              title="delete the category"
+              arrowPointAtCenter
+            >
+              <span
+                className="right"
+                onClick={() => this.onDeleteCategory(item._id)}
+              >
+                <i className="clickable trash icon"></i>
+              </span>
+            </Tooltip>
+            {this.state.openCategoryId === item._id &&
+              this.renderActiveMenuItem(item)}
+          </div>
+        )
+      }
+    })
   }
 
-  renderMenuBuilder = () => {
+  renderArchivedCategories = () => {
+    if (
+      this.state.currentMenu === null ||
+      this.state.currentMenu.categories.length === 0
+    ) {
+      return null
+    }
+    return this.state.currentMenu.categories.map(item => {
+      if (item.isArchived) {
+        return (
+          <div className="menu-content" key={item._id}>
+            <label>{item.name}</label>
+          </div>
+        )
+      }
+    })
+  }
+
+  renderActiveMenu = () => {
     if (this.state.currentMenu === null) {
       return (
         <div className="ui red message">
@@ -222,9 +282,8 @@ class Manager extends React.Component {
         <div>
           {/* get api dont return description key */}
           <h1>Edit your menu: {this.state.currentMenu.name}</h1>
-          <small>{this.state.currentMenu.description}</small>
         </div>
-        <div className="menu-segment">{this.renderCategories()}</div>
+        <div className="menu-segment">{this.renderActiveCategories()}</div>
         <Button
           type="primary"
           shape="round"
@@ -255,6 +314,17 @@ class Manager extends React.Component {
     )
   }
 
+  renderArchivedMenu = () => {
+    return (
+      <div className="menu-builder">
+        <div>
+          <h1>Archived Categories</h1>
+        </div>
+        <div className="menu-segment">{this.renderArchivedCategories()}</div>
+      </div>
+    )
+  }
+
   renderContent = () => {
     if (this.state.displayIndex === DASHBOARD) {
       return <div>Report</div>
@@ -264,7 +334,17 @@ class Manager extends React.Component {
       return <StaffManagement restaurantId={id} />
     }
     if (this.state.displayIndex === MENUS) {
-      return <div>{this.renderMenuBuilder()}</div>
+      return (
+        <Row>
+          <Col span={8}>{this.renderActiveMenu()}</Col>
+          <Col span={8} push={0.5}>
+            {this.renderArchivedMenu()}
+          </Col>
+          <Col span={8} push={0.5}>
+            {this.renderArchivedMenuItem()}
+          </Col>
+        </Row>
+      )
     }
     if (this.state.displayIndex === QRCODE) {
       return <div>code</div>
