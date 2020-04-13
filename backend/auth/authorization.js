@@ -18,7 +18,7 @@ const roles = Object.freeze({
   admin: 'admin',
 })
 
-const isValidRole = (role) => roles[role] !== undefined
+const isValidRole = role => roles[role] !== undefined
 
 const actions = Object.freeze({
   create: 'create',
@@ -51,7 +51,7 @@ const allowIfLoggedin = async (req, res, next) => {
 }
 
 // account
-const requestAccess = function (scope, action, resource) {
+const requestAccess = function(scope, action, resource) {
   if (scope === scopes.account) {
     return requestAccessOnUser(action, resource)
   } else {
@@ -68,7 +68,7 @@ post-cond
   1. if user has permission on [target user : target resource]: pass to next() 
   2. else: 401 
 */
-const requestAccessOnUser = function (action, resource) {
+const requestAccessOnUser = function(action, resource) {
   return async (req, res, next) => {
     try {
       // 1. check pre-cond
@@ -81,7 +81,7 @@ const requestAccessOnUser = function (action, resource) {
       }
 
       // 2. calculate isGranted
-      const isOwn = user._id == userId
+      const isOwn = user._id.equals(userId)
       const isAdmin = user.isAdmin
 
       const ownGranted = ac.can(roles.basic)[action + 'Own'](resource).granted
@@ -112,7 +112,7 @@ post-cond
   1. if user has (the role that has) permission on [target restaurant : target resource]: pass to next() 
   2. else: 403 forbidden
 */
-const requestAccessOnRestaurant = function (action, resource) {
+const requestAccessOnRestaurant = function(action, resource) {
   return async (req, res, next) => {
     try {
       const { restaurantId } = req.params
