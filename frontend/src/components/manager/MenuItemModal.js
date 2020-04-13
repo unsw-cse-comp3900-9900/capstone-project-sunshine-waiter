@@ -10,6 +10,7 @@ class MenuItemModal extends React.Component {
   state = {
     categoryInputVisble: false,
     categoryInputValue: '',
+    //should be only active category
     categoryArray: [],
     name: '',
     description: '',
@@ -70,15 +71,18 @@ class MenuItemModal extends React.Component {
 
   handleCategoryInputValueConfirm = () => {
     const { categoryInputValue } = this.state
-    let { categoryArray } = this.state
+    let activeCategoryArray = this.state.categoryArray.filter(
+      ca => ca.isArchived === false
+    )
+
     if (
       categoryInputValue &&
-      categoryArray.indexOf(categoryInputValue) === -1
+      activeCategoryArray.indexOf(categoryInputValue) === -1
     ) {
-      categoryArray = [...categoryArray, categoryInputValue]
+      activeCategoryArray = [...activeCategoryArray, categoryInputValue]
     }
     this.setState({
-      categoryArray,
+      categoryArray: activeCategoryArray,
       categoryInputVisble: false,
       categoryInputValue: '',
     })
@@ -119,9 +123,11 @@ class MenuItemModal extends React.Component {
     if (currentMenu === null) {
       return null
     } else {
-      return currentMenu.categories.map(ca => (
-        <Select.Option key={ca._id}>{ca.name}</Select.Option>
-      ))
+      return currentMenu.categories.map(ca => {
+        if (!ca.isArchived) {
+          return <Select.Option key={ca._id}>{ca.name}</Select.Option>
+        }
+      })
     }
   }
 
