@@ -1,3 +1,5 @@
+import { message } from 'antd'
+
 import BaseProvider from '../BaseProvider'
 
 export const sendInvitation = (
@@ -8,15 +10,19 @@ export const sendInvitation = (
 ) => {
   if (token !== undefined) {
     const config = {
-      'x-auth-token': token,
+      headers: {
+        'x-auth-token': token,
+      },
     }
     const URL = `/restaurants/${restaurantId}/staff`
 
     BaseProvider.post(URL, params, config)
       .then(res => {
         callback()
-        console.log(res)
+        message.success(res.data.message, 2)
       })
-      .catch(err => alert(err.response.data.error))
+      .catch(err => message.error(err.response.data.error))
   }
 }
+
+export const getStaffs = () => {}

@@ -282,7 +282,7 @@ class Manager extends React.Component {
       <div className="menu-builder">
         <div>
           {/* get api dont return description key */}
-          <h1>Edit your menu: {this.state.currentMenu.name}</h1>
+          <h1>Active menu: {this.state.currentMenu.name}</h1>
         </div>
         <div className="menu-segment">{this.renderActiveCategories()}</div>
         <Button
