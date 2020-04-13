@@ -101,3 +101,9 @@ Fixed bugs for web socket implementation.
 #### Saturday, 11 April 2020
 
 Prepared dummy data for future dashboard data visualisation
+
+## Week 9
+
+#### Monday, 13 April 2020
+
+Finished basic Sales chart and time selector.
