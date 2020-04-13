@@ -4,9 +4,32 @@ const mongoose = require('mongoose')
 const isValid = require('mongoose').Types.ObjectId.isValid
 const { OrderItem, allowedStatus } = require('../models/orderItem.model')
 const MenuItem = require('../models/menuItem.model')
+const Order = require('../models/order.model')
 const { findMenu } = require('./menu.controller')
 const { findOrder } = require('./order.controller')
+const { findRestaurant } = require('./restaurant.controller')
 const { present } = require('../util')
+
+readOrderItem = async (req, res, next) => {
+  try {
+    const { orderItemId } = req.body
+    if (!orderItemId)
+      throw { httpCode: 400, message: 'URL missing orderItemId' }
+    const restaurant = await findRestaurant(req)
+    const ret = await OrderItem.findById(orderItemId)
+    res.json({ data: ret })
+  } catch (error) {}
+}
+
+readAllItemInRestaurant = async (req, res, next) => {
+  try {
+    const restaurant = await findRestaurant(req)
+    const objs = await OrderItem.find({ restaurant: restaurant._id })
+    res.json({ data: objs })
+  } catch (error) {
+    next(error)
+  }
+}
 
 /*
 precond:
@@ -28,6 +51,7 @@ createOrderItems = async (req, res, next, order) => {
         ]),
         order: order._id,
         placedBy,
+        restaurant: order.restaurant,
       }
     })
     await OrderItem.create(docs)
@@ -154,4 +178,6 @@ findItem = async (restaurantId, itemId) => {
 module.exports = {
   createOrderItems,
   readItemsInOrder,
+  readOrderItem,
+  readAllItemInRestaurant,
 }

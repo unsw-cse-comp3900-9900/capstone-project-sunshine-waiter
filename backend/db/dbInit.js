@@ -79,6 +79,7 @@ const dbCreateOrderItem = async (order, menuItems, users) => {
       ..._.pick(menuItem, ['name', 'price', 'categoryArray']),
       status: 'SERVED',
       order: order._id,
+      restaurant: order.restaurant,
       placedBy: order.placedBy,
       readyTime: readyTime,
       serveTime: serveTime,
