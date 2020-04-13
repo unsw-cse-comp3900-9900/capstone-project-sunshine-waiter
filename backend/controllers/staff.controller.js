@@ -2,7 +2,11 @@ const {
   findRestaurant,
   findById: findRestaurantById,
 } = require('./restaurant.controller')
-const { validateObjectId, validateRole } = require('../util')
+const {
+  validateObjectId,
+  validateRole,
+  performTransaction,
+} = require('../util')
 const { findByEmail: findUserByEmail } = require('./user.controller')
 
 /*
@@ -57,15 +61,18 @@ acceptJob = async (req, res, next) => {
 // - user.currentJobs.includes({restaurantId, role})
 // - !user.pendingJobs.includes({restaurantId, role})
 dbUserAcceptJob = async (restaurant, role, user) => {
-  // TODO: make it transaction
-  user.pendingJobs = user.pendingJobs.filter(
-    (job) => !compareJob(job, { restaurant, role })
-  )
-  user.currentJobs.push({ restaurant: restaurant._id, role })
-  await user.save()
+  const transaction = async () => {
+    user.pendingJobs = user.pendingJobs.filter(
+      (job) => !compareJob(job, { restaurant, role })
+    )
+    user.currentJobs.push({ restaurant: restaurant._id, role })
+    await user.save()
 
-  restaurant.userGroups[role].push(user._id)
-  await restaurant.save()
+    restaurant.userGroups[role].push(user._id)
+    await restaurant.save()
+  }
+
+  await performTransaction(transaction)
 }
 
 /*
@@ -122,14 +129,17 @@ validateBasicOnJob = async (req) => {
   return { restaurant, role, user }
 }
 dbUserResignJob = async (restaurant, role, user) => {
-  restaurant.userGroups[role] = restaurant.userGroups[role].filter(
-    (id) => !id.equals(user._id)
-  )
-  await restaurant.save()
-  user.currentJobs = user.currentJobs.filter(
-    (job) => !compareJob(job, { restaurant, role })
-  )
-  await user.save()
+  const transaction = async () => {
+    restaurant.userGroups[role] = restaurant.userGroups[role].filter(
+      (id) => !id.equals(user._id)
+    )
+    await restaurant.save()
+    user.currentJobs = user.currentJobs.filter(
+      (job) => !compareJob(job, { restaurant, role })
+    )
+    await user.save()
+  }
+  await performTransaction(transaction)
 }
 
 /* 
@@ -248,14 +258,18 @@ removeStaff = async (req, res, next) => {
   }
 }
 const dbDeleteStaff = async ({ restaurant, role, staff }) => {
-  staff.currentJobs = staff.currentJobs.filter(
-    (job) => !compareJob(job, { restaurant, role })
-  )
-  await staff.save()
-  restaurant.userGroups[role] = restaurant.userGroups[role].filter(
-    (userId) => !userId.equals(staff._id)
-  )
-  await restaurant.save()
+  const transaction = async () => {
+    staff.currentJobs = staff.currentJobs.filter(
+      (job) => !compareJob(job, { restaurant, role })
+    )
+    await staff.save()
+    restaurant.userGroups[role] = restaurant.userGroups[role].filter(
+      (userId) => !userId.equals(staff._id)
+    )
+    await restaurant.save()
+  }
+  await performTransaction(transaction)
+
   return {
     message: `Successfully removed user ( email: ${staff.email}) from ${role} group of restaurant ${restaurant._id}.`,
   }
