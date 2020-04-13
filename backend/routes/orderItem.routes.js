@@ -18,7 +18,7 @@ const {
 // orderItem CRUD
 
 // public access
-router.get('/:restaurantId/orderItem/:orderItemId', readOrderItem)
+router.get('/:restaurantId/orderItems/:orderItemId', readOrderItem)
 router.get('/:restaurantId/orderitems/', readAllItemInRestaurant)
 
 module.exports = router
