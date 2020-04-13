@@ -38,7 +38,7 @@ export const updateUser = (token, param) => {
     const URL = '/users/' + decodedJWT._id
     BaseProvider.put(URL, param, headerConfig)
       .then(res => {
-        message.success(res.message, 3)
+        message.success(res.data.message, 3)
       })
       .catch(({ response }) => message.error(response.data.error, 3))
   }
@@ -59,10 +59,26 @@ export const deleteUser = (token, callback = () => {}) => {
       .then(res => {
         callback(null, false)
         deleteCookie('token')
-        message.success(res.message, 3)
+        message.success(res.data.message, 3)
       })
       .catch(({ response }) => {
         message.error(response.data.error, 3)
       })
+  }
+}
+
+export const readMe = (token, callback = () => {}) => {
+  if (token !== undefined) {
+    const config = {
+      headers: {
+        'x-auth-token': token,
+      },
+    }
+    const URL = '/users/me'
+    BaseProvider.get(URL, config)
+      .then(res => {
+        callback(res.data.data)
+      })
+      .catch(err => message.error(err.response.data.error, 3))
   }
 }
