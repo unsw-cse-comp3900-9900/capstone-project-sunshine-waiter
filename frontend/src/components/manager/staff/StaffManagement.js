@@ -1,5 +1,5 @@
 import React from 'react'
-import { Select } from 'antd'
+import { Select, Row, Col } from 'antd'
 import _ from 'lodash'
 
 import './staff.css'
@@ -29,10 +29,9 @@ class StaffManagement extends React.Component {
     await sendInvitation(
       getCookie('token'),
       restaurantId,
-      _.pick(this.state, ['email', 'role'])
+      _.pick(this.state, ['email', 'role']),
+      this.onFinishSend
     )
-
-    this.onFinishSend()
   }
 
   renderInvitationBlock = () => {
@@ -89,8 +88,41 @@ class StaffManagement extends React.Component {
     )
   }
 
+  renderCookList = () => {
+    return <div>cook</div>
+  }
+
+  renderWaiterList = () => {
+    return <div>waiter</div>
+  }
+
+  renderManagerList = () => {
+    return <div>manager</div>
+  }
+
   render() {
-    return <div>{this.renderInvitationBlock()}</div>
+    return (
+      <div>
+        <Row>
+          <Col push={4}>{this.renderInvitationBlock()}</Col>
+        </Row>
+        <div className="ui clearing divider"></div>
+        <Row>
+          <Col span={8} push={1}>
+            <h2>Cook List</h2>
+            <div className="staff-box">{this.renderCookList()}</div>
+          </Col>
+          <Col span={8} push={1}>
+            <h2>Waiter List</h2>
+            <div className="staff-box">{this.renderWaiterList()}</div>
+          </Col>
+          <Col span={8} push={1}>
+            <h2>Manager List</h2>
+            <div className="staff-box">{this.renderManagerList()}</div>
+          </Col>
+        </Row>
+      </div>
+    )
   }
 }
 
