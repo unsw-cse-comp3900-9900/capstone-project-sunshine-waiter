@@ -155,7 +155,7 @@ exports.dbInit = async (req, res, next) => {
     const orderItems = await Promise.all(createOrderItemTasks)
     // console.log(orderItems)
 
-    // 6. setup fake "servedBy", "cookedBy", "serveTime", "cookTime"
+    // 6. requests
 
     res.send({ users, restaurants, categories, menuItems, orders, orderItems })
   } catch (error) {
