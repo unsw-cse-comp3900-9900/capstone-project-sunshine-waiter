@@ -1,0 +1,25 @@
+.clickable {
+  cursor: pointer;
+}
+
+.invitation-block {
+  width: 50vw;
+  position: relative;
+  margin: auto;
+  border: grey solid 1px;
+  border-radius: 5px;
+}
+
+h1 {
+  text-align: center;
+}
+
+.invitation-block .field.field-block {
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+
+.invitation-block .my-button {
+  margin-top: 10px;
+}
