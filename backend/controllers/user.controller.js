@@ -16,7 +16,7 @@ createUser = async (req, res, next) => {
     user = await dbCreateUser(req.body)
 
     res.status(201).json({
-      data: _.pick(user, ['_id', 'name', 'email']),
+      data: present(user),
       accessToken: generateAuthToken(user),
     })
   } catch (error) {
@@ -24,15 +24,29 @@ createUser = async (req, res, next) => {
   }
 }
 
-readUser = async (req, res, next) => {
+readById = async (req, res, next) => {
   try {
     const userId = req.params.userId
     const user = await User.findById(userId)
     if (!user) return res.status(404).json({ error: 'User does not exist' })
 
     res.json({
-      data: _.pick(user, ['_id', 'name', 'email']),
+      data: present(user),
     })
+  } catch (error) {
+    next(error)
+  }
+}
+readMe = async (req, res, next) => {
+  try {
+    const { user } = req
+    if (!user)
+      throw {
+        httpCode: 400,
+        message: 'User must login!',
+      }
+
+    res.json({ data: present(user) })
   } catch (error) {
     next(error)
   }
@@ -54,7 +68,7 @@ updateUser = async (req, res, next) => {
     // res
     return res.json({
       success: true,
-      data: _.pick(user, ['_id', 'name', 'email']),
+      data: present(user),
       message: 'User updated.',
     })
   } catch (error) {
@@ -75,13 +89,16 @@ deleteUser = async (req, res, next) => {
 
     return res.json({
       success: true,
-      data: _.pick(user, ['_id', 'name', 'email']),
+      data: present(user),
       message: 'User deleted.',
     })
   } catch (error) {
     next(error)
   }
 }
+
+// Util functions
+present = (user) => _.omit(user, ['isAdmin', 'password'])
 
 async function dbUpdateUser(data, user) {
   const { name, password } = data
@@ -92,7 +109,6 @@ async function dbUpdateUser(data, user) {
   await user.save()
 }
 
-// Util functions
 function validateUpdateDataFormat(user) {
   const schema = {
     name: Joi.string().min(1).max(50),
@@ -129,13 +145,36 @@ const dbCreateUser = async (data) => {
   return user
 }
 
+const findByEmail = async (email) => {
+  const { error } = Joi.validate(
+    { email },
+    {
+      email: Joi.string().min(1).max(255).email(),
+    }
+  )
+  if (error) throw { message: error.details[0].message, httpCode: 400 }
+
+  const user = await User.findOne({ email })
+  if (!user)
+    throw {
+      message: `user with email ${email} not found`,
+      httpCode: 404,
+    }
+  return user
+}
+
+readCollection = async (req, res, next) => res.json(await User.find())
+
 module.exports = {
   // route handlers
   createUser, // aka signup
-  readUser,
+  readById,
+  readMe,
   updateUser,
   deleteUser,
+  readCollection,
 
   // Util functions interact with DB
   dbCreateUser,
+  findByEmail,
 }

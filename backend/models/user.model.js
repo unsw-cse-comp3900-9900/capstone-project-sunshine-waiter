@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const { isValidRole } = require('../auth/authorization')
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -26,6 +27,50 @@ const userSchema = new mongoose.Schema({
     minlength: 10,
     maxlength: 1023,
   },
+  // restaurant serving
+  currentJobs: {
+    type: [
+      {
+        restaurant: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'Restaurant',
+          required: true,
+        },
+        role: {
+          type: String,
+          required: true,
+          validate: {
+            validator: isValidRole,
+            message: '{VALUE} is not an valid role.',
+          },
+        },
+      },
+    ],
+    required: true,
+    default: [],
+  },
+  pendingJobs: {
+    type: [
+      {
+        restaurant: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'Restaurant',
+          required: true,
+        },
+        role: {
+          type: String,
+          required: true,
+          validate: {
+            validator: isValidRole,
+            message: '{VALUE} is not an valid role.',
+          },
+        },
+      },
+    ],
+    required: true,
+    default: [],
+  },
+
   // website admin; not restaurant
   isAdmin: {
     type: Boolean,
