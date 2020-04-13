@@ -11,9 +11,10 @@ import { deleteCategoryItem } from '../apis/actions/category'
 import { getCookie } from '../authenticate/Cookies'
 import { deleteMenuItem } from '../apis/actions/menuItem'
 import Dashboard from './dashBoard/dashBoard'
+import StaffManagement from './staff/StaffManagement'
 
 const { Header, Content, Sider } = Layout
-const { DASHBOARD, STAFFS, MENUS } = ContentType
+const { DASHBOARD, STAFFS, MENUS, QRCODE } = ContentType
 
 class Manager extends React.Component {
   state = {
@@ -260,10 +261,14 @@ class Manager extends React.Component {
       return <Dashboard {...this.props} />
     }
     if (this.state.displayIndex === STAFFS) {
-      return <div>staff</div>
+      const { id } = this.props.match.params
+      return <StaffManagement restaurantId={id} />
     }
     if (this.state.displayIndex === MENUS) {
       return <div>{this.renderMenuBuilder()}</div>
+    }
+    if (this.state.displayIndex === QRCODE) {
+      return <div>code</div>
     }
   }
 
@@ -307,6 +312,12 @@ class Manager extends React.Component {
               <Menu.Item onClick={() => this.setState({ displayIndex: MENUS })}>
                 <i className="list icon"></i>
                 Menu
+              </Menu.Item>
+              <Menu.Item
+                onClick={() => this.setState({ displayIndex: QRCODE })}
+              >
+                <i className="qrcode icon"></i>
+                QRCode
               </Menu.Item>
             </Menu>
           </Sider>
