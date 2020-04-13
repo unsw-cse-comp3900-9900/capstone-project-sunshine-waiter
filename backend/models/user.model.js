@@ -27,7 +27,6 @@ const userSchema = new mongoose.Schema({
     minlength: 10,
     maxlength: 1023,
   },
-  // restaurant serving
   currentJobs: {
     type: [
       {
