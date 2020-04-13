@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const { isValidRole } = require('../auth/authorization')
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -37,9 +38,11 @@ const userSchema = new mongoose.Schema({
         },
         role: {
           type: String,
-          // TODO: validate function
-          // must be one of the allowed roles.
           required: true,
+          validate: {
+            validator: isValidRole,
+            message: '{VALUE} is not an valid role.',
+          },
         },
       },
     ],
@@ -56,9 +59,11 @@ const userSchema = new mongoose.Schema({
         },
         role: {
           type: String,
-          // TODO: validate function
-          // must be one of the allowed roles.
           required: true,
+          validate: {
+            validator: isValidRole,
+            message: '{VALUE} is not an valid role.',
+          },
         },
       },
     ],
