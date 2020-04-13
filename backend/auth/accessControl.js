@@ -1,7 +1,6 @@
 const AccessControl = require('accesscontrol')
 
 // website-wide access control policy
-// TODO: decide all the attributes
 const accessGranted = {
   // Every user has this role
   basic: {
@@ -11,7 +10,12 @@ const accessGranted = {
       'update:own': ['*'],
       'delete:own': ['*'],
     },
-
+    job: {
+      // here, "own" means: targetUser._id == user._id
+      'read:own': ['*'],
+      'update:own': ['*'],
+      'delete:own': ['*'],
+    },
     restaurant: {
       // here, "own" means: restaurant.createdBy == user._id
       // that is, current user is the creator&owner of the restaurant

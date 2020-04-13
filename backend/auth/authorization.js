@@ -29,6 +29,7 @@ const actions = Object.freeze({
 
 const resources = Object.freeze({
   profile: 'profile',
+  job: 'job',
   order: 'order',
   dashboard: 'dashboard',
   restaurant: 'restaurant',

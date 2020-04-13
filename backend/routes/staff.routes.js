@@ -20,7 +20,7 @@ router.post(
   '/users/:userId/roles',
   verifyAuthToken,
   allowIfLoggedin,
-  requestAccess(scopes.account, actions.update, resources.profile), // TODO: add appropriate resources
+  requestAccess(scopes.account, actions.update, resources.job),
   acceptJob
 )
 
@@ -28,7 +28,7 @@ router.delete(
   '/users/:userId/roles',
   verifyAuthToken,
   allowIfLoggedin,
-  requestAccess(scopes.account, actions.update, resources.profile), // TODO: add appropriate resources
+  requestAccess(scopes.account, actions.update, resources.job),
   resignJob
 )
 
