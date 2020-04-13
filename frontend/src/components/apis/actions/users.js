@@ -1,4 +1,5 @@
 import jwtDecode from 'jwt-decode'
+import { message } from 'antd'
 
 import BaseProvider from '../BaseProvider'
 import { deleteCookie } from '../../authenticate/Cookies'
@@ -18,9 +19,9 @@ export const getUser = (token, callback = () => {}) => {
       })
       .catch(({ response }) => {
         if (response === undefined) {
-          alert('Backend server is dnow!')
+          message.warning('Backend server is dnow!', 3)
         } else {
-          alert(response.data.error)
+          message.error(response.data.error, 3)
         }
       })
   }
@@ -37,9 +38,9 @@ export const updateUser = (token, param) => {
     const URL = '/users/' + decodedJWT._id
     BaseProvider.put(URL, param, headerConfig)
       .then(res => {
-        console.log(res)
+        message.success(res.message, 3)
       })
-      .catch(({ response }) => alert(response.data.error))
+      .catch(({ response }) => message.error(response.data.error, 3))
   }
 }
 
@@ -58,9 +59,10 @@ export const deleteUser = (token, callback = () => {}) => {
       .then(res => {
         callback(null, false)
         deleteCookie('token')
+        message.success(res.message, 3)
       })
       .catch(({ response }) => {
-        alert(response.data.error)
+        message.error(response.data.error, 3)
       })
   }
 }

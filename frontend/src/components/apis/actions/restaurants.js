@@ -1,3 +1,5 @@
+import { message } from 'antd'
+
 import BaseProvider from '../BaseProvider'
 // import { deleteCookie } from '../../authenticate/Cookies'
 
@@ -15,9 +17,9 @@ export const getRestaurants = (token, callback = () => {}) => {
       })
       .catch(err => {
         if (err === undefined) {
-          alert('Backend server is dnow!')
+          message.warning('Backend server is dnow!', 3)
         } else {
-          alert(err.response.data.error)
+          message.error(err.response.data.error, 3)
         }
       })
   }
@@ -37,9 +39,9 @@ export const getSingleRestaurant = (token, id, callback = () => {}) => {
       })
       .catch(err => {
         if (err === undefined) {
-          alert('Backend server is dnow!')
+          message.warning('Backend server is dnow!', 3)
         } else {
-          alert(err.response.data.error)
+          message.error(err.response.data.error, 3)
         }
       })
   }
@@ -56,15 +58,16 @@ export const createRestaurant = (token, param, callback = () => {}) => {
     BaseProvider.post('/restaurants', param, config)
       .then(res => {
         callback()
-        alert(
+        message.success(
           'Congrats restaurant ' +
             res.data.data.name +
             ' is ' +
             res.statusText +
-            '!'
+            '!',
+          3
         )
       })
-      .catch(err => console.log({ err }))
+      .catch(err => message.error(err.response.data.error, 3))
   }
 }
 
@@ -80,9 +83,9 @@ export const deleteRestaurant = (token, id, callback = () => {}) => {
       .then(async res => {
         await callback()
 
-        alert(res.data.message)
+        message.success(res.data.message, 3)
       })
-      .catch(err => console.log({ err }))
+      .catch(err => message.error(err.response.data.error, 3))
   }
 }
 
@@ -97,8 +100,8 @@ export const updateRestaurant = (token, id, param, callback = () => {}) => {
     BaseProvider.put('/restaurants/' + id, param, config)
       .then(res => {
         callback()
-        alert(res.data.message)
+        message.success(res.data.message, 3)
       })
-      .catch(err => console.log({ err }))
+      .catch(err => message.error(err.response.data.error, 3))
   }
 }
