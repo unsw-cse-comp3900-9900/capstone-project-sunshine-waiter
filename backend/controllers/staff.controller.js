@@ -61,7 +61,7 @@ dbUserAcceptJob = async (restaurant, role, user) => {
   user.pendingJobs = user.pendingJobs.filter(
     (job) => !compareJob(job, { restaurant, role })
   )
-  user.currentJobs.push({ restaurant, role })
+  user.currentJobs.push({ restaurant: restaurant._id, role })
   await user.save()
 
   restaurant.userGroups[role].push(user._id)
