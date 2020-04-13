@@ -39,7 +39,7 @@ export const getSingleRestaurant = (token, id, callback = () => {}) => {
         if (err === undefined) {
           alert('Backend server is dnow!')
         } else {
-          alert(err.data.error)
+          alert(err.response.data.error)
         }
       })
   }
