@@ -4,7 +4,9 @@ import PopularItems from './popularItems'
 import CategoryPie from './categoryPie'
 import TimeSelector from './timeSelector'
 import { getCookie } from '../../authenticate/Cookies'
-import getAllOrderItems from '../../apis/actions/orderItems'
+import getAllOrderItems, {
+  getAllCategories,
+} from '../../apis/actions/orderItems'
 import { groupBy } from '../../Waiter/Dishes'
 import './dashBoard.css'
 import TotalSale from './totalSale'
@@ -15,7 +17,8 @@ class Dashboard extends Component {
     super(props)
     this.state = {
       orderItems: [],
-      data: [], //
+      categories: [],
+      data: [],
       zoomDomain: {},
     }
   }
@@ -34,11 +37,7 @@ class Dashboard extends Component {
 
   getOrderItems = async () => {
     const { id } = this.props.match.params
-    const orderItems = await getAllOrderItems(
-      getCookie('token'),
-      id,
-      this.getOrderItems
-    )
+    const orderItems = await getAllOrderItems(getCookie('token'), id)
     const sorted = orderItems.sort(
       (a, b) => new Date(a.serveTime) - new Date(b.serveTime)
     )
@@ -46,6 +45,16 @@ class Dashboard extends Component {
     const end = new Date(sorted[sorted.length - 1].serveTime)
     const zoomDomain = { x: [start, end] }
     this.setState({ orderItems: sorted, zoomDomain })
+  }
+
+  getCategories = async () => {
+    const { id } = this.props.match.params
+    const categories = await getAllCategories(getCookie('token'), id)
+    let catIndex = {}
+    for (let cat of categories) {
+      catIndex[cat._id] = cat.name
+    }
+    this.setState({ categories: catIndex })
   }
 
   initData = () => {
@@ -65,19 +74,20 @@ class Dashboard extends Component {
 
   async componentDidMount() {
     await this.getOrderItems() // fetch all orderItems
+    await this.getCategories()
     this.initData()
   }
 
   handleZoom = domain => {
-    this.setState({ zoomDomain: domain })
-  }
-
-  handleBrush = domain => {
-    this.setState({ zoomDomain: domain })
+    const [start, end] = domain.x
+    if (end - start >= 30 * 24 * 60 * 60 * 1000) {
+      this.setState({ zoomDomain: domain })
+    }
   }
 
   render() {
-    const { data, zoomDomain } = this.state
+    const { data, zoomDomain, categories } = this.state
+    const selected = this.selectedOrderItems()
     return (
       <React.Fragment>
         <div className="container">
@@ -85,8 +95,8 @@ class Dashboard extends Component {
             <div className="col-sm chartCard">
               <TimeSelector
                 data={data}
-                brushDomain={zoomDomain}
-                handleBrush={this.handleBrush}
+                zoomDomain={zoomDomain}
+                handleZoom={this.handleZoom}
               />
             </div>
           </div>
@@ -95,7 +105,7 @@ class Dashboard extends Component {
               <TotalSale data={data} zoomDomain={zoomDomain} />
             </div>
             <div className="col-sm chartCard">
-              <OrderAmount data={this.selectedOrderItems()} />
+              <OrderAmount data={selected} />
             </div>
           </div>
           <div className="row">
@@ -106,13 +116,16 @@ class Dashboard extends Component {
                 handleZoom={this.handleZoom}
               />
             </div>
+          </div>
+          <div className="row">
             <div className="col-sm chartCard">
-              <PopularItems data={this.selectedOrderItems()} />
+              <CategoryPie data={selected} categories={categories} />
+            </div>
+            <div className="col-sm chartCard">
+              <PopularItems data={selected} />
             </div>
           </div>
         </div>
-
-        <CategoryPie />
       </React.Fragment>
     )
   }

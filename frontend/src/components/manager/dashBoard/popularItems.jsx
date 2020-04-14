@@ -1,10 +1,8 @@
 import React from 'react'
-import { Tooltip } from 'antd'
 import {
   VictoryChart,
   VictoryBar,
   VictoryContainer,
-  VictoryLabel,
   VictoryAxis,
 } from 'victory'
 import { groupBy } from '../../Waiter/Dishes'
@@ -24,6 +22,7 @@ const PopularItems = ({ data }) => {
       <VictoryChart
         containerComponent={<VictoryContainer />}
         domainPadding={30}
+        animate={{ duration: 1000 }}
       >
         <VictoryAxis
           style={{
@@ -39,7 +38,54 @@ const PopularItems = ({ data }) => {
             datum.x.length < 12 ? datum.x : datum.x.slice(0, 12) + '...'
           }
           cornerRadius={{ top: 10 }}
-          style={{ data: { fill: '#2393d3ce' } }}
+          style={{
+            data: { fill: '#2393d3ce' },
+            labels: { fillOpacity: 0, fontSize: 0 },
+          }}
+          events={[
+            {
+              target: 'data',
+              eventHandlers: {
+                onMouseOver: () => {
+                  return [
+                    {
+                      target: 'data',
+                      mutation: props => {
+                        return {
+                          style: Object.assign({}, props.style, {
+                            fill: '#83e6fff6',
+                          }),
+                        }
+                      },
+                    },
+                    {
+                      target: 'labels',
+                      mutation: props => {
+                        return {
+                          style: Object.assign({}, props.style, {
+                            fillOpacity: 1,
+                            fontSize: 24,
+                          }),
+                        }
+                      },
+                    },
+                  ]
+                },
+                onMouseOut: () => {
+                  return [
+                    {
+                      target: 'data',
+                      mutation: () => null,
+                    },
+                    {
+                      target: 'labels',
+                      mutation: () => null,
+                    },
+                  ]
+                },
+              },
+            },
+          ]}
         />
       </VictoryChart>
     </React.Fragment>

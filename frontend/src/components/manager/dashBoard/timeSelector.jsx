@@ -4,21 +4,27 @@ import {
   VictoryBrushContainer,
   VictoryLine,
   VictoryAxis,
-  VictoryTheme,
 } from 'victory'
 
 const TimeIntervalMessage = ({ start, end }) => {
   if (start)
     return (
       <span>
-        From {start.toLocaleDateString()} to {end.toLocaleDateString()}
+        From{' '}
+        <span className="badge badge-pill badge-primary">
+          {start.toLocaleDateString()}
+        </span>{' '}
+        to{' '}
+        <span className="badge badge-pill badge-primary">
+          {end.toLocaleDateString()}
+        </span>
       </span>
     )
   return <h4>Drag the brush below to select time interval</h4>
 }
 
-const TimeSelector = ({ data, brushDomain, handleBrush }) => {
-  const [start, end] = brushDomain.x || [null, null]
+const TimeSelector = ({ data, zoomDomain, handleZoom }) => {
+  const [start, end] = zoomDomain.x || [null, null]
   return (
     <React.Fragment>
       <TimeIntervalMessage start={start} end={end} />
@@ -34,8 +40,8 @@ const TimeSelector = ({ data, brushDomain, handleBrush }) => {
         containerComponent={
           <VictoryBrushContainer
             brushDimension="x"
-            brushDomain={brushDomain}
-            onBrushDomainChange={handleBrush}
+            brushDomain={zoomDomain}
+            onBrushDomainChange={handleZoom}
           />
         }
       >

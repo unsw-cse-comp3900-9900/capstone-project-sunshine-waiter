@@ -9,8 +9,8 @@
 .header {
   background-color: whitesmoke;
   text-align: center;
-  border: solid 1px;
-  border-radius: 5px;
+  /* border: solid 1px;
+  border-radius: 5px; */
 }
 
 .sider-menu {
