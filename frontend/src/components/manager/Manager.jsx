@@ -10,6 +10,7 @@ import { fetchMenuApi } from '../apis/actions/menus'
 import { deleteCategoryItem } from '../apis/actions/category'
 import { getCookie } from '../authenticate/Cookies'
 import { deleteMenuItem } from '../apis/actions/menuItem'
+import Dashboard from './dashBoard/dashBoard'
 
 const { Header, Content, Sider } = Layout
 const { DASHBOARD, STAFFS, MENUS } = ContentType
@@ -256,7 +257,7 @@ class Manager extends React.Component {
 
   renderContent = () => {
     if (this.state.displayIndex === DASHBOARD) {
-      return <div>Report</div>
+      return <Dashboard {...this.props} />
     }
     if (this.state.displayIndex === STAFFS) {
       return <div>staff</div>
