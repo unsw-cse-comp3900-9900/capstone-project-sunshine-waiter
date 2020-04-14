@@ -11,6 +11,7 @@ import { groupBy } from '../../Waiter/Dishes'
 import './dashBoard.css'
 import TotalSale from './totalSale'
 import OrderAmount from './orderAmount'
+import OrderTable from './orderTable'
 
 class Dashboard extends Component {
   constructor(props) {
@@ -89,6 +90,7 @@ class Dashboard extends Component {
 
   render() {
     const { data, zoomDomain, categories } = this.state
+
     const selected = this.selectedOrderItems()
     return (
       <React.Fragment>
@@ -125,6 +127,11 @@ class Dashboard extends Component {
             </div>
             <div className="col-sm chartCard">
               <PopularItems data={selected} />
+            </div>
+          </div>
+          <div className="row">
+            <div className="col-sm">
+              <OrderTable data={selected} />
             </div>
           </div>
         </div>
