@@ -35,7 +35,7 @@ class Homepage extends React.Component {
   //see the definition
   UNSAFE_componentWillMount = () => {
     const currentCookie = getCookie('token')
-    getUser(currentCookie, this.updateState)
+    getUser(currentCookie, null, this.updateState)
   }
 
   componentDidUpdate = async (prevProps, prevState) => {
@@ -43,7 +43,7 @@ class Homepage extends React.Component {
       prevState.isAuthenticated !== this.state.isAuthenticated &&
       this.state.isAuthenticated
     ) {
-      await getUser(getCookie('token'), this.updateState)
+      await getUser(getCookie('token'), null, this.updateState)
       // getRestaurants(getCookie('token'), this.updateRestaurants)
       await getRestaurants(getCookie('token'), this.props.updateRestaurants)
     }
