@@ -21,6 +21,7 @@ class OrderTable extends Component {
         title: 'Price',
         dataIndex: 'price',
         key: 'price',
+        render: price => `$${price}`,
       },
       {
         title: 'Cooked By',
@@ -82,7 +83,8 @@ class OrderTable extends Component {
               <Table
                 columns={this.itemColums}
                 dataSource={this.state.groupByOrder.get(order.orderId)}
-                scroll={{ x: 100 }}
+                scroll={{ x: 800 }}
+                pagination={{ pageSize: 3 }}
               />
             </Modal>
           </div>
@@ -121,7 +123,13 @@ class OrderTable extends Component {
   render() {
     const { orders } = this.state
     const columns = this.columns
-    return <Table columns={columns} dataSource={orders} />
+    return (
+      <Table
+        columns={columns}
+        dataSource={orders}
+        pagination={{ pageSize: 5 }}
+      />
+    )
   }
 }
 
