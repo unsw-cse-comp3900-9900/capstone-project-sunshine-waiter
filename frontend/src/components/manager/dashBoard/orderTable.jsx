@@ -61,12 +61,16 @@ class OrderTable extends Component {
         title: 'Served At',
         dataIndex: 'serveTime',
         key: 'serveTime',
+        defaultSortOrder: 'descend',
+        sorter: (a, b) => a.serveTime - b.serveTime,
       },
       {
         title: 'Total Price',
         dataIndex: 'totalPrice',
         key: 'totalPrice',
         render: price => `$${numberWithCommas(price)}`,
+        defaultSortOrder: 'descend',
+        sorter: (a, b) => a.totalPrice - b.totalPrice,
       },
       {
         title: 'Action',
