@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { groupBy } from '../../Waiter/Dishes'
 import { Button, Modal, Table } from 'antd'
+import { numberWithCommas } from './totalSale'
 
 class OrderTable extends Component {
   constructor(props) {
@@ -21,7 +22,7 @@ class OrderTable extends Component {
         title: 'Price',
         dataIndex: 'price',
         key: 'price',
-        render: price => `$${price}`,
+        render: price => `$${numberWithCommas(price)}`,
       },
       {
         title: 'Cooked By',
@@ -60,6 +61,12 @@ class OrderTable extends Component {
         title: 'Served At',
         dataIndex: 'serveTime',
         key: 'serveTime',
+      },
+      {
+        title: 'Total Price',
+        dataIndex: 'totalPrice',
+        key: 'totalPrice',
+        render: price => `$${numberWithCommas(price)}`,
       },
       {
         title: 'Action',
@@ -102,11 +109,13 @@ class OrderTable extends Component {
     let orders = []
     for (let [orderId, orderItems] of groupByOrder) {
       detailVisible[orderId] = false
+      let totalPrice = orderItems.map(_ => _.price).reduce((a, b) => a + b, 0)
       let order = {
         key: orderId,
         orderId,
         tableId: orderItems[0].placedBy,
         serveTime: orderItems[orderItems.length - 1].serveTime,
+        totalPrice,
       }
       orders.push(order)
     }

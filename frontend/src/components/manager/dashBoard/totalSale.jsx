@@ -1,7 +1,10 @@
 import React from 'react'
 
-function numberWithCommas(x) {
-  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+export function numberWithCommas(x) {
+  return x
+    .toFixed(2)
+    .toString()
+    .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 }
 
 const TotalSale = ({ data, zoomDomain }) => {
@@ -15,7 +18,7 @@ const TotalSale = ({ data, zoomDomain }) => {
   return (
     <React.Fragment>
       <span>Total Sales</span>
-      <h1>${numberWithCommas(totalSale.toFixed(2))}</h1>
+      <h1>${numberWithCommas(totalSale)}</h1>
     </React.Fragment>
   )
 }

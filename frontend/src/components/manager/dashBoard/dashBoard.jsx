@@ -96,7 +96,7 @@ class Dashboard extends Component {
     return (
       <React.Fragment>
         <div className="container">
-          <Affix offsetTop={80}>
+          <Affix offsetTop={20}>
             <div className="row">
               <div className="col-sm chartCard blur">
                 <TimeSelector
