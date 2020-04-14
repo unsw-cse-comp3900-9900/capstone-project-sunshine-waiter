@@ -113,7 +113,7 @@ class StaffManagement extends React.Component {
     return (
       <div className="ui items">
         {this.state.restaurant.userGroups.cook.map(id => (
-          <StaffItemCard id={id} />
+          <StaffItemCard key={id} id={id} />
         ))}
       </div>
     )
@@ -126,7 +126,7 @@ class StaffManagement extends React.Component {
     return (
       <div className="ui items">
         {this.state.restaurant.userGroups.waiter.map(id => (
-          <StaffItemCard id={id} />
+          <StaffItemCard key={id} id={id} />
         ))}
       </div>
     )
@@ -139,7 +139,7 @@ class StaffManagement extends React.Component {
     return (
       <div className="ui items">
         {this.state.restaurant.userGroups.manager.map(id => (
-          <StaffItemCard id={id} />
+          <StaffItemCard key={id} id={id} />
         ))}
       </div>
     )
