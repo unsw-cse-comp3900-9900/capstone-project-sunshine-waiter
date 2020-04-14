@@ -6,7 +6,6 @@ const OrderAmount = ({ data }) => {
   if (data) {
     const groupByOrder = groupBy(data, 'order')
     orderAmount = groupByOrder.size
-    console.log(orderAmount)
   }
   return (
     <React.Fragment>
