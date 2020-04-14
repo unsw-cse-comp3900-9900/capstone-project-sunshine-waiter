@@ -113,8 +113,8 @@ class RenderDishes extends React.Component {
   renderSingleDish(dish) {
     const renderedDish = (
       <div className="dishBox" key={dish._id}>
-        <div className="dishName">{dish.menuItem.title}</div>
-        <div>{dish.order.createAt}</div>
+        <div className="dishName">{dish.menuItem.name}</div>
+        <div>{dish.order.createdAt}</div>
         <div className="buttonBox">
           {dish.status === COOKING && <div>Cooking...</div>}
           {dish.status === PLACED && (
@@ -171,7 +171,7 @@ class RenderFinished extends React.Component {
   renderSingleDish(dish) {
     return (
       <div className="dishBox" key={dish._id}>
-        <div className="dishName">{dish.menuItem.title}</div>
+        <div className="dishName">{dish.menuItem.name}</div>
         <div>{new Date(dish.readyTime).toLocaleTimeString()}</div>
         <div className="buttonBox">
           <Popconfirm
