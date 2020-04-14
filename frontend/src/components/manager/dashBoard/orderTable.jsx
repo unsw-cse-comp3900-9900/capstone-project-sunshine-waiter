@@ -136,7 +136,7 @@ class OrderTable extends Component {
       <Table
         columns={columns}
         dataSource={orders}
-        pagination={{ pageSize: 5 }}
+        pagination={{ pageSize: 7 }}
       />
     )
   }
