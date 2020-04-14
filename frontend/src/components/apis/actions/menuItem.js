@@ -1,5 +1,3 @@
-import { message } from 'antd'
-
 import BaseProvider from '../BaseProvider'
 
 export const createMenuItem = (
@@ -19,10 +17,9 @@ export const createMenuItem = (
     BaseProvider.post(URL, param, config)
       .then(res => {
         console.log({ res })
-        message.success(res.statusText, 3)
         callback()
       })
-      .catch(err => message.error(err.response.data.error, 3))
+      .catch(err => console.log({ err }))
   }
 }
 
@@ -43,10 +40,10 @@ export const updateMenuItem = (
     const URL = `/restaurants/${restaurantId}/menuItems/${menuItemId}`
     BaseProvider.put(URL, param, config)
       .then(res => {
-        message.success(res.data.message, 3)
+        console.log({ res })
         callback()
       })
-      .catch(err => message.error(err.response.data.error, 3))
+      .catch(err => console.log({ err }))
   }
 }
 
@@ -67,9 +64,8 @@ export const deleteMenuItem = (
     BaseProvider.delete(URL, config)
       .then(res => {
         console.log({ res })
-        message.success(res.data.message, 3)
         callback()
       })
-      .catch(err => message.error(err.response.data.error, 3))
+      .catch(err => console.log({ err }))
   }
 }

@@ -15,27 +15,47 @@ class Homepage extends React.Component {
     showProfile: false,
     showLoginCard: false,
     headerMouseOver: '',
+    profile: {
+      user: null,
+    },
   }
 
   updateState = (userData, authState = true) => {
     //delete account
     if (userData === null) {
-      this.setState({
+      this.setState(prevState => ({
         isAuthenticated: authState,
         showProfile: false,
-      })
+        profile: {
+          ...prevState.profile,
+          user: userData,
+        },
+      }))
     } else {
-      this.setState({
+      this.setState(prevState => ({
         isAuthenticated: authState,
-      })
+        profile: {
+          ...prevState.profile,
+          user: userData,
+        },
+      }))
     }
   }
+
+  // updateRestaurants = (restaurants = []) => {
+  //   this.setState(prevState => ({
+  //     profile: {
+  //       ...prevState.profile,
+  //       restaurants: restaurants,
+  //     },
+  //   }))
+  // }
 
   //when there is no cookies, the getUser request will not be sent,
   //see the definition
   UNSAFE_componentWillMount = () => {
     const currentCookie = getCookie('token')
-    getUser(currentCookie, null, this.updateState)
+    getUser(currentCookie, this.updateState)
   }
 
   componentDidUpdate = async (prevProps, prevState) => {
@@ -43,10 +63,14 @@ class Homepage extends React.Component {
       prevState.isAuthenticated !== this.state.isAuthenticated &&
       this.state.isAuthenticated
     ) {
-      await getUser(getCookie('token'), null, this.updateState)
+      await getUser(getCookie('token'), this.updateState)
       // getRestaurants(getCookie('token'), this.updateRestaurants)
       await getRestaurants(getCookie('token'), this.props.updateRestaurants)
     }
+
+    // if (prevState.profile.restaurants !== this.state.profile.restaurants) {
+    //   this.props.fetchRestaurants(this.state.profile.restaurants)
+    // }
   }
 
   onAuthenticated = state => {
@@ -255,6 +279,7 @@ class Homepage extends React.Component {
           {this.state.showProfile && (
             <SiderBar
               visible={this.state.showProfile}
+              profile={this.state.profile}
               updateState={this.updateState}
               updateRestaurants={updateRestaurants}
               restaurants={restaurants}

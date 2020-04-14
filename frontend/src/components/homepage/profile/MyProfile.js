@@ -1,38 +1,38 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import 'antd/dist/antd.css'
-import { Badge } from 'antd'
 
 import '../default.css'
 import { getCookie } from '../../authenticate/Cookies'
-import { deleteUser, updateUser, readMe } from '../../apis/actions/users'
+import { deleteUser, updateUser } from '../../apis/actions/users'
 import { MODE } from './constant'
 import RestaurantModal from './RestaurantModal'
 import {
   deleteRestaurant,
   getRestaurants,
 } from '../../apis/actions/restaurants'
-import PendingInvitationModal from './PendingInvitationModal'
 
 class MyProfile extends React.Component {
   state = {
     mode: MODE.VIEW,
-    editingName: '',
+    editingUser: {
+      name: '',
+      password: '',
+    },
     modalVisible: false,
     editingRestaurant: null,
-    inviationModalVisible: false,
-    me: null,
   }
 
-  onSetMe = data => {
-    this.setState({
-      me: data,
-      editingName: data.name,
-    })
-  }
-
-  UNSAFE_componentWillMount = async () => {
-    await readMe(getCookie('token'), this.onSetMe)
+  componentDidMount = () => {
+    if (this.props.profile.user !== null) {
+      const { name } = this.props.profile.user
+      this.setState(prevState => ({
+        editingUser: {
+          ...prevState.editingUser,
+          name: name,
+        },
+      }))
+    }
   }
 
   renderViewModeBasic = name => {
@@ -44,21 +44,8 @@ class MyProfile extends React.Component {
           alt=""
         />
         {name}
-        {this.state.mode === MODE.VIEW && this.renderViewModeBasicIcons()}
       </span>
     )
-  }
-
-  showInvitationModal = () => {
-    this.setState({
-      inviationModalVisible: true,
-    })
-  }
-
-  onCloseInvitationModal = () => {
-    this.setState({
-      inviationModalVisible: false,
-    })
   }
 
   showModal = () => {
@@ -76,19 +63,18 @@ class MyProfile extends React.Component {
   handleUserFormSubmit = async e => {
     e.preventDefault()
     const param = {
-      name: this.state.editingName,
+      name: this.state.editingUser.name,
     }
     const token = getCookie('token')
+    const { profile, updateState } = this.props
     //if no this await, the setState will not update when log
     await updateUser(token, param)
-    readMe(getCookie('token'), this.onSetMe)
-    this.setState({ mode: MODE.VIEW })
-  }
-
-  handleFormOnChange = e => {
-    this.setState({
-      editingName: e.target.value,
+    updateState({
+      _id: profile.user._id,
+      name: this.state.editingUser.name,
+      email: profile.user.email,
     })
+    this.setState({ mode: MODE.VIEW })
   }
 
   renderEditModeBasic = () => {
@@ -103,8 +89,14 @@ class MyProfile extends React.Component {
           <input
             className="input"
             type="text"
-            value={this.state.editingName}
-            onChange={this.handleFormOnChange}
+            value={this.state.editingUser.name}
+            onChange={e =>
+              this.setState({
+                editingUser: {
+                  name: e.target.value,
+                },
+              })
+            }
           />
         </span>
         <button className="circular ui mini right icon button">
@@ -154,42 +146,24 @@ class MyProfile extends React.Component {
     return null
   }
 
-  renderViewModeBasicIcons = () => {
-    return (
-      <span>
-        <span
-          className="clickable right"
-          style={{ marginRight: '5px' }}
-          onClick={this.showInvitationModal}
-        >
-          <Badge count={5}>
-            <i className="icon mail" />
-          </Badge>
-        </span>
-        <span
-          className="clickable right"
-          onClick={() => this.setState({ mode: MODE.EDIT })}
-        >
-          <i className="pencil alternate small icon" />
-        </span>
-      </span>
-    )
-  }
-
   render() {
-    const { updateState, updateRestaurants } = this.props
-    if (this.state.me === null) {
+    const { profile, updateState, updateRestaurants } = this.props
+    if (profile.user === null) {
       return null
     }
 
-    const { _id, name, email, avatar } = this.state.me
+    const { _id, name, email, avatar } = profile.user
     return (
       <div className="profile">
-        <PendingInvitationModal
-          visible={this.state.inviationModalVisible}
-          onCancel={this.onCloseInvitationModal}
-        />
         <div className="basic">
+          {this.state.mode === MODE.VIEW && (
+            <span
+              className="clickable right"
+              onClick={() => this.setState({ mode: MODE.EDIT })}
+            >
+              <i className="pencil alternate icon" />
+            </span>
+          )}
           <div className="name">
             {this.state.mode === MODE.VIEW
               ? this.renderViewModeBasic(name)

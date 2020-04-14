@@ -1,5 +1,3 @@
-import { message } from 'antd'
-
 import BaseProvider from '../BaseProvider'
 
 //This is the api to fetch private menus
@@ -16,7 +14,7 @@ export const fetchMenuApi = (token, restaurantId, callback = () => {}) => {
       console.log('did fetch menus: ', { res })
       callback(res.data.data)
     })
-    .catch(err => message.error(err.response.data.error, 3))
+    .catch(err => console.log('fetch', { err }))
 }
 
 export const updateMenuApi = (
@@ -35,9 +33,9 @@ export const updateMenuApi = (
     const URL = `/restaurants/${restaurantId}/menus`
     BaseProvider.put(URL, param, config)
       .then(res => {
-        message.success(res.data.message, 3)
+        console.log({ res })
         callback()
       })
-      .catch(err => message.error(err.response.data.error, 3))
+      .catch(err => console.log({ err }))
   }
 }
