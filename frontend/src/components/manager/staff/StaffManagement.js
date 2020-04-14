@@ -5,12 +5,30 @@ import _ from 'lodash'
 import './staff.css'
 import { sendInvitation } from '../../apis/actions/invitation'
 import { getCookie } from '../../authenticate/Cookies'
+import { getSingleRestaurant } from '../../apis/actions/restaurants'
+import StaffItemCard from './StaffItemCard'
 
 class StaffManagement extends React.Component {
   state = {
     email: '',
     role: 'cook',
     sending: false,
+    restaurant: null,
+  }
+
+  onSetRestaurant = data => {
+    this.setState({
+      restaurant: data,
+    })
+  }
+
+  UNSAFE_componentWillMount = async () => {
+    const { restaurantId } = this.props
+    await getSingleRestaurant(
+      getCookie('token'),
+      restaurantId,
+      this.onSetRestaurant
+    )
   }
 
   onFinishSend = () => {
@@ -89,15 +107,42 @@ class StaffManagement extends React.Component {
   }
 
   renderCookList = () => {
-    return <div>cook</div>
+    if (this.state.restaurant === null) {
+      return null
+    }
+    return (
+      <div className="ui items">
+        {this.state.restaurant.userGroups.cook.map(id => (
+          <StaffItemCard id={id} />
+        ))}
+      </div>
+    )
   }
 
   renderWaiterList = () => {
-    return <div>waiter</div>
+    if (this.state.restaurant === null) {
+      return null
+    }
+    return (
+      <div className="ui items">
+        {this.state.restaurant.userGroups.waiter.map(id => (
+          <StaffItemCard id={id} />
+        ))}
+      </div>
+    )
   }
 
   renderManagerList = () => {
-    return <div>manager</div>
+    if (this.state.restaurant === null) {
+      return null
+    }
+    return (
+      <div className="ui items">
+        {this.state.restaurant.userGroups.manager.map(id => (
+          <StaffItemCard id={id} />
+        ))}
+      </div>
+    )
   }
 
   render() {

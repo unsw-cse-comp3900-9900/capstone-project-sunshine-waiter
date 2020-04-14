@@ -4,15 +4,19 @@ import { message } from 'antd'
 import BaseProvider from '../BaseProvider'
 import { deleteCookie } from '../../authenticate/Cookies'
 
-export const getUser = (token, callback = () => {}) => {
+export const getUser = (token, userId = null, callback = () => {}) => {
   if (token !== undefined) {
-    const decodedJWT = jwtDecode(token)
+    if (userId === null) {
+      const decodedJWT = jwtDecode(token)
+      userId = decodedJWT._id
+    }
+
     const headerConfig = {
       headers: {
         'x-auth-token': token,
       },
     }
-    const URL = '/users/' + decodedJWT._id
+    const URL = '/users/' + userId
     BaseProvider.get(URL, headerConfig)
       .then(res => {
         callback(res.data.data)
