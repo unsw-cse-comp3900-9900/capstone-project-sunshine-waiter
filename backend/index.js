@@ -8,6 +8,7 @@ const menus = require('./routes/menu.routes')
 const menuItems = require('./routes/menuItem.routes')
 const categories = require('./routes/category.routes')
 const orders = require('./routes/order.routes')
+const orderItems = require('./routes/orderItem.routes')
 const staff = require('./routes/staff.routes')
 
 const cors = require('cors')
@@ -42,6 +43,7 @@ app.use('/restaurants', menus)
 app.use('/restaurants', menuItems)
 app.use('/restaurants', categories)
 app.use('/restaurants', orders)
+app.use('/restaurants', orderItems)
 app.use('/', staff)
 
 if (config.get('MODE') !== 'PRODUCTION') {

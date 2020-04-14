@@ -39,7 +39,8 @@ const onAuth = ([param, onAuthenticated, showSignUp]) => event => {
   const URL = showSignUp ? '/users' : '/users/login'
 
   const emailValidator = email => {
-    return email.includes('@') && email.includes('.com')
+    // return email.includes('@') && email.includes('.com')
+    return true
   }
 
   if (!param.password || !param.email || (showSignUp && !param.name)) {

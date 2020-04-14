@@ -91,3 +91,19 @@ Perfect the waiter page, now different waiters of a same restaurant can share th
 #### Sunday, 29 March 2020
 
 Merge websocket server into backend
+
+## Week 7
+
+Fixed bugs for web socket implementation.
+
+## Week 8
+
+#### Saturday, 11 April 2020
+
+Prepared dummy data for future dashboard data visualisation
+
+## Week 9
+
+#### Monday, 13 April 2020
+
+Finished basic Sales chart and time selector.

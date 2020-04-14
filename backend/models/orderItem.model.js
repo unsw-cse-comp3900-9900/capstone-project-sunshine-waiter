@@ -33,6 +33,12 @@ const schema = new mongoose.Schema({
     },
   ],
 
+  restaurant: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Restaurant',
+    required: true,
+  },
+
   name: {
     // init with menuItem.name; shall not be updated.
     // keep this record because menuItem can be modified/deleted in future.

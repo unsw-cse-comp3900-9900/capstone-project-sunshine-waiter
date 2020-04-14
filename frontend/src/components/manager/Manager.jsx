@@ -11,6 +11,7 @@ import { deleteCategoryItem } from '../apis/actions/category'
 import { getCookie } from '../authenticate/Cookies'
 import { deleteMenuItem } from '../apis/actions/menuItem'
 import StaffManagement from './staff/StaffManagement'
+import Dashboard from './dashBoard/dashBoard'
 
 const { Header, Content, Sider } = Layout
 const { DASHBOARD, STAFFS, MENUS, QRCODE } = ContentType
@@ -327,7 +328,7 @@ class Manager extends React.Component {
 
   renderContent = () => {
     if (this.state.displayIndex === DASHBOARD) {
-      return <div>Report</div>
+      return <Dashboard {...this.props} />
     }
     if (this.state.displayIndex === STAFFS) {
       const { id } = this.props.match.params

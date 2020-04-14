@@ -12,8 +12,10 @@
     "antd": "^4.0.3",
     "antd-mobile": "^2.3.1",
     "axios": "0.19.2",
+    "dayjs": "1.8.23",
     "dummy-json": "^2.0.0",
     "jwt-decode": "2.2.0",
+    "lodash": "4.17.15",
     "rc-queue-anim": "^1.8.4",
     "rc-tween-one": "^2.6.8",
     "react": "^16.13.0",
@@ -23,8 +25,7 @@
     "react-router-dom": "5.1.2",
     "react-scripts": "3.4.0",
     "socket.io-client": "^2.3.0",
-    "lodash": "4.17.15",
-    "dayjs": "1.8.23"
+    "victory": "^34.1.3"
   },
   "devDependencies": {
     "prettier": "1.19.1"
