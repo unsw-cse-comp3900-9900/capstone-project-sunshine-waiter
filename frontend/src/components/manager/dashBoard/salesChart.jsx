@@ -8,6 +8,14 @@ import {
 } from 'victory'
 
 const SalesChart = ({ data, zoomDomain, handleZoom }) => {
+  if (!data.length)
+    return (
+      <React.Fragment>
+        <span>Sales Trend</span>
+        <br />
+        <span className="badge badge-warning">No Data</span>
+      </React.Fragment>
+    )
   return (
     <React.Fragment>
       <span>Sales Trend</span>
