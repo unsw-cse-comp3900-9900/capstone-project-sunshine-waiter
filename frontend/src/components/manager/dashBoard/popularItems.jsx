@@ -32,7 +32,7 @@ const PopularItems = ({ data }) => {
         />
         <VictoryBar
           data={barData}
-          labels={({ datum }) => datum.y}
+          labels={({ datum }) => `${datum.x}\n${datum.y} sold`}
           barRatio={1}
           x={datum =>
             datum.x.length < 12 ? datum.x : datum.x.slice(0, 12) + '...'
@@ -64,7 +64,7 @@ const PopularItems = ({ data }) => {
                         return {
                           style: Object.assign({}, props.style, {
                             fillOpacity: 1,
-                            fontSize: 24,
+                            fontSize: 16,
                           }),
                         }
                       },

@@ -41,8 +41,8 @@ class Dashboard extends Component {
     const sorted = orderItems.sort(
       (a, b) => new Date(a.serveTime) - new Date(b.serveTime)
     )
-    const start = new Date(sorted[0].serveTime)
     const end = new Date(sorted[sorted.length - 1].serveTime)
+    const start = new Date(end - 30 * 24 * 60 * 60 * 1000)
     const zoomDomain = { x: [start, end] }
     this.setState({ orderItems: sorted, zoomDomain })
   }
@@ -81,7 +81,7 @@ class Dashboard extends Component {
   handleZoom = domain => {
     const [start, end] = domain.x
     if (end - start >= 30 * 24 * 60 * 60 * 1000) {
-      this.setState({ zoomDomain: domain })
+      this.setState({ zoomDomain: { x: [start, end] } })
     }
   }
 

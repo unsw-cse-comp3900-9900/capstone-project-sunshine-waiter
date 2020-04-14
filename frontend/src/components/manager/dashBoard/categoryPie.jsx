@@ -56,8 +56,7 @@ const CategoryPie = ({ data, categories }) => {
                     mutation: props => {
                       return {
                         style: Object.assign({}, props.style, {
-                          // fill: 'tomato',
-                          stroke: '#2393d3ce',
+                          stroke: '#39fd5a',
                           strokeWidth: 5,
                         }),
                       }
@@ -69,7 +68,7 @@ const CategoryPie = ({ data, categories }) => {
                       return {
                         style: Object.assign({}, props.style, {
                           fillOpacity: 1,
-                          fontSize: 24,
+                          fontSize: 16,
                         }),
                       }
                     },
