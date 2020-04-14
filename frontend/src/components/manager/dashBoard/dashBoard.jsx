@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Affix } from 'antd'
 import SalesChart from './salesChart'
 import PopularItems from './popularItems'
 import CategoryPie from './categoryPie'
@@ -95,15 +96,17 @@ class Dashboard extends Component {
     return (
       <React.Fragment>
         <div className="container">
-          <div className="row">
-            <div className="col-sm chartCard">
-              <TimeSelector
-                data={data}
-                zoomDomain={zoomDomain}
-                handleZoom={this.handleZoom}
-              />
+          <Affix offsetTop={80}>
+            <div className="row">
+              <div className="col-sm chartCard blur">
+                <TimeSelector
+                  data={data}
+                  zoomDomain={zoomDomain}
+                  handleZoom={this.handleZoom}
+                />
+              </div>
             </div>
-          </div>
+          </Affix>
           <div className="row">
             <div className="col-sm chartCard">
               <TotalSale data={data} zoomDomain={zoomDomain} />
