@@ -107,3 +107,7 @@ Prepared dummy data for future dashboard data visualisation
 #### Monday, 13 April 2020
 
 Finished basic Sales chart and time selector.
+
+#### Tuesday, 14 April 2020
+
+Finished dashboard, add total sales, Order amount, sales chart, category pie and best selling dishes.
