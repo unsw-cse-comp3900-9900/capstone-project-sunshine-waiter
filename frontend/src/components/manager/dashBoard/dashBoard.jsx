@@ -17,7 +17,7 @@ class Dashboard extends Component {
     super(props)
     this.state = {
       orderItems: [],
-      categories: [],
+      categories: {},
       data: [],
       zoomDomain: {},
     }
@@ -38,13 +38,15 @@ class Dashboard extends Component {
   getOrderItems = async () => {
     const { id } = this.props.match.params
     const orderItems = await getAllOrderItems(getCookie('token'), id)
-    const sorted = orderItems.sort(
-      (a, b) => new Date(a.serveTime) - new Date(b.serveTime)
-    )
-    const end = new Date(sorted[sorted.length - 1].serveTime)
-    const start = new Date(end - 30 * 24 * 60 * 60 * 1000)
-    const zoomDomain = { x: [start, end] }
-    this.setState({ orderItems: sorted, zoomDomain })
+    if (orderItems.length) {
+      const sorted = orderItems.sort(
+        (a, b) => new Date(a.serveTime) - new Date(b.serveTime)
+      )
+      const end = new Date(sorted[sorted.length - 1].serveTime)
+      const start = new Date(end - 30 * 24 * 60 * 60 * 1000)
+      const zoomDomain = { x: [start, end] }
+      this.setState({ orderItems: sorted, zoomDomain })
+    }
   }
 
   getCategories = async () => {
