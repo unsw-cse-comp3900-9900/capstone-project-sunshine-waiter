@@ -8,6 +8,8 @@ import Kitchen from './components/Kitchen/Kitchen'
 import Waiter from './components/Waiter/Waiter'
 import Manager from './components/manager/Manager'
 import NotFound from './components/NotFound'
+import { getCookie } from './components/authenticate/Cookies'
+import { getRestaurants } from './components/apis/actions/restaurants'
 
 class App extends React.Component {
   //I think reason is when using a tag, it freshes when hitting the page url, so state got freshed back to init

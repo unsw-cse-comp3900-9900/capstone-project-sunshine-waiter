@@ -1,5 +1,3 @@
-import { message } from 'antd'
-
 import BaseProvider from '../BaseProvider'
 
 export const createCategoryItem = (
@@ -19,10 +17,9 @@ export const createCategoryItem = (
     BaseProvider.post(URL, param, config)
       .then(res => {
         console.log({ res })
-        message.success(res.statusText, 3)
         callback()
       })
-      .catch(err => message.error(err.response.data.error, 3))
+      .catch(err => console.log({ err }))
   }
 }
 
@@ -44,10 +41,9 @@ export const updateCategoryItem = (
     BaseProvider.put(URL, param, config)
       .then(res => {
         console.log({ res })
-        message.success(res.data.message, 3)
         callback()
       })
-      .catch(err => message.error(err.response.data.error, 3))
+      .catch(err => console.log({ err }))
   }
 }
 
@@ -86,9 +82,8 @@ export const deleteCategoryItem = (
     BaseProvider.delete(URL, config)
       .then(res => {
         console.log({ res })
-        message.success(res.data.message, 3)
         callback()
       })
-      .catch(err => message.error(err.response.data.error, 3))
+      .catch(err => console.log({ err }))
   }
 }

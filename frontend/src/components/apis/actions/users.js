@@ -1,31 +1,26 @@
 import jwtDecode from 'jwt-decode'
-import { message } from 'antd'
 
 import BaseProvider from '../BaseProvider'
 import { deleteCookie } from '../../authenticate/Cookies'
 
-export const getUser = (token, userId = null, callback = () => {}) => {
+export const getUser = (token, callback = () => {}) => {
   if (token !== undefined) {
-    if (userId === null) {
-      const decodedJWT = jwtDecode(token)
-      userId = decodedJWT._id
-    }
-
+    const decodedJWT = jwtDecode(token)
     const headerConfig = {
       headers: {
         'x-auth-token': token,
       },
     }
-    const URL = '/users/' + userId
+    const URL = '/users/' + decodedJWT._id
     BaseProvider.get(URL, headerConfig)
       .then(res => {
         callback(res.data.data)
       })
       .catch(({ response }) => {
         if (response === undefined) {
-          message.warning('Backend server is dnow!', 3)
+          alert('Backend server is dnow!')
         } else {
-          message.error(response.data.error, 3)
+          alert(response.data.error)
         }
       })
   }
@@ -42,9 +37,9 @@ export const updateUser = (token, param) => {
     const URL = '/users/' + decodedJWT._id
     BaseProvider.put(URL, param, headerConfig)
       .then(res => {
-        message.success(res.data.message, 3)
+        console.log(res)
       })
-      .catch(({ response }) => message.error(response.data.error, 3))
+      .catch(({ response }) => alert(response.data.error))
   }
 }
 
@@ -63,26 +58,9 @@ export const deleteUser = (token, callback = () => {}) => {
       .then(res => {
         callback(null, false)
         deleteCookie('token')
-        message.success(res.data.message, 3)
       })
       .catch(({ response }) => {
-        message.error(response.data.error, 3)
+        alert(response.data.error)
       })
-  }
-}
-
-export const readMe = (token, callback = () => {}) => {
-  if (token !== undefined) {
-    const config = {
-      headers: {
-        'x-auth-token': token,
-      },
-    }
-    const URL = '/users/me'
-    BaseProvider.get(URL, config)
-      .then(res => {
-        callback(res.data.data)
-      })
-      .catch(err => message.error(err.response.data.error, 3))
   }
 }
