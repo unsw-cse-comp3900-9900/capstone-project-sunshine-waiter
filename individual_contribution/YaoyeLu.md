@@ -31,3 +31,17 @@
 -   finish Menu Builder CRUD in manager page:
     -   The restaurant's menu will be read and displayed.
     -   Manager can create/modifiy/delete/read a category and can create/modifiy/delete/read dishes.
+
+#### WEEK8
+
+-   finish persisting page after refresh
+-   improve menu builder
+
+#### WEEK9 -- todo
+
+-   improve UI
+-   adjust menu builder into archived and active
+-   finish staff management ui
+-   To finish staff management
+-   To finish QRCode generator
+-   To finish deployment
