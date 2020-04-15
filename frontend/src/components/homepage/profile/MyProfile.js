@@ -10,6 +10,7 @@ import RestaurantModal from './RestaurantModal'
 import { deleteRestaurant } from '../../apis/actions/restaurants'
 import PendingInvitationModal from './PendingInvitationModal'
 import OwnedRestaurants from './OwnedRestaurants'
+import WorkAtRestaurants from './WorkAtRestaurants'
 
 class MyProfile extends React.Component {
   state = {
@@ -178,6 +179,8 @@ class MyProfile extends React.Component {
           onDeleteRestaurant={this.onDeleteRestaurant}
           onSetEditingRestaurant={this.onSetEditingRestaurant}
         />
+        <span className="ui horizontal divider" />
+        <WorkAtRestaurants />
         <div className="footer">
           <div
             className="ui red button"

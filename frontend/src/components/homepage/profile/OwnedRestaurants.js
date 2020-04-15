@@ -2,13 +2,13 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { List, message } from 'antd'
 import InfiniteScroll from 'react-infinite-scroller'
-import '../default.css'
-import './scrollerContainer.css'
 
 import { compareTwoArrays } from '../../services'
 import { getCookie } from '../../authenticate/Cookies'
 import { Polling } from '../../apis/Polling'
 import { getRestaurants } from '../../apis/actions/restaurants'
+import '../default.css'
+import './scrollerContainer.css'
 
 class OwnedRestaurants extends React.Component {
   //I think reason is when using a tag, it freshes when hitting the page url, so state got freshed back to init
