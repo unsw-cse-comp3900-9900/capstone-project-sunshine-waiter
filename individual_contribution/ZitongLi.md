@@ -111,3 +111,8 @@ Finished basic Sales chart and time selector.
 #### Tuesday, 14 April 2020
 
 Finished dashboard, add total sales, Order amount, sales chart, category pie and best selling dishes.
+
+### todo
+
+*   Web socket server
+*   Restaurant page ui improve
