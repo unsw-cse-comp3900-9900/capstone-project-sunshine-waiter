@@ -1,5 +1,10 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import { List, message } from 'antd'
+import InfiniteScroll from 'react-infinite-scroller'
+import '../default.css'
+import './scrollerContainer.css'
+
 import { compareTwoArrays } from '../../services'
 import { getCookie } from '../../authenticate/Cookies'
 import { Polling } from '../../apis/Polling'
@@ -36,27 +41,34 @@ class OwnedRestaurants extends React.Component {
 
     //DO NOT USE <A> TAG, IT WILL RELOAD THE PAGE AND MAKE THE STATE BACK INITIAL STATE IN App.js
     if (restaurants && restaurants.length > 0) {
-      return restaurants.map(({ _id, name, description }) => (
-        <li className="list" key={_id}>
-          {name}
-          <span onClick={() => onDeleteRestaurant(_id)}>
-            <i className="trash alternate outline icon right clickable" />
-          </span>
-          <span
-            onClick={() => {
-              showModal()
-              onSetEditingRestaurant({ _id, name, description })
-            }}
-          >
-            <i className="pencil alternate right clickable icon" />
-          </span>
-          <Link to={'/restaurants/' + _id} name={name}>
-            <i className="caret square right icon" />
-          </Link>
-        </li>
-      ))
+      return (
+        <List
+          dataSource={restaurants}
+          renderItem={({ _id, name, description }) => (
+            <List.Item key={_id}>
+              <List.Item.Meta title={name} description={description} />
+              <div>
+                <span onClick={() => onDeleteRestaurant(_id)}>
+                  <i className="trash alternate outline icon right clickable" />
+                </span>
+                <span
+                  onClick={() => {
+                    showModal()
+                    onSetEditingRestaurant({ _id, name, description })
+                  }}
+                >
+                  <i className="pencil alternate right clickable icon" />
+                </span>
+                <Link to={'/restaurants/' + _id} name={name}>
+                  <i className="caret square right icon" />
+                </Link>
+              </div>
+            </List.Item>
+          )}
+        ></List>
+      )
     }
-    return null
+    return <div>No restaurants avaliable yet</div>
   }
 
   render() {
@@ -75,7 +87,17 @@ class OwnedRestaurants extends React.Component {
             <i className="plus circle icon right" />
           </span>
         </h4>
-        {this.renderOwnedRestaurantsList()}
+        <div className="scroller-container">
+          <InfiniteScroll
+            initialLoad={false}
+            pageStart={0}
+            loadMore={() => message.info("You've loaded all", 1)}
+            hasMore={false}
+            useWindow={false}
+          >
+            {this.renderOwnedRestaurantsList()}
+          </InfiniteScroll>
+        </div>
       </div>
     )
   }
