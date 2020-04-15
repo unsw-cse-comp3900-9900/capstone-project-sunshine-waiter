@@ -118,7 +118,9 @@ Fit the kitchen and waiter page to mobile window
 
 #### Saturday, 11 April 2020
 
-Prepared dummy data for future dashboard data visualisation
+Work with Jason (Yingjie Zheng) and prepared dummy data for future dashboard data visualisation
+
+![dummyData](ZitongLi.assets/dummyData.png)
 
 ## Week 9
 
@@ -136,5 +138,5 @@ Finished dashboard, add total sales, Order amount, sales chart, category pie and
 
 ### todo
 
-*   Web socket server
+*   Websocket server
 *   Restaurant page ui improve
