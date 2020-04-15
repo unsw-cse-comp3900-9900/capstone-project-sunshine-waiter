@@ -12,6 +12,7 @@ import PendingInvitationModal from './PendingInvitationModal'
 import OwnedRestaurants from './OwnedRestaurants'
 import WorkAtRestaurants from './WorkAtRestaurants'
 import { Polling } from '../../apis/Polling'
+import { compareTwoArraysOfInvitationObj } from '../../services'
 
 class MyProfile extends React.Component {
   state = {
@@ -25,9 +26,15 @@ class MyProfile extends React.Component {
   }
 
   onSetPendingJobs = ({ pendingJobs }) => {
-    this.setState({
-      pendingJobs,
-    })
+    //update only when pendingJobs are different
+    if (
+      !compareTwoArraysOfInvitationObj(this.state.pendingJobs, pendingJobs) ||
+      !compareTwoArraysOfInvitationObj(pendingJobs, this.state.pendingJobs)
+    ) {
+      this.setState({
+        pendingJobs,
+      })
+    }
   }
 
   onSetMe = data => {
@@ -166,6 +173,7 @@ class MyProfile extends React.Component {
         <PendingInvitationModal
           visible={this.state.inviationModalVisible}
           onCancel={this.onCloseInvitationModal}
+          pendingJobs={this.state.pendingJobs}
         />
         <RestaurantModal
           visible={this.state.modalVisible}

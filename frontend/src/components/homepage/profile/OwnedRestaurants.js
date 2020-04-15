@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { List, message } from 'antd'
 import InfiniteScroll from 'react-infinite-scroller'
 
-import { compareTwoArrays } from '../../services'
+import { compareTwoArraysOfRestMetaObj } from '../../services'
 import { getCookie } from '../../authenticate/Cookies'
 import { Polling } from '../../apis/Polling'
 import { getRestaurants } from '../../apis/actions/restaurants'
@@ -19,8 +19,8 @@ class OwnedRestaurants extends React.Component {
 
   updateRestaurants = (restaurants = []) => {
     if (
-      !compareTwoArrays(restaurants, this.state.restaurants) ||
-      !compareTwoArrays(this.state.restaurants, restaurants)
+      !compareTwoArraysOfRestMetaObj(restaurants, this.state.restaurants) ||
+      !compareTwoArraysOfRestMetaObj(this.state.restaurants, restaurants)
     ) {
       this.setState({
         restaurants: restaurants,

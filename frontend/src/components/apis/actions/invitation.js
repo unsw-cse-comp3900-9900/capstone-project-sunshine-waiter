@@ -1,4 +1,5 @@
 import { message } from 'antd'
+import jwtDecode from 'jwt-decode'
 
 import BaseProvider from '../BaseProvider'
 
@@ -25,25 +26,20 @@ export const sendInvitation = (
   }
 }
 
-export const getStaffs = () => {}
-
-export const acceptInvitation = (
-  token,
-  userId,
-  params,
-  callback = () => {}
-) => {
+export const acceptInvitation = (token, params) => {
   if (token !== undefined) {
+    const decodedJWT = jwtDecode(token)
+    const userId = decodedJWT._id
+
     const config = {
       headers: {
         'x-auth-token': token,
       },
     }
 
-    const URL = `/restaurants/${userId}/roles`
+    const URL = `/users/${userId}/roles`
     BaseProvider.post(URL, params, config)
       .then(res => {
-        callback()
         message.success(res.data.message, 3)
       })
       .catch(err => message.error(err.response.data.error, 3))
