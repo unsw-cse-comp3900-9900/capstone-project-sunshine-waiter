@@ -144,7 +144,7 @@ class Homepage extends React.Component {
   }
 
   render() {
-    const { restaurants } = this.props
+    // const { restaurants } = this.props
     return (
       <div className="pusher">
         <div className="ui inverted vertical masthead center aligned segment">
@@ -252,7 +252,6 @@ class Homepage extends React.Component {
             <SiderBar
               visible={this.state.showProfile}
               updateState={this.updateState}
-              restaurants={restaurants}
             />
           )}
         </div>

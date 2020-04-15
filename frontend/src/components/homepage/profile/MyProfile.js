@@ -1,5 +1,4 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
 import 'antd/dist/antd.css'
 import { Badge } from 'antd'
 
@@ -10,6 +9,7 @@ import { MODE } from './constant'
 import RestaurantModal from './RestaurantModal'
 import { deleteRestaurant } from '../../apis/actions/restaurants'
 import PendingInvitationModal from './PendingInvitationModal'
+import OwnedRestaurants from './OwnedRestaurants'
 
 class MyProfile extends React.Component {
   state = {
@@ -26,6 +26,10 @@ class MyProfile extends React.Component {
       me: data,
       editingName: data.name,
     })
+  }
+
+  onSetEditingRestaurant = param => {
+    this.setState({ editingRestaurant: param })
   }
 
   UNSAFE_componentWillMount = async () => {
@@ -115,34 +119,6 @@ class MyProfile extends React.Component {
     await deleteRestaurant(getCookie('token'), id)
   }
 
-  renderRestaurantsLists = () => {
-    const { restaurants } = this.props
-
-    //DO NOT USE <A> TAG, IT WILL RELOAD THE PAGE AND MAKE THE STATE BACK INITIAL STATE IN App.js
-    if (restaurants && restaurants.length > 0) {
-      return restaurants.map(({ _id, name, description }) => (
-        <li className="list" key={_id}>
-          {name}
-          <span onClick={() => this.onDeleteRestaurant(_id)}>
-            <i className="trash alternate outline icon right clickable" />
-          </span>
-          <span
-            onClick={() => {
-              this.showModal()
-              this.setState({ editingRestaurant: { _id, name, description } })
-            }}
-          >
-            <i className="pencil alternate right clickable icon" />
-          </span>
-          <Link to={'/restaurants/' + _id} name={name}>
-            <i className="caret square right icon" />
-          </Link>
-        </li>
-      ))
-    }
-    return null
-  }
-
   renderViewModeBasicIcons = () => {
     return (
       <span>
@@ -178,6 +154,11 @@ class MyProfile extends React.Component {
           visible={this.state.inviationModalVisible}
           onCancel={this.onCloseInvitationModal}
         />
+        <RestaurantModal
+          visible={this.state.modalVisible}
+          onCancel={this.handleModalCancel}
+          editingRestaurant={this.state.editingRestaurant}
+        />
         <div className="basic">
           <div className="name">
             {this.state.mode === MODE.VIEW
@@ -192,26 +173,11 @@ class MyProfile extends React.Component {
           <i className="tag icon"></i>
           Dashboard
         </h4>
-        <RestaurantModal
-          visible={this.state.modalVisible}
-          onCancel={this.handleModalCancel}
-          editingRestaurant={this.state.editingRestaurant}
+        <OwnedRestaurants
+          showModal={this.showModal}
+          onDeleteRestaurant={this.onDeleteRestaurant}
+          onSetEditingRestaurant={this.onSetEditingRestaurant}
         />
-        <div className="my-restaurant">
-          <h3>
-            <i className="coffee icon" />
-            My Restaurants
-            <span
-              onClick={() => {
-                this.setState({ editingRestaurant: null })
-                this.showModal()
-              }}
-            >
-              <i className="plus circle icon right" />
-            </span>
-          </h3>
-          {this.renderRestaurantsLists()}
-        </div>
         <div className="footer">
           <div
             className="ui red button"
