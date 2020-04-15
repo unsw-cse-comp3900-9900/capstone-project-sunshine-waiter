@@ -11,6 +11,7 @@ import { deleteRestaurant } from '../../apis/actions/restaurants'
 import PendingInvitationModal from './PendingInvitationModal'
 import OwnedRestaurants from './OwnedRestaurants'
 import WorkAtRestaurants from './WorkAtRestaurants'
+import { Polling } from '../../apis/Polling'
 
 class MyProfile extends React.Component {
   state = {
@@ -20,6 +21,13 @@ class MyProfile extends React.Component {
     editingRestaurant: null,
     inviationModalVisible: false,
     me: null,
+    pendingJobs: [],
+  }
+
+  onSetPendingJobs = ({ pendingJobs }) => {
+    this.setState({
+      pendingJobs,
+    })
   }
 
   onSetMe = data => {
@@ -35,6 +43,10 @@ class MyProfile extends React.Component {
 
   UNSAFE_componentWillMount = async () => {
     await readMe(getCookie('token'), this.onSetMe)
+  }
+
+  componentDidMount = () => {
+    Polling(() => readMe(getCookie('token'), this.onSetPendingJobs), 500)
   }
 
   renderViewModeBasic = name => {
@@ -128,7 +140,7 @@ class MyProfile extends React.Component {
           style={{ marginRight: '5px' }}
           onClick={this.showInvitationModal}
         >
-          <Badge count={5}>
+          <Badge count={this.state.pendingJobs.length}>
             <i className="icon mail" />
           </Badge>
         </span>
