@@ -42,6 +42,18 @@
 -   improve UI
 -   adjust menu builder into archived and active
 -   finish staff management ui
+
+todo
+
 -   To finish staff management
--   To finish QRCode generator
+    -   polling
+        -   accept invitation
+        -   show rest
+        -   update staff list
+-   menu builder no-cateogory menuItems
+-   frontend authority control
 -   To finish deployment
+
+*   To add img upload(menu and avatar)
+*   To finish QRCode generator
+*   To Improve Myprofile UI
