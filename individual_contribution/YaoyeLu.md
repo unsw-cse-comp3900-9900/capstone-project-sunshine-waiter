@@ -42,16 +42,20 @@
 -   improve UI
 -   adjust menu builder into archived and active
 -   finish staff management ui
+-   finish staff management
+-   finsi polling
+    -   accept invitation
+    -   show rest
+    -   update staff list
+    -   update restaurants
+        -   refactor rendering onwed restaurants
+        -   render restaurants where users work
+        -   improve UI
+-   finish frontend authority control
 
 todo
 
--   To finish staff management
-    -   polling
-        -   accept invitation
-        -   show rest
-        -   update staff list
--   menu builder no-cateogory menuItems
--   frontend authority control
+-   To add menu builder no-cateogory menuItems
 -   To finish deployment
 
 *   To add img upload(menu and avatar)
