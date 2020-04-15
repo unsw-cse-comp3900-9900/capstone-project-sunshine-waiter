@@ -80,8 +80,8 @@ export const deleteRestaurant = (token, id, callback = () => {}) => {
       },
     }
     BaseProvider.delete('/restaurants/' + id, config)
-      .then(async res => {
-        await callback()
+      .then(res => {
+        // await callback()
 
         message.success(res.data.message, 3)
       })

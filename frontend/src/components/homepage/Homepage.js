@@ -6,8 +6,6 @@ import SiderBar from './profile/SiderBar'
 import { getCookie, deleteCookie } from '../authenticate/Cookies'
 import './default.css'
 import { getUser } from '../apis/actions/users'
-import { getRestaurants } from '../apis/actions/restaurants'
-// import { getRestaurants } from '../apis/actions/restaurants'
 
 class Homepage extends React.Component {
   state = {
@@ -44,8 +42,6 @@ class Homepage extends React.Component {
       this.state.isAuthenticated
     ) {
       await getUser(getCookie('token'), null, this.updateState)
-      // getRestaurants(getCookie('token'), this.updateRestaurants)
-      await getRestaurants(getCookie('token'), this.props.updateRestaurants)
     }
   }
 
@@ -148,7 +144,7 @@ class Homepage extends React.Component {
   }
 
   render() {
-    const { updateRestaurants, restaurants } = this.props
+    const { restaurants } = this.props
     return (
       <div className="pusher">
         <div className="ui inverted vertical masthead center aligned segment">
@@ -256,7 +252,6 @@ class Homepage extends React.Component {
             <SiderBar
               visible={this.state.showProfile}
               updateState={this.updateState}
-              updateRestaurants={updateRestaurants}
               restaurants={restaurants}
             />
           )}
