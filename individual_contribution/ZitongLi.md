@@ -140,3 +140,4 @@ Finished dashboard, add total sales, Order amount, sales chart, category pie and
 
 *   Websocket server
 *   Restaurant page ui improve
+*   request api
