@@ -7,6 +7,7 @@ import { sendInvitation } from '../../apis/actions/invitation'
 import { getCookie } from '../../authenticate/Cookies'
 import { getSingleRestaurant } from '../../apis/actions/restaurants'
 import StaffItemCard from './StaffItemCard'
+import { Polling } from '../../apis/Polling'
 
 class StaffManagement extends React.Component {
   state = {
@@ -22,12 +23,17 @@ class StaffManagement extends React.Component {
     })
   }
 
-  UNSAFE_componentWillMount = async () => {
+  componentDidMount = () => {
     const { restaurantId } = this.props
-    await getSingleRestaurant(
-      getCookie('token'),
-      restaurantId,
-      this.onSetRestaurant
+
+    Polling(
+      () =>
+        getSingleRestaurant(
+          getCookie('token'),
+          restaurantId,
+          this.onSetRestaurant
+        ),
+      1000
     )
   }
 
