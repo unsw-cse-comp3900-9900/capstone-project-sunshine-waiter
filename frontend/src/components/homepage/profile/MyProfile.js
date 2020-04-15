@@ -23,9 +23,10 @@ class MyProfile extends React.Component {
     inviationModalVisible: false,
     me: null,
     pendingJobs: [],
+    currentJobs: [],
   }
 
-  onSetPendingJobs = ({ pendingJobs }) => {
+  onSetPendingJobs = ({ currentJobs, pendingJobs }) => {
     //update only when pendingJobs are different
     if (
       !compareTwoArraysOfInvitationObj(this.state.pendingJobs, pendingJobs) ||
@@ -33,6 +34,15 @@ class MyProfile extends React.Component {
     ) {
       this.setState({
         pendingJobs,
+      })
+    }
+
+    if (
+      !compareTwoArraysOfInvitationObj(this.state.currentJobs, currentJobs) ||
+      !compareTwoArraysOfInvitationObj(currentJobs, this.state.currentJobs)
+    ) {
+      this.setState({
+        currentJobs,
       })
     }
   }
@@ -200,7 +210,7 @@ class MyProfile extends React.Component {
           onSetEditingRestaurant={this.onSetEditingRestaurant}
         />
         <span className="ui horizontal divider" />
-        <WorkAtRestaurants />
+        <WorkAtRestaurants currentJobs={this.state.currentJobs} />
         <div className="footer">
           <div
             className="ui red button"

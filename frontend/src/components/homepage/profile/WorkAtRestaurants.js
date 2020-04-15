@@ -2,27 +2,45 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { List, message } from 'antd'
 import InfiniteScroll from 'react-infinite-scroller'
+import { getCookie } from '../../authenticate/Cookies'
+import { getSingleRestaurant } from '../../apis/actions/restaurants'
 
 class WorkAtRestaurants extends React.Component {
   state = {
-    workAtRestaurants: [],
+    name: '',
   }
+
+  onSetState = ({ name }) => {
+    this.setState({
+      name,
+    })
+  }
+
+  renderRestaurantItem = ({ restaurant, role }) => {
+    getSingleRestaurant(getCookie('token'), restaurant, this.onSetState)
+
+    return (
+      <List.Item key={restaurant}>
+        <List.Item.Meta
+          title={role}
+          description={`Work at ${this.state.name}`}
+        />
+        <Link to={'/restaurants/' + restaurant + '/' + role}>
+          <i className="caret square right icon" />
+        </Link>
+      </List.Item>
+    )
+  }
+
   renderWorkAtRestaurantsList = () => {
-    const { workAtRestaurants } = this.state
-    if (workAtRestaurants && workAtRestaurants.length > 0) {
+    // const { workAtRestaurants } = this.state
+    const { currentJobs } = this.props
+
+    if (currentJobs.length > 0) {
       return (
         <List
-          dataSource={workAtRestaurants}
-          renderItem={({ _id, name, description }) => (
-            <List.Item key={_id}>
-              <List.Item.Meta title={name} description={description} />
-              <div>
-                <Link to={'/restaurants/' + _id} name={name}>
-                  <i className="caret square right icon" />
-                </Link>
-              </div>
-            </List.Item>
-          )}
+          dataSource={currentJobs}
+          renderItem={this.renderRestaurantItem}
         ></List>
       )
     }
