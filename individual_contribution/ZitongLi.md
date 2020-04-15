@@ -62,9 +62,13 @@ Built a waiter serving demo using socket.io.
 
 Finished Waiter page layout design.
 
+![waiter1](ZitongLi.assets/waiter1.gif)
+
 #### Sat, 2020/3/21
 
 Finished several major functions of waiter page, like SW-49, SW-50, SW-51. Details of these tasks are on Jira.
+
+![waiter2](ZitongLi.assets/waiter2.gif)
 
 #### Sun, 2020/3/22
 
@@ -79,6 +83,8 @@ Finished web-socket functions. Now the waiter can recieve new ready dishes and s
 #### Thursday, 26 March 2020
 
 Perfect the waiter page, now different waiters of a same restaurant can share the common information and get real-time update when any events happened.
+
+![multiple_waiters](ZitongLi.assets/multiple_waiters.gif)
 
 #### Friday, 27 March 2020
 
@@ -96,6 +102,18 @@ Merge websocket server into backend
 
 Fixed bugs for web socket implementation.
 
+#### TuesDay, 31 March 2020
+
+Finished kitchen page 😪
+
+![kitchen](ZitongLi.assets/kitchen.gif)
+
+#### Wednesday, 1 April 2020
+
+Fit the kitchen and waiter page to mobile window
+
+![fit_mobile](ZitongLi.assets/fit_mobile.png)
+
 ## Week 8
 
 #### Saturday, 11 April 2020
@@ -108,9 +126,13 @@ Prepared dummy data for future dashboard data visualisation
 
 Finished basic Sales chart and time selector.
 
+![1x0o7-d4y2l](ZitongLi.assets/1x0o7-d4y2l.gif)
+
 #### Tuesday, 14 April 2020
 
 Finished dashboard, add total sales, Order amount, sales chart, category pie and best selling dishes.
+
+![6na06-r83q0](ZitongLi.assets/6na06-r83q0.gif)
 
 ### todo
 
