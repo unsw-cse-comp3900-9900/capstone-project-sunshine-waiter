@@ -55,7 +55,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n      \"name\": \"Jenette Carter\",\n      \"email\": \"jenette.carter@skycenta.club\",\n      \"password\": \"password_of_Ian\"\n    }",
+							"raw": "{\n      \"name\": \"Alexis Kelsey\",\n      \"email\": \"alexis.kelsey@airconix.gov\",\n      \"password\": \"password_of_Juliana\"\n    }",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1231,6 +1231,55 @@
 								"{{restaurantId}}",
 								"menuItems",
 								"5e86c158b16672002fca91aa"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "/restaurants/:rID/orderItems",
+			"item": [
+				{
+					"name": "read all items in restaurant",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"type": "text",
+								"value": "{{active-jwt}}"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "javascript"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/restaurants/{{restaurantId}}/orderitems/",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"restaurants",
+								"{{restaurantId}}",
+								"orderitems",
+								""
 							]
 						}
 					},
