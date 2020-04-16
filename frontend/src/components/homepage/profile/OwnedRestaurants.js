@@ -15,17 +15,21 @@ class OwnedRestaurants extends React.Component {
   //prolem is I used a tag in Myprofile
   state = {
     isLoading: true,
-    restaurants: [],
+    restaurants: null,
   }
 
   updateRestaurants = (restaurants = []) => {
-    if (
+    if (this.state.restaurants === null) {
+      this.setState({
+        isLoading: false,
+        restaurants: restaurants,
+      })
+    } else if (
       (restaurants.length > 0 &&
         !compareTwoArraysOfRestMetaObj(restaurants, this.state.restaurants)) ||
       !compareTwoArraysOfRestMetaObj(this.state.restaurants, restaurants)
     ) {
       this.setState({
-        isLoading: false,
         restaurants: restaurants,
       })
     }
