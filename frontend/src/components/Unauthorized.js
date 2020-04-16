@@ -3,9 +3,9 @@ import React from 'react'
 export default class Unauthorized extends React.Component {
   render() {
     return (
-      <div>
-        <h1>Not Authorized</h1>
-        <small>Please contact the manager</small>
+      <div className="ui massive error message">
+        <h1 className="Header">Not Authorized</h1>
+        <h6 style={{ textAlign: 'center' }}>Please contact the manager</h6>
       </div>
     )
   }
