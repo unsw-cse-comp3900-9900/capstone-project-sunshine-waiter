@@ -2,6 +2,8 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { List, message } from 'antd'
 import InfiniteScroll from 'react-infinite-scroller'
+import { resignRole } from '../../apis/actions/invitation'
+import { getCookie } from '../../authenticate/Cookies'
 // import { getCookie } from '../../authenticate/Cookies'
 // import { getSingleRestaurant } from '../../apis/actions/restaurants'
 
@@ -16,6 +18,10 @@ class WorkAtRestaurants extends React.Component {
     })
   }
 
+  onResignRole = params => {
+    resignRole(getCookie('token'), params)
+  }
+
   renderRestaurantItem = ({ restaurant, role }) => {
     // This will cause a Network error after a certain time, don't know why yet
     // getSingleRestaurant(getCookie('token'), restaurant, this.onSetState)
@@ -24,11 +30,14 @@ class WorkAtRestaurants extends React.Component {
       <List.Item key={restaurant}>
         <List.Item.Meta
           title={role}
-          description={`Work at ${this.state.name}`}
+          description={`work at ${this.state.name}`}
         />
         <Link to={'/restaurants/' + restaurant + '/' + role}>
           <i className="caret square right icon" />
         </Link>
+        <span onClick={() => this.onResignRole({ restaurant, role })}>
+          <i className="trash alternate outline icon right clickable" />
+        </span>
       </List.Item>
     )
   }

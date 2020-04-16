@@ -45,3 +45,26 @@ export const acceptInvitation = (token, params) => {
       .catch(err => message.error(err.response.data.error, 3))
   }
 }
+
+export const resignRole = (token, data) => {
+  if (token !== undefined) {
+    const decodedJWT = jwtDecode(token)
+    const userId = decodedJWT._id
+
+    //axios delete has it own rule to take a data body
+    const config = {
+      headers: {
+        'x-auth-token': token,
+      },
+      data: data,
+    }
+
+    const URL = `/users/${userId}/roles?`
+    //delete doesn't have body
+    BaseProvider.delete(URL, config)
+      .then(res => {
+        message.success(res.data.message, 4)
+      })
+      .catch(err => message.error(err.response.data.error, 3))
+  }
+}
