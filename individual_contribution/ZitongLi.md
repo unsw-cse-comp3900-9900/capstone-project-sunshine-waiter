@@ -136,8 +136,11 @@ Finished dashboard, add total sales, Order amount, sales chart, category pie and
 
 ![6na06-r83q0](ZitongLi.assets/6na06-r83q0.gif)
 
-### todo
+#### Friday, 17 April 2020
 
-*   Websocket server
+*   Websocket server authentication finished
+
+#### Todo
+
 *   Restaurant page ui improve
 *   request api
