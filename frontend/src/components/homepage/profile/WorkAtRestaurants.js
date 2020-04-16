@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { List, message, Alert } from 'antd'
+import { List, message, Spin } from 'antd'
 import InfiniteScroll from 'react-infinite-scroller'
 
 import { resignRole } from '../../apis/actions/invitation'
@@ -12,6 +12,7 @@ import './scrollerContainer.css'
 
 class WorkAtRestaurants extends React.Component {
   state = {
+    isLoading: true,
     name: '',
   }
 
@@ -23,6 +24,14 @@ class WorkAtRestaurants extends React.Component {
 
   onResignRole = params => {
     resignRole(getCookie('token'), params)
+  }
+
+  componentDidUpdate = prevProps => {
+    if (this.state.isLoading && this.props.currentJobs !== null) {
+      this.setState({
+        isLoading: false,
+      })
+    }
   }
 
   renderRestaurantItem = ({ restaurant, role }) => {
@@ -49,7 +58,7 @@ class WorkAtRestaurants extends React.Component {
     // const { workAtRestaurants } = this.state
     const { currentJobs } = this.props
 
-    if (currentJobs.length > 0) {
+    if (currentJobs !== null && currentJobs.length > 0) {
       return (
         <List
           dataSource={currentJobs}
@@ -57,15 +66,14 @@ class WorkAtRestaurants extends React.Component {
         ></List>
       )
     }
-    return (
-      <div className="loading-message">
-        <Alert
-          message="No positions yet"
-          description="It is loading if available"
-          type="info"
-        />
-      </div>
-    )
+    if (this.state.isLoading) {
+      return (
+        <div className="spinner">
+          <Spin tip="Loading..."></Spin>
+        </div>
+      )
+    }
+    return null
   }
 
   render() {

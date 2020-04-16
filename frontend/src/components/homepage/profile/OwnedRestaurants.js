@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { List, message, Alert } from 'antd'
+import { List, message, Spin } from 'antd'
 import InfiniteScroll from 'react-infinite-scroller'
 
 import { compareTwoArraysOfRestMetaObj } from '../../services'
@@ -14,6 +14,7 @@ class OwnedRestaurants extends React.Component {
   //I think reason is when using a tag, it freshes when hitting the page url, so state got freshed back to init
   //prolem is I used a tag in Myprofile
   state = {
+    isLoading: true,
     restaurants: [],
   }
 
@@ -24,6 +25,7 @@ class OwnedRestaurants extends React.Component {
       !compareTwoArraysOfRestMetaObj(this.state.restaurants, restaurants)
     ) {
       this.setState({
+        isLoading: false,
         restaurants: restaurants,
       })
     }
@@ -69,15 +71,14 @@ class OwnedRestaurants extends React.Component {
         ></List>
       )
     }
-    return (
-      <div className="loading-message">
-        <Alert
-          message="No restaurants yet"
-          description="It is loading if available"
-          type="info"
-        />
-      </div>
-    )
+    if (this.state.isLoading) {
+      return (
+        <div className="spinner">
+          <Spin tip="Loading..."></Spin>
+        </div>
+      )
+    }
+    return null
   }
 
   render() {

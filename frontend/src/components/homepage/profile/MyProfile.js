@@ -23,10 +23,23 @@ class MyProfile extends React.Component {
     inviationModalVisible: false,
     me: null,
     pendingJobs: [],
-    currentJobs: [],
+    currentJobs: null,
   }
 
   onSetPendingJobs = ({ currentJobs, pendingJobs }) => {
+    if (this.state.currentJobs === null) {
+      this.setState({
+        currentJobs,
+      })
+    } else if (
+      !compareTwoArraysOfInvitationObj(this.state.currentJobs, currentJobs) ||
+      !compareTwoArraysOfInvitationObj(currentJobs, this.state.currentJobs)
+    ) {
+      this.setState({
+        currentJobs,
+      })
+    }
+
     //update only when pendingJobs are different
     if (
       !compareTwoArraysOfInvitationObj(this.state.pendingJobs, pendingJobs) ||
@@ -34,15 +47,6 @@ class MyProfile extends React.Component {
     ) {
       this.setState({
         pendingJobs,
-      })
-    }
-
-    if (
-      !compareTwoArraysOfInvitationObj(this.state.currentJobs, currentJobs) ||
-      !compareTwoArraysOfInvitationObj(currentJobs, this.state.currentJobs)
-    ) {
-      this.setState({
-        currentJobs,
       })
     }
   }

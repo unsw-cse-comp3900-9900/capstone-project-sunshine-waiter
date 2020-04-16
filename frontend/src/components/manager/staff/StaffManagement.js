@@ -116,12 +116,8 @@ class StaffManagement extends React.Component {
   renderCookList = () => {
     if (this.state.restaurant === null) {
       return (
-        <div className="loading-message">
-          <Alert
-            message="No cooks yet, wait..."
-            description="It is loading if available"
-            type="info"
-          />
+        <div className="spinner">
+          <Spin tip="Loading..."></Spin>
         </div>
       )
     }
@@ -137,12 +133,8 @@ class StaffManagement extends React.Component {
   renderWaiterList = () => {
     if (this.state.restaurant === null) {
       return (
-        <div className="loading-message">
-          <Alert
-            message="No waiters yet, wait..."
-            description="It is loading if available"
-            type="info"
-          />
+        <div className="spinner">
+          <Spin tip="Loading..."></Spin>
         </div>
       )
     }

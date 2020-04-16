@@ -49,13 +49,6 @@ h1 {
   display: block;
 }
 
-.staff-box .loading-message {
-  width: 90%;
-  margin-left: 5%;
-  margin-right: 5%;
-  margin-top: 5%;
-}
-
 .staff-box .spinner {
   margin-left: 40%;
   margin-top: 30%;
