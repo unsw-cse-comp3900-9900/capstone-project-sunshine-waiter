@@ -151,12 +151,17 @@ return
 - { error: String } when fail
 - { success: true } when success
 */
-updateItemStatus = async (restaurantId, itemId, newStatus) => {
+updateItem = async (
+  restaurantId,
+  { _id: itemId, state: newStatus, ...rest }
+) => {
   if (!allowedStatus[newStatus])
     return { error: `newStatus ${newStatus} is not valid` }
 
   const item = await findItem(restaurantId, itemId)
   item.status = newStatus
+  for (let [key, value] of Object.entries(rest)) item[key] = value
+
   await item.save()
   return { success: true }
 }
@@ -180,4 +185,5 @@ module.exports = {
   readItemsInOrder,
   readOrderItem,
   readAllItemInRestaurant,
+  updateItem,
 }

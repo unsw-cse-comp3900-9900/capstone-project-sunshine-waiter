@@ -19,8 +19,16 @@ class App extends React.Component {
           path="/restaurants/:id"
           render={props => <Resturant {...props} />}
         />
-        <Route exact path="/restaurants/:id/waiter" children={<Waiter />} />
-        <Route exact path="/restaurants/:id/cook" children={<Kitchen />} />
+        <Route
+          exact
+          path="/restaurants/:id/waiter"
+          children={props => <Waiter {...props} />}
+        />
+        <Route
+          exact
+          path="/restaurants/:id/cook"
+          children={props => <Kitchen {...props} />}
+        />
         <Route
           exact
           path="/restaurants/:id/manager"

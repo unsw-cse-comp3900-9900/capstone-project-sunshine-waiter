@@ -7,6 +7,7 @@ import { message } from 'antd'
 const connect = (component, URL, userData, configure) => {
   const socket = io.connect(URL)
   socket.emit('authenticate', userData)
+
   socket.on('authenticate success', namespace => {
     const safeConnect = io.connect(URL + namespace)
     message.success('Connection established!')
@@ -16,6 +17,7 @@ const connect = (component, URL, userData, configure) => {
     component.setState({
       socket: safeConnect,
     })
+    socket.close()
   })
   socket.on('connect_error', () => {
     message.error('Connect error')
