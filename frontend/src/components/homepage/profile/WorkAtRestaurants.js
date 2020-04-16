@@ -1,12 +1,13 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { List, message, Spin } from 'antd'
+import { List, message } from 'antd'
 import InfiniteScroll from 'react-infinite-scroller'
 
 import { resignRole } from '../../apis/actions/invitation'
 import { getCookie } from '../../authenticate/Cookies'
 import '../default.css'
 import './scrollerContainer.css'
+import Spinner from '../../Spinner'
 // import { getCookie } from '../../authenticate/Cookies'
 // import { getSingleRestaurant } from '../../apis/actions/restaurants'
 
@@ -73,11 +74,7 @@ class WorkAtRestaurants extends React.Component {
       )
     }
     if (this.state.isLoading) {
-      return (
-        <div className="spinner">
-          <Spin tip="Loading..."></Spin>
-        </div>
-      )
+      return <Spinner />
     }
     return null
   }
