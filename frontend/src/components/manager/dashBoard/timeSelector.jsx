@@ -24,6 +24,7 @@ const TimeIntervalMessage = ({ start, end }) => {
 }
 
 const TimeSelector = ({ data, zoomDomain, handleZoom }) => {
+  if (!data.length) return <span className="badge badge-warning">No Data</span>
   const [start, end] = zoomDomain.x || [null, null]
   return (
     <React.Fragment>

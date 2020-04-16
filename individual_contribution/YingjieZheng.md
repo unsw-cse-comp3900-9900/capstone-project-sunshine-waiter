@@ -120,39 +120,54 @@ BackEnd framework Setup **week2** `Jason`
   > Not including the time spend on design, which took aound 1 hour in group meeting discussion.
 
   - [x] replace `delete` to `archive`
-  - [x] record a change history
-  - [x] validate !isArchive before update data (treat archived docs like deleted)
-  - [x] discriminate read-menu api between public and private
+
+  - [x] record a **change history**
+
+  - [x] treat archived docs like `deleted`: 
+
+      >   validate `!isArchive` before update data; 
 
 * [x] Backend - menuItem & category has status of `private` and `public`.
 
   > consider `archive` as private as well
+
+  * [x] discriminate read-menu api between **public and private**
 
 * [x] API for Stuff management
 
   > design-implement-test together consumes two days.
 
   - Manger can invite user to become a staff
+  
   - Manger can dismiss an existing staff
-  - user can see his/her `currentJobs` and `pendingJobs` > `pendingJobs` can be understand as the "pending invitations of job offering"
+  
+- user can see his/her `currentJobs` and `pendingJobs`
+  
+    >   `pendingJobs` can be understand as the "pending invitations of job offering"
+  
   - user can accept ( a pending job ) and resign ( a current job )
-
+  
   Illustration are filmed and uploaded to youtube
-
+  
   - [dbinit and postman enviroment prepare](https://www.youtube.com/watch?v=4b4fW8dH9AE)
   - [invite, accept, dismissal](https://www.youtube.com/watch?v=dAbItl1nEQY)
   - [user accept and resign a job](https://www.youtube.com/watch?v=ciGsapYTI_A)
 
 - [x] Populate data for dashboard usage
-  > The above jobs is reallocated to Steve ( Zitong Li ).
-  > I was an assistant on this, finish `users`, `restaurants`, routing, etc.
-  > He finishes `order`, `orderItems`, and the rest. `orderItems` is the hard part.
-  > He introduced the "dummy JSON" framework which is very powerful and convinient.
+  > -   The above jobs is reallocated to Steve ( Zitong Li ).
+  >
+  > -   I was an assistant on this, finish `users`, `restaurants`, **routing**, etc.
+  > -   He finishes `order`, `orderItems`, and the rest. `orderItems` is the hard part.
+  > -   He introduced the `dummy JSON` framework which is very powerful and convinient.
 
 > 4.13-4.18
 
 - [ ] `picture upload`
-  > working on it
+
+  > Post/Delete/Get `sw.com/theobjecturl/img` 
+
+  -   menuItem
+  -   user avatar
 
 * [ ] Integrate websocket
 
@@ -160,7 +175,14 @@ BackEnd framework Setup **week2** `Jason`
   > I will be an assistant on this.
 
   - [ ] new order placement update
+    
     > We deside to use `polling` rather than `event emit`.
+    
   - [ ] new change on orderItem
+  
   - [ ] new assistant-request update
+  
   - [ ] push new request to waiter client
+  
+- [ ] QRCode-generator
+

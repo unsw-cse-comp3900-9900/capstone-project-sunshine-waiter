@@ -41,7 +41,24 @@
 
 -   improve UI
 -   adjust menu builder into archived and active
--   finish staff management ui
--   To finish staff management
--   To finish QRCode generator
+-   improve UI
+-   finish staff management
+    -   staff accept invitation
+    -   staff resign role
+-   finish polling
+    -   invitation notification
+    -   show restaurants
+    -   update staff list
+-   update restaurants
+    -   refactor rendering owned restaurants
+    -   render restaurants where users work
+-   finish frontend authority control
+
+todo
+
+-   To add menu builder no-cateogory menuItems
 -   To finish deployment
+
+*   To add img upload(menu and avatar)
+*   To finish QRCode generator
+*   To Improve Myprofile UI

@@ -19,6 +19,14 @@ const CategoryPie = ({ data, categories }) => {
     for (let [key, val] of Object.entries(groupByCategory)) {
       pieData.push({ x: categories[key], y: val / s })
     }
+  } else {
+    return (
+      <React.Fragment>
+        <span>Categories</span>
+        <br />
+        <span className="badge badge-warning">No Data</span>
+      </React.Fragment>
+    )
   }
 
   return (
@@ -57,7 +65,7 @@ const CategoryPie = ({ data, categories }) => {
                       return {
                         style: Object.assign({}, props.style, {
                           stroke: '#39fd5a',
-                          strokeWidth: 5,
+                          strokeWidth: ({ datum }) => 1 + datum.y * 20,
                         }),
                       }
                     },

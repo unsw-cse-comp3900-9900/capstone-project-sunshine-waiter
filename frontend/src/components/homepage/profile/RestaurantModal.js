@@ -3,7 +3,6 @@ import { Modal } from 'antd'
 import {
   createRestaurant,
   updateRestaurant,
-  getRestaurants,
 } from '../../apis/actions/restaurants'
 import { getCookie } from '../../authenticate/Cookies'
 
@@ -14,7 +13,7 @@ class RestaurantModal extends React.Component {
   }
 
   onSubmit = async e => {
-    const { updateRestaurants, editingRestaurant } = this.props
+    const { editingRestaurant } = this.props
     e.preventDefault()
     if (editingRestaurant !== null) {
       await updateRestaurant(
@@ -26,7 +25,6 @@ class RestaurantModal extends React.Component {
       await createRestaurant(getCookie('token'), this.state)
     }
 
-    getRestaurants(getCookie('token'), updateRestaurants)
     this.props.onCancel()
   }
 

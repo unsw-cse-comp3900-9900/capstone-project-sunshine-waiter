@@ -8,6 +8,23 @@ import {
 import { groupBy } from '../../Waiter/Dishes'
 
 const PopularItems = ({ data }) => {
+  if (!data.length)
+    return (
+      <React.Fragment>
+        <span>Sales Trend</span>
+        <br />
+        <span className="badge badge-warning">No Data</span>
+      </React.Fragment>
+    )
+  if (data.length < 4) {
+    return (
+      <React.Fragment>
+        <span>Sales Trend</span>
+        <br />
+        <span className="badge badge-warning">Too Little Data</span>
+      </React.Fragment>
+    )
+  }
   const groupByItem = groupBy(data, 'name')
   let barData = []
   for (let [name, group] of groupByItem) {

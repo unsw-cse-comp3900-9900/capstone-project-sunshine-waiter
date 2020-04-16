@@ -4,8 +4,6 @@ const io = require('socket.io')(http)
 const PORT = 5000
 const Restaurant = require('./models/restaurant.model')
 
-const author = require('./auth/authorization')
-
 const arrayToObj = (array) => {
   let result = {}
   for (let item of array) {
@@ -38,58 +36,8 @@ const { dishes, requests } = require('./fakeData')
 const onConnection = (anonymousClient) => {
   console.log('Unknow User ' + anonymousClient.id + ' connected!')
 
-  anonymousClient.on('authenticate', async (data) => {
-    const { jwt, restaurantId, _id, type, password } = data
-
-    // validate user input
-    const { userId, error } = getIdFromJWT(jwt)
-    if (error) {
-      //reject
-    }
-    const { restaurant } = await Restaurant.findById(restaurantId)
-    if (!restaurant) {
-      //reject
-    }
-    const canConnectToRestaurant = true // to be discussed
-
-    const canAccessCook = isGranted(
-      userId,
-      restaurant,
-      author.actions.update,
-      author.resource.cooking_queue
-    )
-    const canAccessWaiter = isGranted(
-      userId,
-      restaurant,
-      author.actions.update,
-      author.resource.serving_queue
-    )
-    const canAccessorder = isGranted(
-      userId,
-      restaurant,
-      author.actions.update,
-      author.resource.order
-    )
-
-    // assume steve is manager
-    if (canConnectToRestaurant) {
-      console.log(type + ' ' + _id + ' authenticated!')
-      // start connection
-      {
-        if (canAccessCook) {
-          // true
-          // add listener on cook update
-        }
-        if (canAccessWaiter) {
-          // true
-          // add listener on waiter update
-        }
-        if (canAccessorder) {
-          // true
-          // add listener on order update
-        }
-      }
-    }
+  anonymousClient.on('authenticate', (data) => {
+    const { restaurantId, _id, type, password } = data
 
     //skip authenticate
     var auth = true
@@ -120,14 +68,14 @@ const onConnection = (anonymousClient) => {
           socket.on('update dish', (dish) => {
             // dish served or fail send from waiter, server need to update the db
             // update db
-            console.log(dish)
+
             dishes[dish._id] = dish
             nsp.to('waiter').emit('update dish', dish) // let all other waiter know
             nsp.to('cook').emit('update dish', dish)
           })
           socket.on('update request', (request) => {
             // update db
-            console.log(request)
+
             requests[request._id] = request
             nsp.to('waiter').emit('update request', request)
           })

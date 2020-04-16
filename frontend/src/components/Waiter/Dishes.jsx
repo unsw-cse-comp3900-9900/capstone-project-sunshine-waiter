@@ -15,7 +15,7 @@ export const groupBy = (array, key) => {
   return array.reduce((result, currentValue) => {
     // If an array already present for key, push it to the array. Else create an array and push the object
     let tmp = result.get(currentValue[key]) || []
-    tmp.push(currentValue)
+    tmp.push({ ...currentValue, key: currentValue._id })
     result.set(currentValue[key], tmp)
     // Return the current iteration `result` value, this will be taken as next iteration `result` value and accumulate
     return result
@@ -164,7 +164,7 @@ class RenderDishes extends React.Component {
   renderSingleDish(dish) {
     const renderedDish = (
       <div className="dishBox" key={dish._id}>
-        <div className="dishName">{dish.menuItem.title}</div>
+        <div className="dishName">{dish.menuItem.name}</div>
         <div>{new Date(dish.readyTime).toLocaleTimeString()}</div>
         <div className="buttonBox">
           {dish.status === SERVING && <div>Serving...</div>}
@@ -225,7 +225,6 @@ class RenderDishes extends React.Component {
   render() {
     const dishList = this.props.dishList
     const dishListGroupedByTableId = groupBy(dishList, 'placedBy')
-    console.log(dishListGroupedByTableId)
     let result = []
     for (let [tableId, orderItems] of dishListGroupedByTableId) {
       const dishes = orderItems.map(dish => this.renderSingleDish(dish))
@@ -245,7 +244,7 @@ class RenderFinished extends React.Component {
   renderSingleDish(dish) {
     return (
       <div className="dishBox" key={dish._id}>
-        <div className="dishName">{dish.menuItem.title}</div>
+        <div className="dishName">{dish.menuItem.name}</div>
         <div>{new Date(dish.serveTime).toLocaleTimeString()}</div>
         <div className="buttonBox">
           <Tooltip title="reset">

@@ -10,31 +10,10 @@ import Manager from './components/manager/Manager'
 import NotFound from './components/NotFound'
 
 class App extends React.Component {
-  //I think reason is when using a tag, it freshes when hitting the page url, so state got freshed back to init
-  //prolem is I used a tag in Myprofile
-  state = {
-    restaurants: [],
-  }
-
-  updateRestaurants = (restaurants = []) => {
-    this.setState({
-      restaurants: restaurants,
-    })
-  }
-
   render() {
     return (
       <Switch>
-        <Route
-          exact
-          path="/"
-          children={
-            <Homepage
-              updateRestaurants={this.updateRestaurants}
-              restaurants={this.state.restaurants}
-            />
-          }
-        />
+        <Route exact path="/" children={<Homepage />} />
         <Route
           exact
           path="/restaurants/:id"

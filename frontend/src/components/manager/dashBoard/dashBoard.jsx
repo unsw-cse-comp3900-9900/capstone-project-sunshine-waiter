@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Affix } from 'antd'
 import SalesChart from './salesChart'
 import PopularItems from './popularItems'
 import CategoryPie from './categoryPie'
@@ -11,13 +12,14 @@ import { groupBy } from '../../Waiter/Dishes'
 import './dashBoard.css'
 import TotalSale from './totalSale'
 import OrderAmount from './orderAmount'
+import OrderTable from './orderTable'
 
 class Dashboard extends Component {
   constructor(props) {
     super(props)
     this.state = {
       orderItems: [],
-      categories: [],
+      categories: {},
       data: [],
       zoomDomain: {},
     }
@@ -38,13 +40,15 @@ class Dashboard extends Component {
   getOrderItems = async () => {
     const { id } = this.props.match.params
     const orderItems = await getAllOrderItems(getCookie('token'), id)
-    const sorted = orderItems.sort(
-      (a, b) => new Date(a.serveTime) - new Date(b.serveTime)
-    )
-    const end = new Date(sorted[sorted.length - 1].serveTime)
-    const start = new Date(end - 30 * 24 * 60 * 60 * 1000)
-    const zoomDomain = { x: [start, end] }
-    this.setState({ orderItems: sorted, zoomDomain })
+    if (orderItems.length) {
+      const sorted = orderItems.sort(
+        (a, b) => new Date(a.serveTime) - new Date(b.serveTime)
+      )
+      const end = new Date(sorted[sorted.length - 1].serveTime)
+      const start = new Date(end - 30 * 24 * 60 * 60 * 1000)
+      const zoomDomain = { x: [start, end] }
+      this.setState({ orderItems: sorted, zoomDomain })
+    }
   }
 
   getCategories = async () => {
@@ -87,19 +91,22 @@ class Dashboard extends Component {
 
   render() {
     const { data, zoomDomain, categories } = this.state
+
     const selected = this.selectedOrderItems()
     return (
       <React.Fragment>
         <div className="container">
-          <div className="row">
-            <div className="col-sm chartCard">
-              <TimeSelector
-                data={data}
-                zoomDomain={zoomDomain}
-                handleZoom={this.handleZoom}
-              />
+          <Affix offsetTop={20}>
+            <div className="row">
+              <div className="col-sm chartCard blur">
+                <TimeSelector
+                  data={data}
+                  zoomDomain={zoomDomain}
+                  handleZoom={this.handleZoom}
+                />
+              </div>
             </div>
-          </div>
+          </Affix>
           <div className="row">
             <div className="col-sm chartCard">
               <TotalSale data={data} zoomDomain={zoomDomain} />
@@ -123,6 +130,11 @@ class Dashboard extends Component {
             </div>
             <div className="col-sm chartCard">
               <PopularItems data={selected} />
+            </div>
+          </div>
+          <div className="row">
+            <div className="col-sm">
+              <OrderTable data={selected} />
             </div>
           </div>
         </div>
