@@ -1,3 +1,6 @@
+import jwtDecode from 'jwt-decode'
+import { getCookie } from './authenticate/Cookies'
+
 //return true if a has exact some object not in b
 export const compareTwoArraysOfRestMetaObj = (a, b) => {
   const res = a.filter(
@@ -19,4 +22,35 @@ export const compareTwoArraysOfInvitationObj = (a, b) => {
       )
   )
   return res.length === 0
+}
+
+export const handleAuthority = ({ userGroups }, page, callback = () => {}) => {
+  const { owner, manager, cook, waiter } = userGroups
+  const userId = jwtDecode(getCookie('token'))._id
+
+  if (page === 'manager' || page === 'customer') {
+    if (owner.includes(userId) || manager.includes(userId)) {
+      callback()
+    }
+  }
+
+  if (page === 'cook') {
+    if (
+      owner.includes(userId) ||
+      manager.includes(userId) ||
+      cook.includes(userId)
+    ) {
+      callback()
+    }
+  }
+
+  if (page === 'waiter') {
+    if (
+      owner.includes(userId) ||
+      manager.includes(userId) ||
+      waiter.includes(userId)
+    ) {
+      callback()
+    }
+  }
 }
