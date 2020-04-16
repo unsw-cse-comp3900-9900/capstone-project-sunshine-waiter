@@ -22,12 +22,12 @@ class App extends React.Component {
         <Route
           exact
           path="/restaurants/:id/waiter"
-          children={props => <Waiter {...props} />}
+          render={props => <Waiter {...props} />}
         />
         <Route
           exact
           path="/restaurants/:id/cook"
-          children={props => <Kitchen {...props} />}
+          render={props => <Kitchen {...props} />}
         />
         <Route
           exact
