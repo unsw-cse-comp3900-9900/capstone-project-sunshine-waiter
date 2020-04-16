@@ -83,6 +83,10 @@ export const readMe = (token, callback = () => {}) => {
       .then(res => {
         callback(res.data.data)
       })
-      .catch(err => message.error(err.response.data.error, 3))
+      .catch(err => {
+        console.log({ err })
+        if (err.response !== undefined)
+          message.error(err.response.data.error, 3)
+      })
   }
 }

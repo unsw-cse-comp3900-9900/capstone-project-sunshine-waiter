@@ -1,5 +1,4 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
 import 'antd/dist/antd.css'
 import { Badge } from 'antd'
 
@@ -8,11 +7,12 @@ import { getCookie } from '../../authenticate/Cookies'
 import { deleteUser, updateUser, readMe } from '../../apis/actions/users'
 import { MODE } from './constant'
 import RestaurantModal from './RestaurantModal'
-import {
-  deleteRestaurant,
-  getRestaurants,
-} from '../../apis/actions/restaurants'
+import { deleteRestaurant } from '../../apis/actions/restaurants'
 import PendingInvitationModal from './PendingInvitationModal'
+import OwnedRestaurants from './OwnedRestaurants'
+import WorkAtRestaurants from './WorkAtRestaurants'
+import { Polling } from '../../apis/Polling'
+import { compareTwoArraysOfInvitationObj } from '../../services'
 
 class MyProfile extends React.Component {
   state = {
@@ -22,6 +22,33 @@ class MyProfile extends React.Component {
     editingRestaurant: null,
     inviationModalVisible: false,
     me: null,
+    pendingJobs: [],
+    currentJobs: null,
+  }
+
+  onSetPendingJobs = ({ currentJobs, pendingJobs }) => {
+    if (this.state.currentJobs === null) {
+      this.setState({
+        currentJobs,
+      })
+    } else if (
+      !compareTwoArraysOfInvitationObj(this.state.currentJobs, currentJobs) ||
+      !compareTwoArraysOfInvitationObj(currentJobs, this.state.currentJobs)
+    ) {
+      this.setState({
+        currentJobs,
+      })
+    }
+
+    //update only when pendingJobs are different
+    if (
+      !compareTwoArraysOfInvitationObj(this.state.pendingJobs, pendingJobs) ||
+      !compareTwoArraysOfInvitationObj(pendingJobs, this.state.pendingJobs)
+    ) {
+      this.setState({
+        pendingJobs,
+      })
+    }
   }
 
   onSetMe = data => {
@@ -31,8 +58,16 @@ class MyProfile extends React.Component {
     })
   }
 
+  onSetEditingRestaurant = param => {
+    this.setState({ editingRestaurant: param })
+  }
+
   UNSAFE_componentWillMount = async () => {
     await readMe(getCookie('token'), this.onSetMe)
+  }
+
+  componentDidMount = () => {
+    Polling(timer => readMe(getCookie('token'), this.onSetPendingJobs), 4000)
   }
 
   renderViewModeBasic = name => {
@@ -114,44 +149,8 @@ class MyProfile extends React.Component {
     )
   }
 
-  onFetchNewRestaurantsList = async () => {
-    getRestaurants(getCookie('token'), this.props.updateRestaurants)
-  }
-
   onDeleteRestaurant = async id => {
-    await deleteRestaurant(
-      getCookie('token'),
-      id,
-      this.onFetchNewRestaurantsList
-    )
-  }
-
-  renderRestaurantsLists = () => {
-    const { restaurants } = this.props
-
-    //DO NOT USE <A> TAG, IT WILL RELOAD THE PAGE AND MAKE THE STATE BACK INITIAL STATE IN App.js
-    if (restaurants && restaurants.length > 0) {
-      return restaurants.map(({ _id, name, description }) => (
-        <li className="list" key={_id}>
-          {name}
-          <span onClick={() => this.onDeleteRestaurant(_id)}>
-            <i className="trash alternate outline icon right clickable" />
-          </span>
-          <span
-            onClick={() => {
-              this.showModal()
-              this.setState({ editingRestaurant: { _id, name, description } })
-            }}
-          >
-            <i className="pencil alternate right clickable icon" />
-          </span>
-          <Link to={'/restaurants/' + _id} name={name}>
-            <i className="caret square right icon" />
-          </Link>
-        </li>
-      ))
-    }
-    return null
+    await deleteRestaurant(getCookie('token'), id)
   }
 
   renderViewModeBasicIcons = () => {
@@ -162,7 +161,7 @@ class MyProfile extends React.Component {
           style={{ marginRight: '5px' }}
           onClick={this.showInvitationModal}
         >
-          <Badge count={5}>
+          <Badge count={this.state.pendingJobs.length}>
             <i className="icon mail" />
           </Badge>
         </span>
@@ -177,7 +176,7 @@ class MyProfile extends React.Component {
   }
 
   render() {
-    const { updateState, updateRestaurants } = this.props
+    const { updateState } = this.props
     if (this.state.me === null) {
       return null
     }
@@ -188,6 +187,12 @@ class MyProfile extends React.Component {
         <PendingInvitationModal
           visible={this.state.inviationModalVisible}
           onCancel={this.onCloseInvitationModal}
+          pendingJobs={this.state.pendingJobs}
+        />
+        <RestaurantModal
+          visible={this.state.modalVisible}
+          onCancel={this.handleModalCancel}
+          editingRestaurant={this.state.editingRestaurant}
         />
         <div className="basic">
           <div className="name">
@@ -203,27 +208,13 @@ class MyProfile extends React.Component {
           <i className="tag icon"></i>
           Dashboard
         </h4>
-        <RestaurantModal
-          visible={this.state.modalVisible}
-          onCancel={this.handleModalCancel}
-          updateRestaurants={updateRestaurants}
-          editingRestaurant={this.state.editingRestaurant}
+        <OwnedRestaurants
+          showModal={this.showModal}
+          onDeleteRestaurant={this.onDeleteRestaurant}
+          onSetEditingRestaurant={this.onSetEditingRestaurant}
         />
-        <div className="my-restaurant">
-          <h3>
-            <i className="coffee icon" />
-            My Restaurants
-            <span
-              onClick={() => {
-                this.setState({ editingRestaurant: null })
-                this.showModal()
-              }}
-            >
-              <i className="plus circle icon right" />
-            </span>
-          </h3>
-          {this.renderRestaurantsLists()}
-        </div>
+        <span className="ui horizontal divider" />
+        <WorkAtRestaurants currentJobs={this.state.currentJobs} />
         <div className="footer">
           <div
             className="ui red button"

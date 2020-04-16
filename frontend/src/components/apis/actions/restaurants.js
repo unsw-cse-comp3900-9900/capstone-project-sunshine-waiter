@@ -19,7 +19,9 @@ export const getRestaurants = (token, callback = () => {}) => {
         if (err === undefined) {
           message.warning('Backend server is dnow!', 3)
         } else {
-          message.error(err.response.data.error, 3)
+          console.log('rs', { err })
+          if (err.response !== undefined)
+            message.error(err.response.data.error, 3)
         }
       })
   }
@@ -39,9 +41,11 @@ export const getSingleRestaurant = (token, id, callback = () => {}) => {
       })
       .catch(err => {
         if (err === undefined) {
-          message.warning('Backend server is dnow!', 3)
+          message.warning('Backend server is down!', 3)
         } else {
-          message.error(err.response.data.error, 3)
+          console.log('rashdai', { err })
+          if (err.response !== undefined)
+            message.error(err.response.data.error, 3)
         }
       })
   }
@@ -80,8 +84,8 @@ export const deleteRestaurant = (token, id, callback = () => {}) => {
       },
     }
     BaseProvider.delete('/restaurants/' + id, config)
-      .then(async res => {
-        await callback()
+      .then(res => {
+        // await callback()
 
         message.success(res.data.message, 3)
       })

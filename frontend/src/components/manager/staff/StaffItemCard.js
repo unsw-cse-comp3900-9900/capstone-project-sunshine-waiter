@@ -28,8 +28,10 @@ class StaffItemCard extends React.Component {
       <div className="item item-box">
         <img id="avater" src={require('../../homepage/SWLogo.png')} />
         <div className="middle aligned">
-          <h4>{name}</h4>
-          <small className="email">email: {email}</small>
+          <h4 style={{ fontSize: '80%' }}>{name}</h4>
+          <small className="email" style={{ fontSize: '70%' }}>
+            email: {email}
+          </small>
         </div>
       </div>
     )
