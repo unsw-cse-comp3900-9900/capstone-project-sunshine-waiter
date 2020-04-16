@@ -1,175 +1,183 @@
 const Joi = require('joi')
 const _ = require('lodash')
-
-const OrderItem = require('../models/orderItem.model')
+const mongoose = require('mongoose')
+const isValid = require('mongoose').Types.ObjectId.isValid
+const { OrderItem, allowedStatus } = require('../models/orderItem.model')
+const MenuItem = require('../models/menuItem.model')
+const Order = require('../models/order.model')
 const { findMenu } = require('./menu.controller')
-
-// present data to client side
-const present = (obj) => {
-  const { __v, ...data } = obj._doc
-  return data
-}
-
-// create order { name, price, description, note  }
-createOrderItem = async (req, res, next) => {
-  try {
-    // validate input ( params, body )
-    const { error } = validateCreateDataFormat(req.body)
-    if (error) return res.status(400).json({ error: error.details[0].message })
-    const menu = await findMenu(req, res)
-
-    // create order
-    order = new OrderItem({
-      ..._.pick(req.body, ['name', 'price', 'description', 'note']),
-      menu: menu._id,
-    })
-    await order.save()
-
-    res.status(201).json({ data: present(order) })
-  } catch (error) {
-    next(error)
-  }
-}
+const { findOrder } = require('./order.controller')
+const { findRestaurant } = require('./restaurant.controller')
+const { present } = require('../util')
 
 readOrderItem = async (req, res, next) => {
   try {
-    // find
-    const orderId = req.params.orderId
-    const order = await OrderItem.findById(orderId)
-    if (!order)
-      return res.status(404).json({ error: 'OrderItem does not exist' })
-
-    // res
-    res.status(201).json({ data: present(order) })
-  } catch (error) {
-    next(error)
-  }
+    const { orderItemId } = req.body
+    if (!orderItemId)
+      throw { httpCode: 400, message: 'URL missing orderItemId' }
+    const restaurant = await findRestaurant(req)
+    const ret = await OrderItem.findById(orderItemId)
+    res.json({ data: ret })
+  } catch (error) {}
 }
 
-readMany = async (req, res, next) => {
+readAllItemInRestaurant = async (req, res, next) => {
   try {
-    const menu = await findMenu(req, res)
-    const orders = await OrderItem.find({ menu: menu._id })
-
-    res.json({ data: orders.map((v) => present(v)) })
-  } catch (error) {
-    next(error)
-  }
-}
-
-// update scope: { name, description }
-updateOrderItem = async (req, res, next) => {
-  try {
-    // find
-    const orderId = req.params.orderId
-    const order = await OrderItem.findById(orderId)
-    if (!order)
-      return res.status(404).json({ error: 'OrderItem does not exist' })
-
-    // validate new data
-    const { name, description } = req.body
-    const { error } = validateUpdateDataFormat({ name, description })
-    if (error) return res.status(400).json({ error: error.details[0].message })
-
-    // update
-    order.name = name || order.name
-    order.description = description || order.description
-    await order.save()
-
-    // res
-    return res.json({
-      success: true,
-      data: present(order),
-      message: 'OrderItem updated.',
-    })
-  } catch (error) {
-    next(error)
-  }
-}
-
-deleteOrderItem = async (req, res, next) => {
-  try {
-    const orderId = req.params.orderId
-    const order = await OrderItem.findById(orderId)
-    if (!order)
-      return res
-        .status(204)
-        .send('OrderItem has been deleted or does not exist at all.')
-
-    await OrderItem.findByIdAndDelete(orderId)
-
-    return res.json({
-      success: true,
-      data: present(order),
-      message: 'OrderItem deleted.',
-    })
-  } catch (error) {
-    next(error)
-  }
-}
-
-deleteMany = async (req, res, next) => {
-  try {
-    const id_list = req.body.items
-    return res.json({
-      success: false,
-      message: `DeleteMany is not yet implemented. You can perform Delete on each id of ${id_list}`,
-    })
+    const restaurant = await findRestaurant(req)
+    const objs = await OrderItem.find({ restaurant: restaurant._id })
+    res.json({ data: objs })
   } catch (error) {
     next(error)
   }
 }
 
 /*
-ret: 
-- new object if success
-- { error: 'error messsage' } if fail
+precond:
+- on every menuItemId from req.orderItemsData, exist menuItem in DB with such id 
 */
-updateStatus = async (id, dataToUpdate) => {
+createOrderItems = async (req, res, next, order) => {
   try {
-    // 1. validtate input
-    const orderItem = await OrderItem.findById(id)
-    if (!orderItem) {
-      // const ret = {error : `orderItem ${id} not found`}
-    }
-    const { error } = validateUpdateDataFormat(dataToUpdate)
+    await validateOrderItemsData(req, res, next)
 
-    // 2. update data
-    await updateItem(dataToUpdate)
-
-    // 3. return data
+    const { orderItemsData, placedBy } = req.body
+    const docs = orderItemsData.map((orderItemData) => {
+      return {
+        ..._.pick(orderItemData, [
+          'menuItem',
+          'price',
+          'name',
+          'amount',
+          'notes',
+        ]),
+        order: order._id,
+        placedBy,
+        restaurant: order.restaurant,
+      }
+    })
+    await OrderItem.create(docs)
   } catch (error) {
-    return error
+    next(error)
   }
 }
 
-function validateCreateDataFormat(order) {
-  const schema = {
+validateOrderItemsData = async (req, res, next) => {
+  const { placedBy } = req.body
+
+  // Incomplete, not including checkInteger(amount) , checkObjectId(menuItem)
+  const basicSchema = {
     name: Joi.string().max(50).required(),
     price: Joi.number().required(),
-    description: Joi.string().max(2047),
-    note: Joi.string().max(255),
+    amount: Joi.number().integer().positive().required(),
+    notes: Joi.string().max(255),
+    placedBy: Joi.string().max(255),
   }
 
-  return Joi.validate(order, schema)
+  const validateBasic = (orderItemData) => {
+    const data = {
+      ..._.pick(orderItemData, ['price', 'name', 'amount', 'notes']),
+      placedBy,
+    }
+    const { error } = Joi.validate(data, basicSchema)
+
+    if (error) {
+      throw {
+        httpCode: 400,
+        message: error.details[0].message,
+        problematicData: orderItemData,
+      }
+    }
+  }
+
+  const currentMenu = await findMenu(req, res)
+  const validateMenuItemRef = async (orderItemData) => {
+    const objectId = orderItemData.menuItem
+
+    const isValid = mongoose.Types.ObjectId.isValid
+    if (!isValid(objectId)) {
+      throw {
+        httpCode: 400,
+        message: `${objectId} is not a valid objectId.`,
+        problematicData: orderItemData,
+      }
+    }
+
+    const menuItem = await MenuItem.findById(objectId)
+
+    if (!menuItem || !currentMenu._id.equals(menuItem.menu)) {
+      throw {
+        httpCode: 400,
+        message: `Menuitem ${objectId} not found. It is not refering to an existing menuItem in target restaurant.`,
+        problematicData: orderItemData,
+      }
+    }
+  }
+
+  try {
+    const { orderItemsData } = req.body
+    if (!Array.isArray(orderItemsData) || !orderItemsData.length) {
+      throw {
+        httpCode: 400,
+        message:
+          'Request body shall contain orderItemsData. It is an array containing data for creating orderItems.',
+      }
+    }
+
+    orderItemsData.forEach((orderItemData) => {
+      validateBasic(orderItemData)
+    })
+
+    const validatePromises = orderItemsData.map((orderItemData) =>
+      (async () => await validateMenuItemRef(orderItemData))()
+    )
+    await Promise.all(validatePromises)
+    return
+  } catch (error) {
+    next(error)
+  }
 }
 
-function validateUpdateDataFormat(order) {
-  const schema = {
-    name: Joi.string().min(1).max(50),
-    description: Joi.string().min(1).max(2047),
-    // TODO:  serveTime
-  }
+/*
+precond:
+exist order with req.params.orderId 
+*/
+readItemsInOrder = async (req, res, next) => {
+  const order = await findOrder(req, res, next)
+  const objs = await OrderItem.find({ order: order._id })
+  res.json({ data: objs.map((v) => present(v)) })
+}
 
-  return Joi.validate(order, schema)
+/*
+return 
+- { error: String } when fail
+- { success: true } when success
+*/
+updateItemStatus = async (restaurantId, itemId, newStatus) => {
+  if (!allowedStatus[newStatus])
+    return { error: `newStatus ${newStatus} is not valid` }
+
+  const item = await findItem(restaurantId, itemId)
+  item.status = newStatus
+  await item.save()
+  return { success: true }
+}
+
+findItem = async (restaurantId, itemId) => {
+  if (!itemId || !isValid(itemId))
+    return { error: `itemId ${itemId} is not valid` }
+  if (!restaurantId || !isValid(restaurantId))
+    return { error: `restaurantId ${restaurantId} is not valid` }
+  const item = await OrderItem.findById(itemId)
+  if (!item) return { error: `orderItem ${itemId} not found` }
+  const order = await Order.findById(item.order)
+  if (!order) return { error: `order not found` }
+  if (!order.restaurant.equals(restaurantId))
+    return { error: `item ${itemId} is not in current restaurant!` }
+  return item
 }
 
 module.exports = {
-  createOrderItem,
+  createOrderItems,
+  readItemsInOrder,
   readOrderItem,
-  updateOrderItem,
-  deleteOrderItem,
-  readMany,
-  deleteMany,
-  updateStatus,
+  readAllItemInRestaurant,
 }

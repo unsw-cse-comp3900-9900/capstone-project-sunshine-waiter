@@ -9,7 +9,7 @@
 			"name": "/users",
 			"item": [
 				{
-					"name": "user register",
+					"name": "/users",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -22,7 +22,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\":\"new user\",\n\t\"email\":\"newemail2@new.com\",\n\t\"password\":\"new-password\"\n}",
+							"raw": "{\n  \"name\": \"Cook - Jason\",\n  \"email\": \"jason@sw.com\",\n  \"password\": \"password_of_Jason\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -30,22 +30,19 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8000/users/",
-							"protocol": "http",
+							"raw": "{{baseURL}}/users",
 							"host": [
-								"localhost"
+								"{{baseURL}}"
 							],
-							"port": "8000",
 							"path": [
-								"users",
-								""
+								"users"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "user register - invalid data",
+					"name": "/users/login",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -58,7 +55,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\":\"hbxzknight\",\n\t\"email\":\"hbxzkni\",\n\t\"password\":\"hbxzknight_password\"\n}",
+							"raw": "{\n      \"name\": \"Jenette Carter\",\n      \"email\": \"jenette.carter@skycenta.club\",\n      \"password\": \"password_of_Ian\"\n    }",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -66,48 +63,10 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8000/users/",
-							"protocol": "http",
+							"raw": "{{baseURL}}/users/login",
 							"host": [
-								"localhost"
+								"{{baseURL}}"
 							],
-							"port": "8000",
-							"path": [
-								"users",
-								""
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "user login",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"name": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n\t\"name\":\"new user\",\n\t\"email\":\"new4@new.com\",\n\t\"password\":\"new-password\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:8000/users/login",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8000",
 							"path": [
 								"users",
 								"login"
@@ -117,56 +76,97 @@
 					"response": []
 				},
 				{
-					"name": "user login - user not exist",
+					"name": "/users/:userId",
 					"request": {
-						"method": "POST",
+						"method": "GET",
 						"header": [
 							{
-								"key": "Content-Type",
-								"name": "Content-Type",
+								"key": "x-auth-token",
+								"value": "{{active-jwt}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/users/{{userId}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"{{userId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user read \"me\"",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-auth-token",
 								"type": "text",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n\t\"email\":\"non-exist@mail.com\",\n\t\"password\":\"pwoasfdfdfsdf\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:8000/users/login",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8000",
-							"path": [
-								"users",
-								"login"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "user login - wrong password",
-					"request": {
-						"method": "POST",
-						"header": [
+								"value": "{{second-jwt}}"
+							},
 							{
-								"key": "Content-Type",
-								"name": "Content-Type",
+								"key": "x-auth-token",
+								"value": "{{active-jwt}}",
 								"type": "text",
-								"value": "application/json"
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/users/me",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "developer read all user",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"type": "text",
+								"value": "{{active-jwt}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseURL}}/admin/users",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"admin",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/users/:userId",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "{{active-jwt}}",
+								"type": "text"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"email\":\"asdfsasdfdfe@acom\",\n\t\"password\":\"wrong-password\"\n}",
+							"raw": "{\n  \"name\": \"Cook - Jason\",\n  \n  \"password\": \"aapassword_of_Jason\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -174,93 +174,13 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8000/users/login",
-							"protocol": "http",
+							"raw": "{{baseURL}}/users/{{userId}}",
 							"host": [
-								"localhost"
+								"{{baseURL}}"
 							],
-							"port": "8000",
 							"path": [
 								"users",
-								"login"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "200",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "x-auth-token",
-								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTZmMjk4NTQ3MjBjYzAwYjg2NDZhYzEiLCJpYXQiOjE1ODQ1MTEzMDUsImV4cCI6MTU4NDU5NzcwNX0.XMEgmSkSBJ1BjRezcfYeNt7jLbFVZJhTZRjCVfZgGUQ",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "http://localhost:8000/users/5e6f29854720cc00b8646ac1",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8000",
-							"path": [
-								"users",
-								"5e6f29854720cc00b8646ac1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "401 read: basic user - another user",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "x-auth-token",
-								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTZmMjk4NTQ3MjBjYzAwYjg2NDZhYzEiLCJpYXQiOjE1ODQ1MTEzMDUsImV4cCI6MTU4NDU5NzcwNX0.XMEgmSkSBJ1BjRezcfYeNt7jLbFVZJhTZRjCVfZgGUQ",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "http://localhost:8000/users/5e6f29854720cc00b8646ac1",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8000",
-							"path": [
-								"users",
-								"5e6f29854720cc00b8646ac1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "200 read: admin user - another user",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "x-auth-token",
-								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTZmMjk4NTQ3MjBjYzAwYjg2NDZhYzEiLCJpYXQiOjE1ODQ1MTEzMDUsImV4cCI6MTU4NDU5NzcwNX0.XMEgmSkSBJ1BjRezcfYeNt7jLbFVZJhTZRjCVfZgGUQ",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "http://localhost:8000/users/5e6f29854720cc00b8646ac1",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8000",
-							"path": [
-								"users",
-								"5e6f29854720cc00b8646ac1"
+								"{{userId}}"
 							]
 						}
 					},
@@ -297,315 +217,24 @@
 					]
 				},
 				{
-					"name": "update profile - 200 user update own",
-					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "x-auth-token",
-								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTZmMjk4NTQ3MjBjYzAwYjg2NDZhYzEiLCJpYXQiOjE1ODQ1MTEzMDUsImV4cCI6MTU4NDU5NzcwNX0.XMEgmSkSBJ1BjRezcfYeNt7jLbFVZJhTZRjCVfZgGUQ",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n\t\"name\":\"new mew user name\",\n\t\"email\":\"new-email-12@gmail.com\",\n\t\"password\":\"pwodfdfsdfasfsff\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:8000/users/5e6f29854720cc00b8646ac1",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8000",
-							"path": [
-								"users",
-								"5e6f29854720cc00b8646ac1"
-							]
-						}
-					},
-					"response": [
-						{
-							"name": "read profile - 200 admin user access another user",
-							"originalRequest": {
-								"method": "GET",
-								"header": [
-									{
-										"key": "x-auth-token",
-										"type": "text",
-										"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTZmMjk4NTQ3MjBjYzAwYjg2NDZhYzEiLCJpYXQiOjE1ODQ1MTEzMDUsImV4cCI6MTU4NDU5NzcwNX0.XMEgmSkSBJ1BjRezcfYeNt7jLbFVZJhTZRjCVfZgGUQ"
-									}
-								],
-								"url": {
-									"raw": "http://localhost:8000/users/5e6f29854720cc00b8646ac1",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "8000",
-									"path": [
-										"users",
-										"5e6f29854720cc00b8646ac1"
-									]
-								}
-							},
-							"_postman_previewlanguage": null,
-							"header": null,
-							"cookie": [],
-							"body": null
-						}
-					]
-				},
-				{
-					"name": "update profile - 401 user update other's",
-					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "x-auth-token",
-								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTZmMjk4NTQ3MjBjYzAwYjg2NDZhYzEiLCJpYXQiOjE1ODQ1MTEzMDUsImV4cCI6MTU4NDU5NzcwNX0.XMEgmSkSBJ1BjRezcfYeNt7jLbFVZJhTZRjCVfZgGUQ",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "http://localhost:8000/users/5e6f29854720cc00b8646ac1",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8000",
-							"path": [
-								"users",
-								"5e6f29854720cc00b8646ac1"
-							]
-						}
-					},
-					"response": [
-						{
-							"name": "read profile - 200 admin user access another user",
-							"originalRequest": {
-								"method": "GET",
-								"header": [
-									{
-										"key": "x-auth-token",
-										"type": "text",
-										"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTZmMjk4NTQ3MjBjYzAwYjg2NDZhYzEiLCJpYXQiOjE1ODQ1MTEzMDUsImV4cCI6MTU4NDU5NzcwNX0.XMEgmSkSBJ1BjRezcfYeNt7jLbFVZJhTZRjCVfZgGUQ"
-									}
-								],
-								"url": {
-									"raw": "http://localhost:8000/users/5e6f29854720cc00b8646ac1",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "8000",
-									"path": [
-										"users",
-										"5e6f29854720cc00b8646ac1"
-									]
-								}
-							},
-							"_postman_previewlanguage": null,
-							"header": null,
-							"cookie": [],
-							"body": null
-						}
-					]
-				},
-				{
-					"name": "update profile - 200 admin user update others",
-					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "x-auth-token",
-								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTZmMjk4NTQ3MjBjYzAwYjg2NDZhYzEiLCJpYXQiOjE1ODQ1MTEzMDUsImV4cCI6MTU4NDU5NzcwNX0.XMEgmSkSBJ1BjRezcfYeNt7jLbFVZJhTZRjCVfZgGUQ",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "http://localhost:8000/users/5e6f29854720cc00b8646ac1",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8000",
-							"path": [
-								"users",
-								"5e6f29854720cc00b8646ac1"
-							]
-						}
-					},
-					"response": [
-						{
-							"name": "read profile - 200 admin user access another user",
-							"originalRequest": {
-								"method": "GET",
-								"header": [
-									{
-										"key": "x-auth-token",
-										"type": "text",
-										"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTZmMjk4NTQ3MjBjYzAwYjg2NDZhYzEiLCJpYXQiOjE1ODQ1MTEzMDUsImV4cCI6MTU4NDU5NzcwNX0.XMEgmSkSBJ1BjRezcfYeNt7jLbFVZJhTZRjCVfZgGUQ"
-									}
-								],
-								"url": {
-									"raw": "http://localhost:8000/users/5e6f29854720cc00b8646ac1",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "8000",
-									"path": [
-										"users",
-										"5e6f29854720cc00b8646ac1"
-									]
-								}
-							},
-							"_postman_previewlanguage": null,
-							"header": null,
-							"cookie": [],
-							"body": null
-						}
-					]
-				},
-				{
-					"name": "delete profile - 200 user del own",
+					"name": "/users/:userId",
 					"request": {
 						"method": "DELETE",
 						"header": [
 							{
 								"key": "x-auth-token",
-								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTZmMjk4NTQ3MjBjYzAwYjg2NDZhYzEiLCJpYXQiOjE1ODQ1MTEzMDUsImV4cCI6MTU4NDU5NzcwNX0.XMEgmSkSBJ1BjRezcfYeNt7jLbFVZJhTZRjCVfZgGUQ",
+								"value": "{{active-jwt}}",
 								"type": "text"
 							}
 						],
 						"url": {
-							"raw": "http://localhost:8000/users/5e6f29854720cc00b8646ac1",
-							"protocol": "http",
+							"raw": "{{baseURL}}/users/{{userId}}",
 							"host": [
-								"localhost"
+								"{{baseURL}}"
 							],
-							"port": "8000",
 							"path": [
 								"users",
-								"5e6f29854720cc00b8646ac1"
-							]
-						}
-					},
-					"response": [
-						{
-							"name": "read profile - 200 admin user access another user",
-							"originalRequest": {
-								"method": "GET",
-								"header": [
-									{
-										"key": "x-auth-token",
-										"type": "text",
-										"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTZmMjk4NTQ3MjBjYzAwYjg2NDZhYzEiLCJpYXQiOjE1ODQ1MTEzMDUsImV4cCI6MTU4NDU5NzcwNX0.XMEgmSkSBJ1BjRezcfYeNt7jLbFVZJhTZRjCVfZgGUQ"
-									}
-								],
-								"url": {
-									"raw": "http://localhost:8000/users/5e6f29854720cc00b8646ac1",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "8000",
-									"path": [
-										"users",
-										"5e6f29854720cc00b8646ac1"
-									]
-								}
-							},
-							"_postman_previewlanguage": null,
-							"header": null,
-							"cookie": [],
-							"body": null
-						}
-					]
-				},
-				{
-					"name": "delete profile - 401 user del others",
-					"request": {
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "x-auth-token",
-								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTZmMjk4NTQ3MjBjYzAwYjg2NDZhYzEiLCJpYXQiOjE1ODQ1MTEzMDUsImV4cCI6MTU4NDU5NzcwNX0.XMEgmSkSBJ1BjRezcfYeNt7jLbFVZJhTZRjCVfZgGUQ",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "http://localhost:8000/users/5e6f29854720cc00b8646ac1",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8000",
-							"path": [
-								"users",
-								"5e6f29854720cc00b8646ac1"
-							]
-						}
-					},
-					"response": [
-						{
-							"name": "read profile - 200 admin user access another user",
-							"originalRequest": {
-								"method": "GET",
-								"header": [
-									{
-										"key": "x-auth-token",
-										"type": "text",
-										"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTZmMjk4NTQ3MjBjYzAwYjg2NDZhYzEiLCJpYXQiOjE1ODQ1MTEzMDUsImV4cCI6MTU4NDU5NzcwNX0.XMEgmSkSBJ1BjRezcfYeNt7jLbFVZJhTZRjCVfZgGUQ"
-									}
-								],
-								"url": {
-									"raw": "http://localhost:8000/users/5e6f29854720cc00b8646ac1",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "8000",
-									"path": [
-										"users",
-										"5e6f29854720cc00b8646ac1"
-									]
-								}
-							},
-							"_postman_previewlanguage": null,
-							"header": null,
-							"cookie": [],
-							"body": null
-						}
-					]
-				},
-				{
-					"name": "delete profile - 200 admin user del others",
-					"request": {
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "x-auth-token",
-								"value": "{{admin-token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "http://localhost:8000/users/5e6f29854720cc00b8646ac1",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8000",
-							"path": [
-								"users",
-								"5e6f29854720cc00b8646ac1"
+								"{{userId}}"
 							]
 						}
 					},
@@ -671,28 +300,195 @@
 			"name": "/restaurants",
 			"item": [
 				{
-					"name": "Get restaurants/restaurantId/",
+					"name": "restaurants/",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"type": "text",
+								"value": "{{active-jwt}}"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\":\"Beef rice nuddle 10\",\n\t\"description\":\"Gogogo\"\n}",
+							"options": {
+								"raw": {
+									"language": "javascript"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/restaurants/",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"restaurants",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "restaurants/:id",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
 					"request": {
 						"method": "GET",
 						"header": [
 							{
 								"key": "x-auth-token",
-								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZTY5YzFkMzAyNmI4MjAxMWJlMDcxZjIiLCJpYXQiOjE1ODQwMDgxNzF9.UZbOPxlJbAtg4g3YmIOJShhOBq1lQsl6kH25apnMMpw",
+								"value": "{{active-jwt}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
 								"type": "text"
 							}
 						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "javascript"
+								}
+							}
+						},
 						"url": {
-							"raw": "http://localhost:8000/api/restaurants/1234/home",
-							"protocol": "http",
+							"raw": "{{baseURL}}/restaurants/{{restaurantId}}",
 							"host": [
-								"localhost"
+								"{{baseURL}}"
 							],
-							"port": "8000",
 							"path": [
-								"api",
 								"restaurants",
-								"1234",
-								"home"
+								"{{restaurantId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "restaurants/  (read all of my restaurants)",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"type": "text",
+								"value": "{{active-jwt}}"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "javascript"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/restaurants",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"restaurants"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "restaurants/:id",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "{{active-jwt}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\":\"Beef ball with rice nuddle 1\",\n\t\"description\":\"Gogogo\"\n}",
+							"options": {
+								"raw": {
+									"language": "javascript"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/restaurants/{{restaurantId}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"restaurants",
+								"{{restaurantId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "restaurants/:id",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"type": "text",
+								"value": "{{active-jwt}}"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\":\"Duck Duck gooo\",\n\t\"description\":\"Not the famous one\"\n}",
+							"options": {
+								"raw": {
+									"language": "javascript"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/restaurants/{{restaurantId}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"restaurants",
+								"{{restaurantId}}"
 							]
 						}
 					},
@@ -700,6 +496,1134 @@
 				}
 			],
 			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "/restaurants/:rID/menus",
+			"item": [
+				{
+					"name": "/restaurants/:restaurantId/menus",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "{{active-jwt}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "javascript"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/restaurants/{{restaurantId}}/menus/",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"restaurants",
+								"{{restaurantId}}",
+								"menus",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/restaurants/:restaurantId/menus/public",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"type": "text",
+								"value": "asdf",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "javascript"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/restaurants/{{restaurantId}}/menus/public",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"restaurants",
+								"{{restaurantId}}",
+								"menus",
+								"public"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/restaurants/:restaurantId/menus",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"type": "text",
+								"value": "{{active-jwt}}"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"new menu name\",\n    \"description\": \"Man! write down my new description\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/restaurants/{{restaurantId}}/menus",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"restaurants",
+								"{{restaurantId}}",
+								"menus"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "/restaurants/:rID/categories",
+			"item": [
+				{
+					"name": "/restaurants/:rID/categories",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "{{active-jwt}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\":\"汤粉\",\n\t\"description\": \"各种好吃汤粉\",\n\t\"isPrivate\": false\n}",
+							"options": {
+								"raw": {
+									"language": "javascript"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/restaurants/{{restaurantId}}/categories",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"restaurants",
+								"{{restaurantId}}",
+								"categories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/restaurants/:rID/categories/",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"type": "text",
+								"value": "{{active-jwt}}"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "javascript"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/restaurants/{{restaurantId}}/categories/",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"restaurants",
+								"{{restaurantId}}",
+								"categories",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/restaurants/:rID/categories/public",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"type": "text",
+								"value": "{{active-jwt}}",
+								"disabled": true
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "javascript"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/restaurants/{{restaurantId}}/categories/public",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"restaurants",
+								"{{restaurantId}}",
+								"categories",
+								"public"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/restaurants/:rID/categories/:cID",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "{{active-jwt}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "javascript"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/restaurants/{{restaurantId}}/categories/5e8d4b79b1828f06a2e4b9e8",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"restaurants",
+								"{{restaurantId}}",
+								"categories",
+								"5e8d4b79b1828f06a2e4b9e8"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/restaurants/:rID/categories/:cID/public",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "{{active-jwt}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "javascript"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/restaurants/{{restaurantId}}/categories/5e8d4b79b1828f06a2e4b9e8/public",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"restaurants",
+								"{{restaurantId}}",
+								"categories",
+								"5e8d4b79b1828f06a2e4b9e8",
+								"public"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/restaurants/:rID/categories/:cID",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"type": "text",
+								"value": "{{active-jwt}}"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n      \"name\": \"nuddle version 2\",\n      \"isPrivate\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/restaurants/{{restaurantId}}/categories/5e8d48123638ce051cb91065",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"restaurants",
+								"{{restaurantId}}",
+								"categories",
+								"5e8d48123638ce051cb91065"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/restaurants/:rID/categories/:cID",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"type": "text",
+								"value": "{{active-jwt}}"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "javascript"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/restaurants/{{restaurantId}}/categories/5e8d48123638ce051cb91065",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"restaurants",
+								"{{restaurantId}}",
+								"categories",
+								"5e8d48123638ce051cb91065"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "/restaurants/:rID/menuItems",
+			"item": [
+				{
+					"name": "/restaurants/:rID/menuItems/",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "{{active-jwt}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\n\t\"categoryArray\":[\"5e86c14fb16672002fca91a9\"], \n\t\"name\":\"牛肉粿条汤 大\",\n\t\"description\": \"郑英杰最爱的潮式粿条\",\n\t\"note\": \"Available after 10:30am at participating restaurants\",\n\t\"price\": 25,\n\t\"isPrivate\": true\n}",
+							"options": {
+								"raw": {
+									"language": "javascript"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/restaurants/{{restaurantId}}/menuItems/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"restaurants",
+								"{{restaurantId}}",
+								"menuItems",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/restaurants/:rID/menuItems/",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"type": "text",
+								"value": "{{active-jwt}}"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"title\":\"Roseberry Sandwich\",\n\t\"description\": \"With roseberry and jam\",\n\t\"note\": \"Available after 10:30am at participating restaurants\",\n\t\"cost\": 20\n}",
+							"options": {
+								"raw": {
+									"language": "javascript"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/restaurants/{{restaurantId}}/menuItems/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"restaurants",
+								"{{restaurantId}}",
+								"menuItems",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/restaurants/:rID/menuItems/public",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"type": "text",
+								"value": "{{active-jwt}}"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"title\":\"Roseberry Sandwich\",\n\t\"description\": \"With roseberry and jam\",\n\t\"note\": \"Available after 10:30am at participating restaurants\",\n\t\"cost\": 20\n}",
+							"options": {
+								"raw": {
+									"language": "javascript"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/restaurants/{{restaurantId}}/menuItems/public",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"restaurants",
+								"{{restaurantId}}",
+								"menuItems",
+								"public"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/restaurants/:rID/menuItems/:mID",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "{{active-jwt}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "javascript"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/restaurants/{{restaurantId}}/menuItems/5e8bf29ba173ac06caf3b5f0",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"restaurants",
+								"{{restaurantId}}",
+								"menuItems",
+								"5e8bf29ba173ac06caf3b5f0"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/restaurants/:rID/menuItems/:mID/public",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"type": "text",
+								"value": "{{active-jwt}}"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "javascript"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/restaurants/{{restaurantId}}/menuItems/5e8bf29ba173ac06caf3b5f0/public",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"restaurants",
+								"{{restaurantId}}",
+								"menuItems",
+								"5e8bf29ba173ac06caf3b5f0",
+								"public"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/restaurants/:rID/menuItems/:mID",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"type": "text",
+								"value": "{{active-jwt}}"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"categoryArray\": [\"5e8d48123638ce051cb91065\"],\n\t\"name\": \"牛肉粿条汤 小\",\n    \"price\": 20,\n    \"description\": \"郑英杰最爱的潮式粿条\",\n    \"note\": \"Available after 10:30am at participating restaurants\",\n    \"isPrivate\": false\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/restaurants/{{restaurantId}}/menuItems/5e8bf29ba173ac06caf3b5f0",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"restaurants",
+								"{{restaurantId}}",
+								"menuItems",
+								"5e8bf29ba173ac06caf3b5f0"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/restaurants/:rID/menuItems/:mID",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"type": "text",
+								"value": "{{active-jwt}}"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"title\":\"new new Roseberry Sandwich\",\n\t\"description\": \"With roseberry and jam\",\n\t\"note\": \"Available after 10:30am at participating restaurants\",\n\t\"cost\": 20,\n\t\"add-categories\":[\"ghskdlfuoieqrj248039ueiojsdk\", \"8yrewiughfdsajbnvc84279rwyeiuafsdhjb\"],\n\t\"remove-categories\":[\"ghskdlfuoieqrj248039ueiojsdk\", \"8yrewiughfdsajbnvc84279rwyeiuafsdhjb\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/restaurants/{{restaurantId}}/menuItems/5e86c158b16672002fca91aa",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"restaurants",
+								"{{restaurantId}}",
+								"menuItems",
+								"5e86c158b16672002fca91aa"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "/restaurants/:rID/orders",
+			"item": [
+				{
+					"name": "/restaurants/:rID/orders",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "{{active-jwt}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"placedBy\": \"17-a\",\n\t\"orderItemsData\": [\n\t\t{\n\t\t\t        \"menuItem\": \"5e91b040f57254048466930b\",\n        \"name\": \"Old Town BBQ Combo\",\n        \"price\": 58,\n\t    \t\"notes\": \"no spicy\",\n\t    \t\"amount\": 1\n\t\t},\n\t\t{\n\t\t\t        \"menuItem\": \"5e91b040f57254048466930b\",\n        \"name\": \"Old Town BBQ Combo\",\n        \"price\": 58,\n\t    \t\"notes\": \"no spicy\",\n\t    \t\"amount\": 1\n\t\t}\n\t]\n}",
+							"options": {
+								"raw": {
+									"language": "javascript"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/restaurants/{{restaurantId}}/orders",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"restaurants",
+								"{{restaurantId}}",
+								"orders"
+							]
+						},
+						"description": "costomer request this; will recive \"costomer-jwt\", \"orderId\""
+					},
+					"response": []
+				},
+				{
+					"name": "/restaurants/:rID/orders/oId",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"type": "text",
+								"value": "{{active-jwt}}"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "javascript"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/restaurants/{{restaurantId}}/orders/{{orderId}}",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"restaurants",
+								"{{restaurantId}}",
+								"orders",
+								"{{orderId}}"
+							]
+						},
+						"description": "For usage of dashboard, order management"
+					},
+					"response": []
+				},
+				{
+					"name": "/restaurants/:rID/orders",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"type": "text",
+								"value": "{{active-jwt}}"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "javascript"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/restaurants/{{restaurantId}}/orders/",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"restaurants",
+								"{{restaurantId}}",
+								"orders",
+								""
+							]
+						},
+						"description": "For usage of dashboard, order management"
+					},
+					"response": []
+				},
+				{
+					"name": "/restaurants/:rID/orders/oId/payment",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"type": "text",
+								"value": "{{active-jwt}}"
+							},
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"isPaid\": true\n}\n",
+							"options": {
+								"raw": {
+									"language": "javascript"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/restaurants/{{restaurantId}}/orders/{{orderId}}/payment",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"restaurants",
+								"{{restaurantId}}",
+								"orders",
+								"{{orderId}}",
+								"payment"
+							]
+						},
+						"description": "For usage of order update payment.\nIf success, will return 204. Else, error code should be delivered."
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "/restaurants/:rID/staff",
+			"item": [
+				{
+					"name": "user accpet a role",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "{{second-jwt}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n       \"restaurant\": \"5e93c677d2ff77031719f650\",\n        \"role\": \"waiter\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/users/{{secondUserId}}/roles",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"{{secondUserId}}",
+								"roles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user resign a role",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "{{second-jwt}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{   \n       \"restaurant\": \"5e93c677d2ff77031719f650\",\n        \"role\": \"manager\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/users/{{secondUserId}}/roles",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"users",
+								"{{secondUserId}}",
+								"roles"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "manager invite staff",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "{{active-jwt}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"role\": \"waiter\",\n\t\"email\": \"jenette.carter@skycenta.club\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/restaurants/{{restaurantId}}/staff",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"restaurants",
+								"{{restaurantId}}",
+								"staff"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "manager read all staff",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"type": "text",
+								"value": "{{active-jwt}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"role\": \"cook\",\n\t\"email\": \"jenette.carter@skycenta.club\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/restaurants/{{restaurantId}}/staff",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"restaurants",
+								"{{restaurantId}}",
+								"staff"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "manager remove staff",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "x-auth-token",
+								"value": "{{active-jwt}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"role\": \"waiter\",\n\t\"email\": \"jenette.carter@skycenta.club\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseURL}}/restaurants/{{restaurantId}}/staff/",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"restaurants",
+								"{{restaurantId}}",
+								"staff",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "/restaurants/:rID/dashboard",
+			"item": [],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "dbinit",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/dbinit",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"dbinit"
+					]
+				},
+				"description": "Populate DB with initial data. Talk with Steve & Jason to add more."
+			},
+			"response": []
 		}
 	],
 	"protocolProfileBehavior": {}

@@ -1,7 +1,7 @@
 const { accessControl: ac } = require('./accessControl')
 const Restaurant = require('../models/restaurant.model')
 
-const scopes = Object.freeze({ website_admin: 1, restaurant: 2 })
+const scopes = Object.freeze({ account: 1, restaurant: 2 })
 const roles = Object.freeze({
   // every user has this role
   basic: 'basic',
@@ -14,9 +14,11 @@ const roles = Object.freeze({
   waiter: 'waiter',
   customer: 'customer',
 
-  // website_admin
+  // account
   admin: 'admin',
 })
+
+const isValidRole = role => roles[role] !== undefined
 
 const actions = Object.freeze({
   create: 'create',
@@ -27,11 +29,12 @@ const actions = Object.freeze({
 
 const resources = Object.freeze({
   profile: 'profile',
+  job: 'job',
   order: 'order',
   dashboard: 'dashboard',
   restaurant: 'restaurant',
   menu: 'menu',
-  stuff: 'stuff',
+  staff: 'staff',
   cooking_queue: 'cooking_queue',
   serving_queue: 'serving_queue',
 })
@@ -47,9 +50,9 @@ const allowIfLoggedin = async (req, res, next) => {
   next()
 }
 
-// website_admin
-const requestAccess = function (scope, action, resource) {
-  if (scope === scopes.website_admin) {
+// account
+const requestAccess = function(scope, action, resource) {
+  if (scope === scopes.account) {
     return requestAccessOnUser(action, resource)
   } else {
     // scope === scopes.restaurant
@@ -65,7 +68,7 @@ post-cond
   1. if user has permission on [target user : target resource]: pass to next() 
   2. else: 401 
 */
-const requestAccessOnUser = function (action, resource) {
+const requestAccessOnUser = function(action, resource) {
   return async (req, res, next) => {
     try {
       // 1. check pre-cond
@@ -78,7 +81,7 @@ const requestAccessOnUser = function (action, resource) {
       }
 
       // 2. calculate isGranted
-      const isOwn = user._id == userId
+      const isOwn = user._id.equals(userId)
       const isAdmin = user.isAdmin
 
       const ownGranted = ac.can(roles.basic)[action + 'Own'](resource).granted
@@ -109,7 +112,7 @@ post-cond
   1. if user has (the role that has) permission on [target restaurant : target resource]: pass to next() 
   2. else: 403 forbidden
 */
-const requestAccessOnRestaurant = function (action, resource) {
+const requestAccessOnRestaurant = function(action, resource) {
   return async (req, res, next) => {
     try {
       const { restaurantId } = req.params
@@ -171,6 +174,7 @@ const requestAccessOnRestaurant = function (action, resource) {
 
 module.exports = {
   roles,
+  isValidRole,
   scopes,
   actions,
   resources,

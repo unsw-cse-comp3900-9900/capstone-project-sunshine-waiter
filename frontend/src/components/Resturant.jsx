@@ -2,12 +2,32 @@ import React from 'react'
 
 import Nivagation from './Navigation'
 import './Resturant.css'
+import { getSingleRestaurant } from './apis/actions/restaurants'
+import { getCookie } from './authenticate/Cookies'
 
 class Restaurant extends React.Component {
+  state = {
+    currentRestaurant: {
+      name: '',
+      description: '',
+    },
+  }
+
+  onSetState = data => {
+    this.setState({
+      currentRestaurant: data,
+    })
+  }
+
+  UNSAFE_componentWillMount = () => {
+    const { id } = this.props.match.params
+    getSingleRestaurant(getCookie('token'), id, this.onSetState)
+  }
+
   render() {
-    const { details } = this.props
-    const { _id, name, description } = details
-    console.log('sds', details)
+    const { id } = this.props.match.params
+    const { name, description } = this.state.currentRestaurant
+
     return (
       <div className="restaurant">
         <img src={require('../resturant.jpg')} alt="" />
@@ -18,7 +38,7 @@ class Restaurant extends React.Component {
           <small>{description}</small>
         </div>
         <div className="buttons">
-          <Nivagation id={_id} />
+          <Nivagation id={id} />
         </div>
       </div>
     )

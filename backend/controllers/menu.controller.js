@@ -1,15 +1,47 @@
 const Joi = require('joi')
 const Restaurant = require('../models/restaurant.model')
 const Menu = require('../models/menu.model')
+const Category = require('../models/category.model')
+const MenuItem = require('../models/menuItem.model')
 const _ = require('lodash')
+
+const present = (obj) => {
+  const { __v, ...data } = obj._doc
+  return data
+}
+
 /*
 1. no menuId, only Restaurant Id
-2. 
 */
 readMenu = async (req, res, next) => {
   try {
     const obj = await findMenu(req, res)
-    res.json({ data: obj })
+    const menuItems = (await MenuItem.find({ menu: obj._id })) || []
+    const categories = (await Category.find({ menu: obj._id })) || []
+
+    res.json({ data: { menuItems, categories, ...present(obj) } })
+  } catch (error) {
+    next(error)
+  }
+}
+
+readMenuPublicly = async (req, res, next) => {
+  try {
+    const obj = await findMenu(req, res)
+    const menuItems =
+      (await MenuItem.find({
+        menu: obj._id,
+        isArchived: false,
+        isPrivate: false,
+      })) || []
+    const categories =
+      (await Category.find({
+        menu: obj._id,
+        isArchived: false,
+        isPrivate: false,
+      })) || []
+
+    res.json({ data: { menuItems, categories, ...present(obj) } })
   } catch (error) {
     next(error)
   }
@@ -76,6 +108,7 @@ function validateUpdateDataFormat(menu) {
 
 module.exports = {
   readMenu,
+  readMenuPublicly,
   updateMenu,
 
   findMenu, // Note that it's not a req handler.

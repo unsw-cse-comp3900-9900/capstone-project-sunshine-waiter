@@ -63,17 +63,14 @@ class Kitchen extends React.Component {
               notification['success']({
                 message: target.menuItem.title + ' ordered!',
                 description:
-                  'Dish id: ' +
-                  target._id +
-                  ' From table: ' +
-                  target.order.placedBy,
+                  'Dish id: ' + target._id + ' From table: ' + target.placedBy,
                 duration: 3,
               })
               break
             case 'READY':
               notification['success']({
                 message: 'Dish: ' + target.menuItem.title + ' finished!',
-                description: 'Cooked by table: ' + target.cookedBy.name,
+                description: 'Cooked by: ' + target.cookedBy.name,
                 duration: 3,
               })
               break
@@ -100,6 +97,10 @@ class Kitchen extends React.Component {
     } catch (error) {
       console.log({ error })
     }
+  }
+
+  componentWillUnmount() {
+    this.state.socket.close()
   }
 
   render() {

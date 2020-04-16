@@ -7,8 +7,15 @@ const restaurants = require('./routes/restaurant.routes')
 const menus = require('./routes/menu.routes')
 const menuItems = require('./routes/menuItem.routes')
 const categories = require('./routes/category.routes')
+const orders = require('./routes/order.routes')
+const orderItems = require('./routes/orderItem.routes')
+const staff = require('./routes/staff.routes')
+
 const cors = require('cors')
-const errorHandler = require('./middleware/errorHandler')
+const {
+  dbErrorHandler,
+  httpCodeErrorHandler,
+} = require('./middleware/errorHandler')
 
 // import websocket
 require('./server.js')
@@ -35,8 +42,19 @@ app.use('/restaurants', restaurants)
 app.use('/restaurants', menus)
 app.use('/restaurants', menuItems)
 app.use('/restaurants', categories)
+app.use('/restaurants', orders)
+app.use('/restaurants', orderItems)
+app.use('/', staff)
 
-app.use(errorHandler)
+if (config.get('MODE') !== 'PRODUCTION') {
+  const { dbInit } = require('./db/dbInit')
+  app.get('/dbinit', dbInit)
+  const { readCollection } = require('./controllers/user.controller')
+  app.get('/admin/users', readCollection)
+}
+
+app.use(dbErrorHandler)
+app.use(httpCodeErrorHandler)
 
 app.listen(PORT_MAIN, () => {
   console.log('Node RESTful API listening at ' + PORT_MAIN)

@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { message } from 'antd'
 
 import './default.css'
 // import GoogleAuth from './GoogleAuth'
@@ -38,17 +39,18 @@ const onAuth = ([param, onAuthenticated, showSignUp]) => event => {
   const URL = showSignUp ? '/users' : '/users/login'
 
   const emailValidator = email => {
-    return email.includes('@') && email.includes('.com')
+    // return email.includes('@') && email.includes('.com')
+    return true
   }
 
   if (!param.password || !param.email || (showSignUp && !param.name)) {
-    alert('Information is incomplete!')
+    message.warning('Information is incomplete!', 3)
   } else if (showSignUp && param.name.length < 5) {
-    alert('Username is less than 5 letters!')
+    message.warning('Username is less than 5 letters!', 3)
   } else if (!emailValidator(param.email)) {
-    alert('Email is invalid!')
+    message.warning('Email is invalid!', 3)
   } else if (param.password.length < 10) {
-    alert('Password is less than 10 letters!')
+    message.warning('Password is less than 10 letters!', 3)
   } else {
     BaseProvider.post(URL, param)
       .then(res => {
@@ -56,7 +58,7 @@ const onAuth = ([param, onAuthenticated, showSignUp]) => event => {
         setCookie('token', token)
         getCookie('token') !== undefined && onAuthenticated(true)
       })
-      .catch(({ response }) => alert(response.data.error))
+      .catch(({ response }) => message.error(response.data.error, 3))
   }
 }
 

@@ -1,3 +1,5 @@
+import { message } from 'antd'
+
 import BaseProvider from '../BaseProvider'
 // import { deleteCookie } from '../../authenticate/Cookies'
 
@@ -13,7 +15,35 @@ export const getRestaurants = (token, callback = () => {}) => {
       .then(res => {
         callback(res.data.data)
       })
-      .catch(err => console.log({ err }))
+      .catch(err => {
+        if (err === undefined) {
+          message.warning('Backend server is dnow!', 3)
+        } else {
+          message.error(err.response.data.error, 3)
+        }
+      })
+  }
+}
+
+export const getSingleRestaurant = (token, id, callback = () => {}) => {
+  if (token !== undefined) {
+    const config = {
+      headers: {
+        'x-auth-token': token,
+        'Content-Type': 'application/json',
+      },
+    }
+    BaseProvider.get(`/restaurants/${id}`, config)
+      .then(res => {
+        callback(res.data.data)
+      })
+      .catch(err => {
+        if (err === undefined) {
+          message.warning('Backend server is dnow!', 3)
+        } else {
+          message.error(err.response.data.error, 3)
+        }
+      })
   }
 }
 
@@ -28,15 +58,16 @@ export const createRestaurant = (token, param, callback = () => {}) => {
     BaseProvider.post('/restaurants', param, config)
       .then(res => {
         callback()
-        alert(
+        message.success(
           'Congrats restaurant ' +
             res.data.data.name +
             ' is ' +
             res.statusText +
-            '!'
+            '!',
+          3
         )
       })
-      .catch(err => console.log({ err }))
+      .catch(err => message.error(err.response.data.error, 3))
   }
 }
 
@@ -49,12 +80,12 @@ export const deleteRestaurant = (token, id, callback = () => {}) => {
       },
     }
     BaseProvider.delete('/restaurants/' + id, config)
-      .then(res => {
-        callback()
-        console.log('done', { res })
-        alert(res.data.message)
+      .then(async res => {
+        await callback()
+
+        message.success(res.data.message, 3)
       })
-      .catch(err => console.log({ err }))
+      .catch(err => message.error(err.response.data.error, 3))
   }
 }
 
@@ -69,8 +100,8 @@ export const updateRestaurant = (token, id, param, callback = () => {}) => {
     BaseProvider.put('/restaurants/' + id, param, config)
       .then(res => {
         callback()
-        alert(res.data.message)
+        message.success(res.data.message, 3)
       })
-      .catch(err => console.log({ err }))
+      .catch(err => message.error(err.response.data.error, 3))
   }
 }

@@ -6,6 +6,7 @@ import SiderBar from './profile/SiderBar'
 import { getCookie, deleteCookie } from '../authenticate/Cookies'
 import './default.css'
 import { getUser } from '../apis/actions/users'
+import { getRestaurants } from '../apis/actions/restaurants'
 // import { getRestaurants } from '../apis/actions/restaurants'
 
 class Homepage extends React.Component {
@@ -14,62 +15,38 @@ class Homepage extends React.Component {
     showProfile: false,
     showLoginCard: false,
     headerMouseOver: '',
-    profile: {
-      user: null,
-    },
   }
 
   updateState = (userData, authState = true) => {
     //delete account
     if (userData === null) {
-      this.setState(prevState => ({
+      this.setState({
         isAuthenticated: authState,
         showProfile: false,
-        profile: {
-          ...prevState.profile,
-          user: userData,
-        },
-      }))
+      })
     } else {
-      this.setState(prevState => ({
+      this.setState({
         isAuthenticated: authState,
-        profile: {
-          ...prevState.profile,
-          user: userData,
-        },
-      }))
+      })
     }
   }
-
-  // updateRestaurants = (restaurants = []) => {
-  //   this.setState(prevState => ({
-  //     profile: {
-  //       ...prevState.profile,
-  //       restaurants: restaurants,
-  //     },
-  //   }))
-  // }
 
   //when there is no cookies, the getUser request will not be sent,
   //see the definition
   UNSAFE_componentWillMount = () => {
     const currentCookie = getCookie('token')
-    getUser(currentCookie, this.updateState)
+    getUser(currentCookie, null, this.updateState)
   }
 
-  componentDidUpdate = (prevProps, prevState) => {
+  componentDidUpdate = async (prevProps, prevState) => {
     if (
       prevState.isAuthenticated !== this.state.isAuthenticated &&
       this.state.isAuthenticated
     ) {
-      getUser(getCookie('token'), this.updateState)
+      await getUser(getCookie('token'), null, this.updateState)
       // getRestaurants(getCookie('token'), this.updateRestaurants)
-      this.props.recordRestaurantsListUpdatedStatus()
+      await getRestaurants(getCookie('token'), this.props.updateRestaurants)
     }
-
-    // if (prevState.profile.restaurants !== this.state.profile.restaurants) {
-    //   this.props.fetchRestaurants(this.state.profile.restaurants)
-    // }
   }
 
   onAuthenticated = state => {
@@ -171,7 +148,7 @@ class Homepage extends React.Component {
   }
 
   render() {
-    const { recordRestaurantsListUpdatedStatus, restaurants } = this.props
+    const { updateRestaurants, restaurants } = this.props
     return (
       <div className="pusher">
         <div className="ui inverted vertical masthead center aligned segment">
@@ -221,7 +198,7 @@ class Homepage extends React.Component {
         </div>
         <div className="ui vertical stripe segment">
           <div className="ui left aligned stackable grid container">
-            <h1 className="header">Sunshine to The Community</h1>
+            <h1>Sunshine to The Community</h1>
             <p>
               When people go out for a meal, sometimes they need to wait for a
               long time to place order in peak time. Too long waiting time may
@@ -278,11 +255,8 @@ class Homepage extends React.Component {
           {this.state.showProfile && (
             <SiderBar
               visible={this.state.showProfile}
-              profile={this.state.profile}
               updateState={this.updateState}
-              recordRestaurantsListUpdatedStatus={
-                recordRestaurantsListUpdatedStatus
-              }
+              updateRestaurants={updateRestaurants}
               restaurants={restaurants}
             />
           )}

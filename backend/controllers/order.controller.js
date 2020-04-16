@@ -1,80 +1,145 @@
-const Joi = require('joi')
 const Order = require('../models/order.model')
+const { OrderItem, allowedStatus } = require('../models/orderItem.model')
+
+const { findRestaurant } = require('./restaurant.controller')
+const { createOrderItems } = require('./orderItem.controller')
+
 const _ = require('lodash')
+const isValid = require('mongoose').Types.ObjectId.isValid
+const { present: presentDoc } = require('../util')
+
+const present = async (order) => {
+  const obj = presentDoc(order)
+  const items = await OrderItem.find({ order: order._id })
+  const data = { ...obj, items }
+  return data
+}
 
 /*
 1. validate input
 2. if valid: create new object with input; save it;
 3. response 
+
+precond: 
+- exist restaurant in DB with req.restaurantId
+- on every menuItemId from req.orderItemsData, exist menuItem in DB with such id 
 */
 createOrder = async (req, res, next) => {
   try {
-    const { restaurantId } = req.params
-    {
-      menuItem, amount, configuration
-    }
-    // if any error
-    res.status(404).json({ error: `Object ot found. id: ${id}` })
+    const { placedBy } = req.body
+    if (!placedBy)
+      throw { httpCode: 400, message: 'Request body miss key: placedBy' }
+    const restaurant = await findRestaurant(req)
+
+    const order = new Order({
+      placedBy,
+      isPaid: false,
+      isAllServed: false,
+      createdAt: new Date(),
+      restaurant: restaurant._id,
+      orderItems: [],
+    })
+    await order.save()
+
+    await createOrderItems(req, res, next, order)
+
+    res.status(201).json({ data: await present(order) })
   } catch (error) {
     next(error)
   }
-}
-
-function validateCreateDataFormat(order) {
-  const schema = {
-    name: Joi.string().min(1).max(50),
-    description: Joi.string().min(1).max(2047),
-  }
-
-  return Joi.validate(order, schema)
 }
 
 readOrder = async (req, res, next) => {
   try {
-    const { orderId: id } = req.params
-    const obj = await Order.findById(id)
-    if (obj) {
-      res.json({ data: obj })
-    } else {
-      res.status(404).json({ error: `Object ot found. id: ${id}` })
-    }
+    const order = await findOrder(req, res, next)
+    res.json({ data: await present(order) })
   } catch (error) {
     next(error)
   }
 }
 
-// update scope: { name, description }
-updateOrder = async (req, res, next) => {
+readMany = async (req, res, next) => {
   try {
-    // validate new data
+    const restaurant = await findRestaurant(req)
+    const objs = await Order.find({ restaurant: restaurant._id })
 
-    // update&save
-    obj.name = name || obj.name
-    obj.description = description || obj.description
+    const tasks = objs.map((o) => (async () => await present(o))())
+    const mappedRuslt = await Promise.all(tasks)
+
+    res.json({ data: mappedRuslt })
+  } catch (error) {
+    next(error)
+  }
+}
+
+updatePaymentStatus = async (req, res, next) => {
+  try {
+    const { isPaid, obj } = await validatePaymentStatus(req, res, next)
+    obj.isPaid = isPaid
     await obj.save()
 
-    // res
-    return res.json({
+    return res.status(204).json({
       success: true,
-      data: obj,
       message: 'Order updated.',
     })
   } catch (error) {
     next(error)
   }
 }
+validatePaymentStatus = async (req, res, next) => {
+  try {
+    const { isPaid } = req.body
+    if (typeof isPaid !== 'boolean')
+      return res.status(400).json({ error: 'Boolean "isPaid" is required.' })
 
-function validateUpdateDataFormat(order) {
-  const schema = {
-    name: Joi.string().min(1).max(50),
-    description: Joi.string().min(1).max(2047),
+    const obj = await findOrder(req, res, next)
+    return { isPaid, obj }
+  } catch (error) {
+    next(error)
   }
+}
 
-  return Joi.validate(order, schema)
+updateServedStatus = async (orderId) => {
+  try {
+    const order = await Order.findById(orderId)
+
+    await order.orderItems.forEach(async (orderItem) => {
+      if (
+        orderItem.status != allowedStatus.SERVED &&
+        orderItem.status != allowedStatus.FAIL
+      ) {
+        order.isAllServed = false
+        await order.save()
+        return { isAllServed: false }
+      }
+    })
+
+    order.isAllServed = true
+    await order.save()
+    return { isAllServed: true }
+  } catch (error) {
+    return error
+  }
+}
+
+// util
+findOrder = async (req, res, next) => {
+  const { orderId } = req.params
+  if (!orderId || !isValid(orderId))
+    return res.status(400).json({ error: 'orderId is not valid' })
+
+  const obj = await Order.findById(orderId)
+  if (!obj)
+    return res.status(404).json({ error: `Order ${orderId} not found.` })
+
+  return obj
 }
 
 module.exports = {
   createOrder,
   readOrder,
-  updateOrder,
+  readMany,
+  updatePaymentStatus,
+  updateServedStatus,
+  findOrder,
 }

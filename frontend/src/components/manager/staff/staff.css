@@ -1,0 +1,49 @@
+.clickable {
+  cursor: pointer;
+}
+
+.invitation-block {
+  width: 50vw;
+  position: relative;
+  margin: auto;
+  border: grey solid 1px;
+  border-radius: 5px;
+}
+
+h1 {
+  text-align: center;
+}
+
+.invitation-block .field.field-block {
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+
+.invitation-block .my-button {
+  margin-top: 10px;
+}
+
+.staff-box {
+  width: 80%;
+  height: 80%;
+  min-height: 400px;
+  border: grey solid 2px;
+  border-radius: 10px;
+}
+
+.staff-box .ui.items .item.item-box {
+  width: 96%;
+  border: grey solid 1px;
+  margin-left: 6px;
+  margin-top: 6px;
+  border-radius: 5px;
+}
+.staff-box .ui.items .item.item-box #avater {
+  width: 40px;
+  height: 40px;
+}
+
+.staff-box .ui.items .item.item-box .email {
+  display: block;
+}

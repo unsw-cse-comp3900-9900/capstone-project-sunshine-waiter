@@ -3,6 +3,7 @@ import { Modal } from 'antd'
 import {
   createRestaurant,
   updateRestaurant,
+  getRestaurants,
 } from '../../apis/actions/restaurants'
 import { getCookie } from '../../authenticate/Cookies'
 
@@ -13,32 +14,40 @@ class RestaurantModal extends React.Component {
   }
 
   onSubmit = async e => {
-    const { recordRestaurantsListUpdatedStatus, editingRestaurant } = this.props
+    const { updateRestaurants, editingRestaurant } = this.props
     e.preventDefault()
     if (editingRestaurant !== null) {
       await updateRestaurant(
         getCookie('token'),
         editingRestaurant._id,
-        this.state,
-        recordRestaurantsListUpdatedStatus()
+        this.state
       )
     } else {
-      await createRestaurant(
-        getCookie('token'),
-        this.state,
-        recordRestaurantsListUpdatedStatus()
-      )
+      await createRestaurant(getCookie('token'), this.state)
     }
 
+    getRestaurants(getCookie('token'), updateRestaurants)
     this.props.onCancel()
   }
 
   UNSAFE_componentWillReceiveProps = nextProps => {
     const { editingRestaurant } = nextProps
+
     if (editingRestaurant !== null) {
+      //when clicking submit, somehow it will trigger re-passing the props down to this component,
+      //then this method will be triggered
+      //So the currented changed new value will be replaced by the old value
+      //this if statement fixes this problem
+      if (this.state.name === '') {
+        this.setState({
+          name: editingRestaurant.name,
+          description: editingRestaurant.description,
+        })
+      }
+    } else {
       this.setState({
-        name: editingRestaurant.name,
-        description: editingRestaurant.description,
+        name: '',
+        description: '',
       })
     }
   }

@@ -23,27 +23,7 @@ createRestaurant = async (req, res, next) => {
         .send('Restaurant with current name already registered.')
 
     // create
-    restaurant = new Restaurant({
-      ..._.pick(req.body, ['name', 'description']),
-      createdBy: req.user._id,
-      userGroups: {
-        owner: [req.user._id],
-        manager: [req.user._id],
-        cook: [],
-        waiter: [],
-        cashier: [],
-      },
-    })
-
-    const menu = new Menu({
-      name: 'menu',
-      menuItems: [],
-      categories: [],
-      restaurant,
-    })
-    await menu.save()
-    restaurant.menu = menu._id
-    await restaurant.save()
+    restaurant = await dbCreateRestaurant({ ...req.body, userId: req.user._id })
 
     res.status(201).json({ data: present(restaurant) })
   } catch (error) {
@@ -51,19 +31,54 @@ createRestaurant = async (req, res, next) => {
   }
 }
 
+dbCreateRestaurant = async (data) => {
+  const restaurant = new Restaurant({
+    ..._.pick(data, ['name', 'description']),
+    createdBy: data.userId,
+    userGroups: {
+      owner: [data.userId],
+      manager: [data.userId],
+      cook: [],
+      waiter: [],
+      cashier: [],
+    },
+  })
+  const menu = new Menu({
+    name: 'menu',
+    menuItems: [],
+    categories: [],
+    restaurant,
+  })
+  await menu.save()
+  restaurant.menu = menu._id
+  await restaurant.save()
+  return restaurant
+}
+
 readRestaurant = async (req, res, next) => {
   try {
-    // find
-    const restaurantId = req.params.restaurantId
-    const restaurant = await Restaurant.findById(restaurantId)
-    if (!restaurant)
-      return res.status(404).json({ error: 'Restaurant does not exist' })
-
-    // res
+    const restaurant = await findRestaurant(req)
     res.json({ data: present(restaurant) })
   } catch (error) {
     next(error)
   }
+}
+
+// designed for inside consumption. not for route handling.
+const findRestaurant = async (req) => {
+  const { restaurantId } = req.params
+  if (!restaurantId)
+    throw { httpCode: 400, message: 'URI params missing restaurantId ' }
+  const restaurant = await findById(restaurantId)
+
+  return restaurant
+}
+
+findById = async (id) => {
+  const restaurant = await Restaurant.findById(id)
+  if (!restaurant)
+    throw { httpCode: 404, message: `Restaurant "${id}" does not exist.` }
+  return restaurant
 }
 
 /*
@@ -154,4 +169,8 @@ module.exports = {
   readMyRestaurants,
   updateRestaurant,
   deleteRestaurant,
+
+  findRestaurant,
+  findById,
+  dbCreateRestaurant,
 }

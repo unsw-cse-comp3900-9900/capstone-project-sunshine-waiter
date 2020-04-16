@@ -11,41 +11,14 @@ const {
 } = require('../auth/authorization')
 
 const {
-  createOrderItem,
   readOrderItem,
-  updateOrderItem,
-  deleteOrderItem,
-  readMany,
+  readAllItemInRestaurant,
 } = require('../controllers/orderItem.controller')
 
 // orderItem CRUD
 
 // public access
-router.get('/:restaurantId/menuitems/:orderItemId', readOrderItem)
-router.get('/:restaurantId/menuitems/', readMany)
-
-// owner/manager access
-router.post(
-  '/:restaurantId/menuitems/',
-  verifyAuthToken,
-  allowIfLoggedin,
-  requestAccess(scopes.restaurant, actions.create, resources.menu),
-  createOrderItem
-)
-router.put(
-  '/:restaurantId/menuitems/:orderItemId',
-  verifyAuthToken,
-  allowIfLoggedin,
-  requestAccess(scopes.restaurant, actions.update, resources.menu),
-  updateOrderItem
-)
-
-router.delete(
-  '/:restaurantId/menuitems/:orderItemId',
-  verifyAuthToken,
-  allowIfLoggedin,
-  requestAccess(scopes.restaurant, actions.delete, resources.menu),
-  deleteOrderItem
-)
+router.get('/:restaurantId/orderItem/:orderItemId', readOrderItem)
+router.get('/:restaurantId/orderitems/', readAllItemInRestaurant)
 
 module.exports = router

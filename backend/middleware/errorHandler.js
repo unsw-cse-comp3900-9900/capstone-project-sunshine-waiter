@@ -26,4 +26,17 @@ const dbErrorHandler = (err, req, res, next) => {
   } else return next(err)
 }
 
-module.exports = dbErrorHandler
+const httpCodeErrorHandler = (err, req, res, next) => {
+  if (err && err.httpCode)
+    res.status(err.httpCode).json({
+      error: err.message,
+      message: err.message,
+      problematicData: err.problematicData,
+    })
+  else {
+    console.log(err)
+    res.status(500).send(err.message)
+  }
+}
+
+module.exports = { dbErrorHandler, httpCodeErrorHandler }

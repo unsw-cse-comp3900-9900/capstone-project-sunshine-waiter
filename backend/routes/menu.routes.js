@@ -10,9 +10,23 @@ const {
   requestAccess,
 } = require('../auth/authorization')
 
-const { readMenu, updateMenu } = require('../controllers/menu.controller')
+const {
+  readMenu,
+  readMenuPublicly,
+  updateMenu,
+} = require('../controllers/menu.controller')
 
-router.get('/:restaurantId/menus', readMenu)
+// public
+router.get('/:restaurantId/menus/public', readMenuPublicly)
+
+// managment
+router.get(
+  '/:restaurantId/menus',
+  verifyAuthToken,
+  allowIfLoggedin,
+  requestAccess(scopes.restaurant, actions.read, resources.menu),
+  readMenu
+)
 
 router.put(
   '/:restaurantId/menus',

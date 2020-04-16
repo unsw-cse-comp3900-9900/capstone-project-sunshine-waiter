@@ -2,9 +2,7 @@ const mongoose = require('mongoose')
 
 // require restaurant admin to update orderItems
 const restaurantSchema = new mongoose.Schema({
-  orderItems: [{ type: mongoose.Schema.Types.ObjectId, ref: 'OrderItem' }],
-
-  isPayed: {
+  isPaid: {
     type: Boolean,
     required: true,
   },
@@ -25,7 +23,7 @@ const restaurantSchema = new mongoose.Schema({
     required: true,
   },
 
-  createAt: {
+  createdAt: {
     type: Date,
     required: true,
   },

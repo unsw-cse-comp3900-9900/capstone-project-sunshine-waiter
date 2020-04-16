@@ -12,28 +12,25 @@ const {
 
 const {
   createUser,
-  readUser,
+  readById,
   updateUser,
   deleteUser,
+  readMe,
 } = require('../controllers/user.controller')
 
 router.post('/login', login)
 
 router.post('/', createUser)
 
-router.get(
-  '/:userId',
-  verifyAuthToken,
-  allowIfLoggedin,
-  requestAccess(scopes.website_admin, actions.read, resources.profile),
-  readUser
-)
+router.get('/me', verifyAuthToken, allowIfLoggedin, readMe)
+
+router.get('/:userId', readById)
 
 router.put(
   '/:userId',
   verifyAuthToken,
   allowIfLoggedin,
-  requestAccess(scopes.website_admin, actions.update, resources.profile),
+  requestAccess(scopes.account, actions.update, resources.profile),
   updateUser
 )
 
@@ -41,7 +38,7 @@ router.delete(
   '/:userId',
   verifyAuthToken,
   allowIfLoggedin,
-  requestAccess(scopes.website_admin, actions.delete, resources.profile),
+  requestAccess(scopes.account, actions.delete, resources.profile),
   deleteUser
 )
 
