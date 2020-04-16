@@ -6,6 +6,11 @@ import { objToArray, arrayToObj, WelcomeMessage } from '../Waiter/Waiter'
 import { connect } from '../apis/socketClient'
 import getCurrentUser from '../getCurrentUser'
 import { URL } from '../apis/webSocketUrl.json'
+import { getSingleRestaurant } from '../apis/actions/restaurants'
+import { getCookie } from '../authenticate/Cookies'
+import Spinner from '../Spinner'
+import Unauthorized from '../Unauthorized'
+import { handleAuthority } from '../services'
 
 class Kitchen extends React.Component {
   constructor(props) {
@@ -14,6 +19,8 @@ class Kitchen extends React.Component {
     this.state = {
       socket: null,
       dishQue: [],
+      authorized: false,
+      isLoading: true,
     }
   }
 
@@ -81,6 +88,22 @@ class Kitchen extends React.Component {
 
   async componentDidMount() {
     await this.setUpUser()
+
+    //request authority
+    const { id } = this.props.match.params
+
+    getSingleRestaurant(getCookie('token'), id, data => {
+      this.setState({
+        isLoading: false,
+      })
+
+      handleAuthority(data, 'cook', () => {
+        this.setState({
+          authorized: true,
+        })
+      })
+    })
+
     const userData = { ...this.user }
 
     // configure includs the event and response you defined for the socket
@@ -101,6 +124,12 @@ class Kitchen extends React.Component {
   }
 
   render() {
+    if (this.state.isLoading) {
+      return <Spinner />
+    }
+    if (!this.state.isLoading && !this.state.authorized) {
+      return <Unauthorized />
+    }
     return (
       <div>
         <header>

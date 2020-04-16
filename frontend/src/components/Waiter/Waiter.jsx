@@ -6,6 +6,11 @@ import { notification } from 'antd'
 import { connect } from '../apis/socketClient'
 import getCurrentUser from '../getCurrentUser'
 import { URL } from '../apis/webSocketUrl.json'
+import { getCookie } from '../authenticate/Cookies'
+import { getSingleRestaurant } from '../apis/actions/restaurants'
+import { handleAuthority } from '../services'
+import Unauthorized from '../Unauthorized'
+import Spinner from '../Spinner'
 
 export const arrayToObj = array => {
   let result = {}
@@ -42,6 +47,8 @@ class Waiter extends React.Component {
       socket: null,
       dishQue: [],
       requestQue: [],
+      authorized: false,
+      isLoading: true,
     }
   }
 
@@ -140,6 +147,21 @@ class Waiter extends React.Component {
 
   async componentDidMount() {
     await this.setUpUser()
+
+    //request authority
+    const { restaurantId } = this.props.match.params
+
+    getSingleRestaurant(getCookie('token'), restaurantId, data => {
+      this.setState({
+        isLoading: false,
+      })
+      handleAuthority(data, 'waiter', () => {
+        this.setState({
+          authorized: true,
+        })
+      })
+    })
+
     const userData = { ...this.user }
 
     // configure includs the event and response you defined for the socket
@@ -161,6 +183,12 @@ class Waiter extends React.Component {
   }
 
   render() {
+    if (this.state.isLoading) {
+      return <Spinner />
+    }
+    if (!this.state.isLoading && !this.state.authorized) {
+      return <Unauthorized />
+    }
     return (
       <div>
         <header>
