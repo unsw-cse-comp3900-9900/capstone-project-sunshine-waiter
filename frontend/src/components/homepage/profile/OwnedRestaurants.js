@@ -19,7 +19,8 @@ class OwnedRestaurants extends React.Component {
 
   updateRestaurants = (restaurants = []) => {
     if (
-      !compareTwoArraysOfRestMetaObj(restaurants, this.state.restaurants) ||
+      (restaurants.length > 0 &&
+        !compareTwoArraysOfRestMetaObj(restaurants, this.state.restaurants)) ||
       !compareTwoArraysOfRestMetaObj(this.state.restaurants, restaurants)
     ) {
       this.setState({
@@ -30,8 +31,8 @@ class OwnedRestaurants extends React.Component {
 
   componentDidMount = () => {
     Polling(
-      () => getRestaurants(getCookie('token'), this.updateRestaurants),
-      1000
+      timer => getRestaurants(getCookie('token'), this.updateRestaurants),
+      3000
     )
   }
 
@@ -68,7 +69,7 @@ class OwnedRestaurants extends React.Component {
         ></List>
       )
     }
-    return <div>No restaurants avaliable yet</div>
+    return <div>No restaurants avaliable yet, wait...</div>
   }
 
   render() {

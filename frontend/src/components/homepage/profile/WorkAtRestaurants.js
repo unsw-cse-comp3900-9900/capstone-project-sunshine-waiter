@@ -2,8 +2,8 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { List, message } from 'antd'
 import InfiniteScroll from 'react-infinite-scroller'
-import { getCookie } from '../../authenticate/Cookies'
-import { getSingleRestaurant } from '../../apis/actions/restaurants'
+// import { getCookie } from '../../authenticate/Cookies'
+// import { getSingleRestaurant } from '../../apis/actions/restaurants'
 
 class WorkAtRestaurants extends React.Component {
   state = {
@@ -17,7 +17,8 @@ class WorkAtRestaurants extends React.Component {
   }
 
   renderRestaurantItem = ({ restaurant, role }) => {
-    getSingleRestaurant(getCookie('token'), restaurant, this.onSetState)
+    // This will cause a Network error after a certain time, don't know why yet
+    // getSingleRestaurant(getCookie('token'), restaurant, this.onSetState)
 
     return (
       <List.Item key={restaurant}>
@@ -44,7 +45,7 @@ class WorkAtRestaurants extends React.Component {
         ></List>
       )
     }
-    return <div>No restaurants avaliable yet</div>
+    return <div>No restaurants avaliable yet, waiting</div>
   }
 
   render() {

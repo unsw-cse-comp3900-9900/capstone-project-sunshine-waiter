@@ -1,7 +1,6 @@
 import React from 'react'
 import { Modal, List, Button, message } from 'antd'
 import InfiniteScroll from 'react-infinite-scroller'
-import { getSingleRestaurant } from '../../apis/actions/restaurants'
 import { getCookie } from '../../authenticate/Cookies'
 import { acceptInvitation } from '../../apis/actions/invitation'
 

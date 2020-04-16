@@ -1,5 +1,5 @@
 export const Polling = (fn = () => {}, interval) => {
-  setInterval(() => {
-    fn()
+  const timer = setInterval(() => {
+    fn(timer)
   }, interval)
 }

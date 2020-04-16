@@ -63,7 +63,7 @@ class MyProfile extends React.Component {
   }
 
   componentDidMount = () => {
-    Polling(() => readMe(getCookie('token'), this.onSetPendingJobs), 500)
+    Polling(timer => readMe(getCookie('token'), this.onSetPendingJobs), 4000)
   }
 
   renderViewModeBasic = name => {
