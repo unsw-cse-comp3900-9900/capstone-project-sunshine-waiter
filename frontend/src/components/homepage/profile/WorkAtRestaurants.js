@@ -44,9 +44,15 @@ class WorkAtRestaurants extends React.Component {
           title={role}
           description={`work at ${this.state.name}`}
         />
-        <Link to={'/restaurants/' + restaurant + '/' + role}>
-          <i className="caret square right icon" />
-        </Link>
+        {role === 'manager' ? (
+          <Link to={'/restaurants/' + restaurant}>
+            <i className="caret square right icon" />
+          </Link>
+        ) : (
+          <Link to={'/restaurants/' + restaurant + '/' + role}>
+            <i className="caret square right icon" />
+          </Link>
+        )}
         <span onClick={() => this.onResignRole({ restaurant, role })}>
           <i className="trash alternate outline icon right clickable" />
         </span>
