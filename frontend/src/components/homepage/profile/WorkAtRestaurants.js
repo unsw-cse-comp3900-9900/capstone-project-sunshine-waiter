@@ -1,9 +1,12 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { List, message } from 'antd'
+import { List, message, Alert } from 'antd'
 import InfiniteScroll from 'react-infinite-scroller'
+
 import { resignRole } from '../../apis/actions/invitation'
 import { getCookie } from '../../authenticate/Cookies'
+import '../default.css'
+import './scrollerContainer.css'
 // import { getCookie } from '../../authenticate/Cookies'
 // import { getSingleRestaurant } from '../../apis/actions/restaurants'
 
@@ -54,7 +57,15 @@ class WorkAtRestaurants extends React.Component {
         ></List>
       )
     }
-    return <div>No restaurants avaliable yet, waiting</div>
+    return (
+      <div className="loading-message">
+        <Alert
+          message="No workplaces yet"
+          description="It is loading if available"
+          type="info"
+        />
+      </div>
+    )
   }
 
   render() {

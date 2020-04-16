@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { List, message } from 'antd'
+import { List, message, Alert } from 'antd'
 import InfiniteScroll from 'react-infinite-scroller'
 
 import { compareTwoArraysOfRestMetaObj } from '../../services'
@@ -69,7 +69,15 @@ class OwnedRestaurants extends React.Component {
         ></List>
       )
     }
-    return <div>No restaurants avaliable yet, wait...</div>
+    return (
+      <div className="loading-message">
+        <Alert
+          message="No restaurants yet"
+          description="It is loading if available"
+          type="info"
+        />
+      </div>
+    )
   }
 
   render() {
