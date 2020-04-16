@@ -1,6 +1,7 @@
 import React from 'react'
-import { Select, Row, Col } from 'antd'
+import { Select, Row, Col, Spin, Alert } from 'antd'
 import _ from 'lodash'
+import 'antd/dist/antd.css'
 
 import './staff.css'
 import { sendInvitation } from '../../apis/actions/invitation'
@@ -27,13 +28,13 @@ class StaffManagement extends React.Component {
     const { restaurantId } = this.props
 
     Polling(
-      () =>
+      timer =>
         getSingleRestaurant(
           getCookie('token'),
           restaurantId,
           this.onSetRestaurant
         ),
-      1000
+      5000
     )
   }
 
@@ -114,7 +115,15 @@ class StaffManagement extends React.Component {
 
   renderCookList = () => {
     if (this.state.restaurant === null) {
-      return null
+      return (
+        <div className="loading-message">
+          <Alert
+            message="No cooks yet, wait..."
+            description="It is loading if available"
+            type="info"
+          />
+        </div>
+      )
     }
     return (
       <div className="ui items">
@@ -127,7 +136,15 @@ class StaffManagement extends React.Component {
 
   renderWaiterList = () => {
     if (this.state.restaurant === null) {
-      return null
+      return (
+        <div className="loading-message">
+          <Alert
+            message="No waiters yet, wait..."
+            description="It is loading if available"
+            type="info"
+          />
+        </div>
+      )
     }
     return (
       <div className="ui items">
@@ -140,7 +157,11 @@ class StaffManagement extends React.Component {
 
   renderManagerList = () => {
     if (this.state.restaurant === null) {
-      return null
+      return (
+        <div className="spinner">
+          <Spin tip="Loading..."></Spin>
+        </div>
+      )
     }
     return (
       <div className="ui items">

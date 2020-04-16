@@ -33,10 +33,11 @@ h1 {
 }
 
 .staff-box .ui.items .item.item-box {
-  width: 96%;
+  width: 90%;
   border: grey solid 1px;
-  margin-left: 6px;
-  margin-top: 6px;
+  margin-left: 5%;
+  margin-right: 5%;
+  margin-top: 5%;
   border-radius: 5px;
 }
 .staff-box .ui.items .item.item-box #avater {
@@ -46,4 +47,16 @@ h1 {
 
 .staff-box .ui.items .item.item-box .email {
   display: block;
+}
+
+.staff-box .loading-message {
+  width: 90%;
+  margin-left: 5%;
+  margin-right: 5%;
+  margin-top: 5%;
+}
+
+.staff-box .spinner {
+  margin-left: 40%;
+  margin-top: 30%;
 }
