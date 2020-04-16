@@ -1,5 +1,5 @@
 import React from 'react'
-import { Select, Row, Col, Spin, Alert } from 'antd'
+import { Select, Row, Col } from 'antd'
 import _ from 'lodash'
 import 'antd/dist/antd.css'
 
@@ -9,6 +9,7 @@ import { getCookie } from '../../authenticate/Cookies'
 import { getSingleRestaurant } from '../../apis/actions/restaurants'
 import StaffItemCard from './StaffItemCard'
 import { Polling } from '../../apis/Polling'
+import Spinner from '../../Spinner'
 
 class StaffManagement extends React.Component {
   state = {
@@ -115,11 +116,7 @@ class StaffManagement extends React.Component {
 
   renderCookList = () => {
     if (this.state.restaurant === null) {
-      return (
-        <div className="spinner">
-          <Spin tip="Loading..."></Spin>
-        </div>
-      )
+      return <Spinner />
     }
     return (
       <div className="ui items">
@@ -132,11 +129,7 @@ class StaffManagement extends React.Component {
 
   renderWaiterList = () => {
     if (this.state.restaurant === null) {
-      return (
-        <div className="spinner">
-          <Spin tip="Loading..."></Spin>
-        </div>
-      )
+      return <Spinner />
     }
     return (
       <div className="ui items">
@@ -149,11 +142,7 @@ class StaffManagement extends React.Component {
 
   renderManagerList = () => {
     if (this.state.restaurant === null) {
-      return (
-        <div className="spinner">
-          <Spin tip="Loading..."></Spin>
-        </div>
-      )
+      return <Spinner />
     }
     return (
       <div className="ui items">

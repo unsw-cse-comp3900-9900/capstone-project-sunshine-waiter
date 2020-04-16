@@ -12,6 +12,10 @@ import { getCookie } from '../authenticate/Cookies'
 import { deleteMenuItem } from '../apis/actions/menuItem'
 import Dashboard from './dashBoard/dashBoard'
 import StaffManagement from './staff/StaffManagement'
+import Unauthorized from '../Unauthorized'
+import { getSingleRestaurant } from '../apis/actions/restaurants'
+import { handleAuthority } from '../services'
+import Spinner from '../Spinner'
 
 const { Header, Content, Sider } = Layout
 const { DASHBOARD, STAFFS, MENUS, QRCODE } = ContentType
@@ -25,11 +29,31 @@ class Manager extends React.Component {
     currentCategoryParam: null,
     currentMenuItemParam: null,
     currentMenu: null,
+    authorized: false,
+    isLoading: true,
   }
 
   //fetch data before rendering the component
   UNSAFE_componentWillMount = () => {
     this.onFetchCurrentMenu()
+  }
+
+  //request authority
+  componentDidMount = () => {
+    const { id } = this.props.match.params
+
+    getSingleRestaurant(getCookie('token'), id, data => {
+      //finish loading
+      this.setState({
+        isLoading: false,
+      })
+
+      handleAuthority(data, 'manager', () => {
+        this.setState({
+          authorized: true,
+        })
+      })
+    })
   }
 
   onSetCurrentMenu = data => {
@@ -354,6 +378,12 @@ class Manager extends React.Component {
 
   render() {
     const { id } = this.props.match.params
+    if (this.state.isLoading) {
+      return <Spinner />
+    }
+    if (!this.state.isLoading && !this.state.authorized) {
+      return <Unauthorized />
+    }
     return (
       <Layout>
         <MenuItemModal

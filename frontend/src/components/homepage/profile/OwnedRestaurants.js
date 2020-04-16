@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { List, message, Spin } from 'antd'
+import { List, message } from 'antd'
 import InfiniteScroll from 'react-infinite-scroller'
 
 import { compareTwoArraysOfRestMetaObj } from '../../services'
@@ -9,6 +9,7 @@ import { Polling } from '../../apis/Polling'
 import { getRestaurants } from '../../apis/actions/restaurants'
 import '../default.css'
 import './scrollerContainer.css'
+import Spinner from '../../Spinner'
 
 class OwnedRestaurants extends React.Component {
   //I think reason is when using a tag, it freshes when hitting the page url, so state got freshed back to init
@@ -76,11 +77,7 @@ class OwnedRestaurants extends React.Component {
       )
     }
     if (this.state.isLoading) {
-      return (
-        <div className="spinner">
-          <Spin tip="Loading..."></Spin>
-        </div>
-      )
+      return <Spinner />
     }
     return null
   }
