@@ -60,7 +60,7 @@ class WorkAtRestaurants extends React.Component {
     return (
       <div className="loading-message">
         <Alert
-          message="No workplaces yet"
+          message="No positions yet"
           description="It is loading if available"
           type="info"
         />
@@ -72,8 +72,8 @@ class WorkAtRestaurants extends React.Component {
     return (
       <div className="my-restaurant">
         <h4>
-          <i className="coffee small icon" />
-          WorkAt Restaurants
+          <i className="briefcase icon" />
+          Positions
         </h4>
         <div className="scroller-container">
           <InfiniteScroll
