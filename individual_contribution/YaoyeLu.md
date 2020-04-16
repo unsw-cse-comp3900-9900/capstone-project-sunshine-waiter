@@ -41,16 +41,17 @@
 
 -   improve UI
 -   adjust menu builder into archived and active
--   finish staff management ui
+-   improve UI
 -   finish staff management
--   finsi polling
-    -   accept invitation
-    -   show rest
+    -   staff accept invitation
+    -   staff resign role
+-   finish polling
+    -   invitation notification
+    -   show restaurants
     -   update staff list
-    -   update restaurants
-        -   refactor rendering onwed restaurants
-        -   render restaurants where users work
-        -   improve UI
+-   update restaurants
+    -   refactor rendering owned restaurants
+    -   render restaurants where users work
 -   finish frontend authority control
 
 todo
