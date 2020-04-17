@@ -42,7 +42,7 @@ class Restaurant extends React.Component {
             <h1 className="text-left display-4 white text-shadow">{name}</h1>
           </div>
           <div className="row">
-            <footer class="blockquote-footer my-3 font-italic">
+            <footer className="blockquote-footer my-3 font-italic">
               {description}
             </footer>
           </div>
