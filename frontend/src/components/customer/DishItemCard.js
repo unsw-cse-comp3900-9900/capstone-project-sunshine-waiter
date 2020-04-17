@@ -70,16 +70,13 @@ class DishItemCard extends Component {
         >
           <Card.Header title={name} />
           <Card.Body>
-<<<<<<< Updated upstream
-            <img src={imgURL} alt="wrong" width="200px" height="100px" />
-=======
+            {/* <img src={imgURL} alt="wrong" width="200px" height="100px" /> */}
             <img
               src={require('./services/statics/0_Roseberry.jpg')}
               alt="wrong"
               width="200px"
               height="100px"
             />
->>>>>>> Stashed changes
           </Card.Body>
           <Card.Footer
             content={description}
