@@ -63,14 +63,13 @@ class Dashboard extends Component {
 
   initData = () => {
     const data = this.state.orderItems.map(item => {
-      return { x: new Date(item.serveTime).toLocaleDateString(), y: item.price }
+      return { x: new Date(item.serveTime).toDateString(), y: item.price }
     })
     const groupByDate = groupBy(data, 'x')
     let dailyIncomes = []
     for (let [date, prices] of groupByDate) {
       let income = prices.map(_ => _.y).reduce((a, b) => a + b, 0)
-      let [d, m, y] = date.split('/').map(_ => parseInt(_))
-      dailyIncomes.push({ x: new Date(y, m, d), y: income })
+      dailyIncomes.push({ x: new Date(date), y: income })
     }
 
     this.setState({ data: dailyIncomes })

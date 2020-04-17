@@ -16,7 +16,7 @@ export const fetchMenuApi = (token, restaurantId, callback = () => {}) => {
       console.log('did fetch menus: ', { res })
       callback(res.data.data)
     })
-    .catch(err => message.error(err.response.data.error, 3))
+    .catch(err => err.response && message.error(err.response.data.error, 3))
 }
 
 export const fetchPublicMenuApi = (restaurantId, callback = () => {}) => {
@@ -53,6 +53,6 @@ export const updateMenuApi = (
         message.success(res.data.message, 3)
         callback()
       })
-      .catch(err => message.error(err.response.data.error, 3))
+      .catch(err => err.response && message.error(err.response.data.error, 3))
   }
 }
