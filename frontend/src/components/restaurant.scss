@@ -1,0 +1,16 @@
+.restaurant {
+  background-image: url('restaurant.jpg');
+  background-size: cover;
+  height: 100vh;
+  .white {
+    color: white;
+  }
+  .text-shadow {
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.397);
+  }
+
+  .center {
+    position: relative;
+    top: 35%;
+  }
+}
