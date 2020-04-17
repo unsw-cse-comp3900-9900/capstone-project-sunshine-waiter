@@ -19,6 +19,21 @@ export const fetchMenuApi = (token, restaurantId, callback = () => {}) => {
     .catch(err => message.error(err.response.data.error, 3))
 }
 
+export const fetchPublicMenuApi = (restaurantId, callback = () => {}) => {
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  }
+  const URL = `/restaurants/${restaurantId}/menus/public`
+  BaseProvider.get(URL, config)
+    .then(res => {
+      console.log('did fetch menus public: ', { res })
+      callback(res.data.data)
+    })
+    .catch(err => console.log('fetch', { err }))
+}
+
 export const updateMenuApi = (
   token,
   restaurantId,

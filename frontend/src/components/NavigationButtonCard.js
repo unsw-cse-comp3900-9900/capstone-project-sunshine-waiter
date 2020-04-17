@@ -5,6 +5,7 @@ const NavigationButtonCard = props => {
   let className = 'btn btn-primary m-2 '
   className += props.linkActiveItem === props.linkName ? 'active item' : 'item'
 
+  console.log('navigationbtncard->', props)
   return (
     <Link
       role="button"

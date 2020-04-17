@@ -31,5 +31,20 @@
 
 ### week7
 
-    - fix orderlist,image display bugs
-    - change the category style into Tab
+    -   fix orderlist,image display bugs
+    -   change the category style into Tab
+
+### week9
+
+    -   read tableid from url  -------finish
+    -   add category to orderitems ( should consider dish belong to mulitple categories)  ----backend bugs! fix later...
+    -   ui improvement  -----4.16
+        -   add/minus, cart --- finish
+        -   amount modify in cart  ----finish
+        -   request button, toast ---finish
+        -   notes after order --- needtodo !!!!
+        -   add timeout when jump to order confirmation. --- finish
+    -   submit order
+        -   order confirmation(check null,confirm jump to payment page)       ----finish(modify table style needed)
+        -   jump to checkorder
+        -   jump to final page ----- 4.17,18
