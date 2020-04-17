@@ -1,14 +1,7 @@
 import React, { Component, Fragment } from 'react'
 import { getMenus } from './services/fakemenu'
 
-import {
-  Card,
-  WingBlank,
-  WhiteSpace,
-  Button,
-  Icon,
-  Pagination,
-} from 'antd-mobile'
+import { Card, WingBlank, WhiteSpace, Button } from 'antd-mobile'
 import 'antd-mobile/dist/antd-mobile.css'
 
 //to make pictures display correctly. must pay attention to the order of img in file
@@ -51,9 +44,7 @@ class DishItemCard extends Component {
         <Card>
           <Card.Header title={title} />
           <Card.Body>
-
             <img src={imgURL} alt="wrong" width="200px" height="100px" />
-
           </Card.Body>
           <Card.Footer
             content={description}
