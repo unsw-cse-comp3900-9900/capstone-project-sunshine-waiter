@@ -12,7 +12,7 @@ console.log('Imgs->' + Imgs)
 
 class DishItemCard extends Component {
   state = {
-    menus: getMenus(),
+    // menus: getMenus(),
     count: 1,
     //dish_id: 0,
   }
@@ -33,18 +33,53 @@ class DishItemCard extends Component {
     }
   }
 
-  render() {
-    const { title, image_id, description, cost, getorder } = this.props
+  handleClick() {
+    this.props.getorder(
+      this.props.name,
+      this.props._id,
+      this.props.price,
+      this.state.count,
+      this.props.categoryArray
+    )
+    this.setState({
+      count: 1,
+    })
+  }
 
-    var imgURL = Imgs[image_id]
-    console.log('imgurl' + imgURL)
+  render() {
+    // const { title, image_id, description, cost, getorder } = this.props
+    const {
+      categoryArray,
+      _id,
+      name,
+      price,
+      description,
+      note,
+      getorder,
+    } = this.props
+
+    // var imgURL = Imgs[image_id]
+    // console.log('imgurl' + imgURL)
     return (
       <WingBlank size="sm">
         <WhiteSpace size="sm" />
-        <Card>
-          <Card.Header title={title} />
+        <Card
+          style={{
+            width: '300px',
+          }}
+        >
+          <Card.Header title={name} />
           <Card.Body>
+<<<<<<< Updated upstream
             <img src={imgURL} alt="wrong" width="200px" height="100px" />
+=======
+            <img
+              src={require('./services/statics/0_Roseberry.jpg')}
+              alt="wrong"
+              width="200px"
+              height="100px"
+            />
+>>>>>>> Stashed changes
           </Card.Body>
           <Card.Footer
             content={description}
@@ -56,12 +91,12 @@ class DishItemCard extends Component {
                     fontSize: '20px',
                   }}
                 >
-                  {cost}$
+                  {price}$
                 </i>
                 <span>
-                  <div className="ui icon" onClick={() => this.handleAdd()}>
+                  <i className="ui icon" onClick={() => this.handleAdd()}>
                     <i className="plus square blue icon" />
-                  </div>
+                  </i>
 
                   <input
                     style={{
@@ -70,15 +105,15 @@ class DishItemCard extends Component {
                     value={this.state.count}
                   />
 
-                  <div className="ui icon" onClick={() => this.handleMinus()}>
+                  <i className="ui icon" onClick={() => this.handleMinus()}>
                     <i className="minus square blue icon" />
-                  </div>
+                  </i>
                 </span>
 
                 <Button
                   type="ghost"
                   size="small"
-                  onClick={() => getorder(this.props.title, this.state.count)}
+                  onClick={() => this.handleClick()}
                 >
                   add to cart
                 </Button>

@@ -15,6 +15,7 @@ class RestaurantModal extends React.Component {
   onSubmit = async e => {
     const { editingRestaurant } = this.props
     e.preventDefault()
+    console.log('thisisresturant', this.props)
     if (editingRestaurant !== null) {
       await updateRestaurant(
         getCookie('token'),
