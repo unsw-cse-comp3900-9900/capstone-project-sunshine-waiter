@@ -4,13 +4,13 @@ import Request from './Request'
 import './Waiter.css'
 import { notification } from 'antd'
 import { connect } from '../apis/socketClient'
+import getCurrentUser from '../getCurrentUser'
+import { URL } from '../apis/webSocketUrl.json'
 import { getCookie } from '../authenticate/Cookies'
 import { getSingleRestaurant } from '../apis/actions/restaurants'
 import { handleAuthority } from '../services'
 import Unauthorized from '../Unauthorized'
 import Spinner from '../Spinner'
-
-const URL = 'http://localhost:5000'
 
 export const arrayToObj = array => {
   let result = {}
@@ -42,7 +42,7 @@ export const WelcomeMessage = props => {
 class Waiter extends React.Component {
   constructor(props) {
     super(props)
-    this.user = this.getRandomUserFrom(['Steve', 'Jason', 'Jeren', 'Annie'])
+    this.user = {}
     this.state = {
       socket: null,
       dishQue: [],
@@ -91,18 +91,14 @@ class Waiter extends React.Component {
             .filter(
               dish => dish.status === 'READY' || dish.status === 'SERVING'
             )
-            .sort(
-              (a, b) =>
-                new Date(a.readyTime).getTime() -
-                new Date(b.readyTime).getTime()
-            )
+            .sort((a, b) => new Date(a.readyTime) - new Date(b.readyTime))
           this.setState({
             dishQue: newDishQue,
           })
           switch (target.status) {
             case 'SERVED':
               notification['success']({
-                message: target.menuItem.title + ' served!',
+                message: target.menuItem.name + ' served!',
                 description:
                   'Dish id: ' +
                   target._id +
@@ -113,7 +109,7 @@ class Waiter extends React.Component {
               break
             case 'READY':
               notification['success']({
-                message: 'New dish: ' + target.menuItem.title + ' ready!',
+                message: 'New dish: ' + target.menuItem.name + ' ready!',
                 description: 'Ordered by table: ' + target.placedBy,
                 duration: 3,
               })
@@ -124,11 +120,7 @@ class Waiter extends React.Component {
         case 'requestQue':
           const newRequestQue = objToArray(newObj)
             .filter(request => request.finishTime == null)
-            .sort(
-              (a, b) =>
-                new Date(a.receiveTime).getTime() -
-                new Date(b.receiveTime).getTime()
-            )
+            .sort((a, b) => new Date(a.receiveTime) - new Date(b.receiveTime))
           this.setState({
             requestQue: newRequestQue,
           })
@@ -146,11 +138,20 @@ class Waiter extends React.Component {
     }
   }
 
-  componentDidMount() {
-    //request authority
-    const { id } = this.props.match.params
+  setUpUser = async () => {
+    const user = await getCurrentUser()
 
-    getSingleRestaurant(getCookie('token'), id, data => {
+    const { id: restaurantId } = this.props.match.params
+    this.user = { ...user, restaurantId, type: 'waiter' }
+  }
+
+  async componentDidMount() {
+    await this.setUpUser()
+
+    //request authority
+    const { id: restaurantId } = this.props.match.params
+
+    getSingleRestaurant(getCookie('token'), restaurantId, data => {
       this.setState({
         isLoading: false,
       })
@@ -178,7 +179,7 @@ class Waiter extends React.Component {
   }
 
   componentWillUnmount() {
-    this.state.socket.close()
+    if (this.state.socket) this.state.socket.close()
   }
 
   render() {

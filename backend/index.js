@@ -18,7 +18,8 @@ const {
 } = require('./middleware/errorHandler')
 
 // import websocket
-require('./server.js')
+// import websocket
+require('./webSocket.server/server.js').default
 
 // check environment variables
 if (!config.get('JWT_SECRET')) {

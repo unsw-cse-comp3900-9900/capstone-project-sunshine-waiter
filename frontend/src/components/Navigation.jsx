@@ -24,7 +24,7 @@ export default class Navigation extends React.Component {
           linkName="Customer"
           linkOnClick={this.handleItemClick}
         >
-          <i className="spy icon"></i>
+          <i className="fas fa-user-friends"> </i>
         </NavigationButtonCard>
         <NavigationButtonCard
           linkActiveItem={activeItem}
@@ -42,14 +42,7 @@ export default class Navigation extends React.Component {
         >
           <i className="food icon"></i>
         </NavigationButtonCard>
-        <NavigationButtonCard
-          linkActiveItem={activeItem}
-          linkTo={'/restaurants/' + id + '/cashier'}
-          linkName="Cashier"
-          linkOnClick={this.handleItemClick}
-        >
-          <i className="spy icon"></i>
-        </NavigationButtonCard>
+
         <NavigationButtonCard
           linkActiveItem={activeItem}
           linkTo={'/restaurants/' + id + '/manager'}

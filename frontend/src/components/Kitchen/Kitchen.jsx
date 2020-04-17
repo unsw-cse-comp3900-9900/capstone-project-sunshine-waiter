@@ -4,18 +4,18 @@ import DishesToCook from './dishesToCook'
 import { notification } from 'antd'
 import { objToArray, arrayToObj, WelcomeMessage } from '../Waiter/Waiter'
 import { connect } from '../apis/socketClient'
+import getCurrentUser from '../getCurrentUser'
+import { URL } from '../apis/webSocketUrl.json'
 import { getSingleRestaurant } from '../apis/actions/restaurants'
 import { getCookie } from '../authenticate/Cookies'
 import Spinner from '../Spinner'
 import Unauthorized from '../Unauthorized'
 import { handleAuthority } from '../services'
 
-const URL = 'http://localhost:5000'
-
 class Kitchen extends React.Component {
   constructor(props) {
     super(props)
-    this.user = this.getRandomUserFrom(['Steve', 'Jason', 'Jeren', 'Annie'])
+    this.user = {}
     this.state = {
       socket: null,
       dishQue: [],
@@ -24,15 +24,11 @@ class Kitchen extends React.Component {
     }
   }
 
-  getRandomUserFrom = names => {
-    let randomInt = Math.floor(Math.random() * names.length)
-    return {
-      restaurantId: 'restaurant1',
-      _id: 'user' + randomInt.toString(),
-      type: 'cook',
-      name: names[randomInt],
-      password: 'password',
-    }
+  setUpUser = async () => {
+    const user = await getCurrentUser()
+
+    const { id: restaurantId } = this.props.match.params
+    this.user = { ...user, restaurantId, type: 'cook' }
   }
 
   initiate = dishes => {
@@ -68,7 +64,7 @@ class Kitchen extends React.Component {
           switch (target.status) {
             case 'PLACED':
               notification['success']({
-                message: target.menuItem.title + ' ordered!',
+                message: target.menuItem.name + ' ordered!',
                 description:
                   'Dish id: ' + target._id + ' From table: ' + target.placedBy,
                 duration: 3,
@@ -76,7 +72,7 @@ class Kitchen extends React.Component {
               break
             case 'READY':
               notification['success']({
-                message: 'Dish: ' + target.menuItem.title + ' finished!',
+                message: 'Dish: ' + target.menuItem.name + ' finished!',
                 description: 'Cooked by: ' + target.cookedBy.name,
                 duration: 3,
               })
@@ -90,7 +86,9 @@ class Kitchen extends React.Component {
     }
   }
 
-  componentDidMount() {
+  async componentDidMount() {
+    await this.setUpUser()
+
     //request authority
     const { id } = this.props.match.params
 
