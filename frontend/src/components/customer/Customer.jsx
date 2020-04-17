@@ -5,7 +5,6 @@ import { getMenus } from './services/fakemenu'
 import './my-drawer.css'
 
 import {
-  TabBar,
   List,
   Drawer,
   Icon,
