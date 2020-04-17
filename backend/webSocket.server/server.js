@@ -7,37 +7,30 @@ const PORT = 5000
 
 const nsps = {}
 
-const onConnection = (anonymousClient) => {
-  console.log('Unknow User ' + anonymousClient.id + ' connected!')
+const authenticate = async (socket, next) => {
+  let { jwt, restaurantId } = socket.handshake.query
 
-  anonymousClient.on('authenticate', async (data) => {
-    const { jwt, restaurantId, type } = data
-    try {
-      const { userId, restaurant } = await canConnectToRestaurant(
-        jwt,
-        restaurantId
-      )
-
-      // assume steve is manager
-      if (userId) {
-        // start connection
-        const nspName = '/' + restaurantId
-        anonymousClient.emit('authenticate success', nspName) // send nsp to authenticated client
-        if (!nsps[restaurantId]) {
-          const nsp = io.of(nspName)
-          nsp.on('connect', serverRules(nsp, userId, restaurant, type))
-          nsps[restaurantId] = nsp
-        }
-      }
-    } catch (error) {
-      anonymousClient.close()
-    }
-  })
-  anonymousClient.on('disconnect', () => {
-    console.log('UnKnown User ' + anonymousClient.id + ' disconnected!')
-  })
+  try {
+    const { userId } = await canConnectToRestaurant(jwt, restaurantId)
+    if (userId) next()
+  } catch (err) {
+    return next(err)
+  }
 }
 
+const onConnection = (authenticatedClient) => {
+  let { restaurantId } = authenticatedClient.handshake.query
+  const nspName = '/' + restaurantId
+  authenticatedClient.emit('authenticate success', nspName)
+  if (!nsps[restaurantId]) {
+    //create new nsp
+    const nsp = io.of(nspName)
+    nsp.on('connect', serverRules(nsp))
+    nsps[restaurantId] = nsp
+  }
+}
+
+io.use(authenticate) // middle ware to check user's auth
 io.on('connect', onConnection)
 
 http.listen(PORT, function () {

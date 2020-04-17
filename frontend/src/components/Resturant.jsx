@@ -34,12 +34,12 @@ class Restaurant extends React.Component {
       <div className="restaurant">
         <div className="container center">
           <div className="row">
-            <h1 className="display-1 white text-shadow font-weight-bolder text-shadow">
+            <h1 className="text-left display-1 white text-shadow font-weight-bolder text-shadow">
               Welcome to
             </h1>
           </div>
           <div className="row">
-            <h1 className="display-4 white text-shadow">{name}</h1>
+            <h1 className="text-left display-4 white text-shadow">{name}</h1>
           </div>
           <div className="row">
             <footer class="blockquote-footer my-3 font-italic">

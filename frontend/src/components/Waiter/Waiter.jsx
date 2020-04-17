@@ -149,7 +149,7 @@ class Waiter extends React.Component {
     await this.setUpUser()
 
     //request authority
-    const { restaurantId } = this.props.match.params
+    const { id: restaurantId } = this.props.match.params
 
     getSingleRestaurant(getCookie('token'), restaurantId, data => {
       this.setState({

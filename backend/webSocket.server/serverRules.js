@@ -1,15 +1,16 @@
 const { updateItem } = require('../controllers/orderItem.controller')
 const { dishes, requests } = require('./fakeData')
 
-const serverRules = (nsp, userId, restaurant, type) => {
+const serverRules = (nsp) => {
   return (socket) => {
-    console.log(type + ' ' + userId + ' connect to ' + restaurant._id)
+    let { restaurantId, _id: userId, type } = socket.handshake.query
+    console.log(`${type} ${userId} connected to restaurant ${restaurantId}`)
     socket.join(type) // put user into rooms according to their type
     socket.on('update dish', async (item) => {
       // dish served or fail send from waiter, server need to update the db
       // update db
       // console.log(item)
-      await updateItem(restaurant._id, item)
+      await updateItem(restaurantId, item)
       dishes[item._id] = item
       nsp.to('waiter').emit('update dish', item) // let all other waiter know
       nsp.to('cook').emit('update dish', item)
@@ -21,7 +22,9 @@ const serverRules = (nsp, userId, restaurant, type) => {
       nsp.to('waiter').emit('update request', request)
     })
     socket.on('disconnect', () => {
-      console.log(type + ' ' + userId + ' disconnect to ' + restaurant._id)
+      console.log(
+        type + ' ' + userId + ' disconnect to restaurnat ' + restaurantId
+      )
     })
 
     // initiate with dummy data

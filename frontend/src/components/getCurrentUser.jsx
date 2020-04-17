@@ -3,7 +3,6 @@ import BaseProvider from './apis/BaseProvider'
 
 const getCurrentUser = async () => {
   const jwt = getCookie('token')
-  console.log(jwt)
 
   const config = {
     headers: {

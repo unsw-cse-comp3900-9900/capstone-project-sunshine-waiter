@@ -8,7 +8,7 @@ const NavigationButtonCard = props => {
       to={props.linkTo}
       name={props.linkName}
       onClick={props.linkOnClick}
-      className="btn btn-primary mx-2"
+      className="btn btn-primary m-2"
     >
       <span>{props.children}</span>
       {props.linkName}
