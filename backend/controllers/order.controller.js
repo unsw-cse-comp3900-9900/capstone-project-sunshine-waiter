@@ -1,12 +1,12 @@
-const Order = require('../models/order.model')
-const { OrderItem, allowedStatus } = require('../models/orderItem.model')
-
-const { findRestaurant } = require('./restaurant.controller')
-const { createOrderItems } = require('./orderItem.controller')
-
+const moment = require('moment')
 const _ = require('lodash')
 const isValid = require('mongoose').Types.ObjectId.isValid
-const { present: presentDoc } = require('../util')
+const { present: presentDoc, performTransaction } = require('../util')
+
+const Order = require('../models/order.model')
+const { OrderItem, allowedStatus } = require('../models/orderItem.model')
+const { findRestaurant } = require('./restaurant.controller')
+const { createOrderItems } = require('./orderItem.controller')
 const { sendOrderItems } = require('./sendOrderItem')
 
 const present = async (order) => {
@@ -31,8 +31,20 @@ createOrder = async (req, res, next) => {
     if (!placedBy)
       throw { httpCode: 400, message: 'Request body miss key: placedBy' }
     const restaurant = await findRestaurant(req)
+    var intradayId = 0
+    const isFirstOrderToday = moment(moment()).isSame(
+      restaurant.lastOpenDate,
+      'day'
+    )
+    if (!isFirstOrderToday) {
+      restaurant.lastOpenDate = new Date()
+    } else {
+      intradayId = restaurant.intradayId
+      restaurant.intradayId = restaurant.intradayId + 1
+    }
 
     const order = new Order({
+      intradayId,
       placedBy,
       isPaid: false,
       isAllServed: false,
@@ -40,10 +52,14 @@ createOrder = async (req, res, next) => {
       restaurant: restaurant._id,
       orderItems: [],
     })
-    await order.save()
 
-    const orderItems = await createOrderItems(req, res, next, order)
-    sendOrderItems(orderItems) // send to websocket server
+    const transaction = async () => {
+      await order.save()
+      await restaurant.save()
+      const orderItems = await createOrderItems(req, res, next, order)
+      sendOrderItems(orderItems) // send to websocket server
+    }
+    await performTransaction(transaction)
     res.status(201).json({ data: await present(order) })
   } catch (error) {
     next(error)

@@ -19,6 +19,13 @@ const {
 
 // public access
 router.get('/:restaurantId/orderItems/:orderItemId', readOrderItem)
-router.get('/:restaurantId/orderitems/', readAllItemInRestaurant)
+
+router.get(
+  '/:restaurantId/orderitems/',
+  verifyAuthToken,
+  allowIfLoggedin,
+  requestAccess(scopes.restaurant, actions.read, resources.order),
+  readAllItemInRestaurant
+)
 
 module.exports = router

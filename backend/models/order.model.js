@@ -2,6 +2,11 @@ const mongoose = require('mongoose')
 
 // require restaurant admin to update orderItems
 const restaurantSchema = new mongoose.Schema({
+  intradayId: {
+    type: Number,
+    required: true,
+    default: 0,
+  },
   isPaid: {
     type: Boolean,
     required: true,
