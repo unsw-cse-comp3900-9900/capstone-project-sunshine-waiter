@@ -54,7 +54,7 @@ createOrderItems = async (req, res, next, order) => {
         restaurant: order.restaurant,
       }
     })
-    await OrderItem.create(docs)
+    return await OrderItem.create(docs)
   } catch (error) {
     next(error)
   }
@@ -153,7 +153,7 @@ return
 */
 updateItem = async (
   restaurantId,
-  { _id: itemId, state: newStatus, ...rest }
+  { _id: itemId, status: newStatus, ...rest }
 ) => {
   if (!allowedStatus[newStatus])
     return { error: `newStatus ${newStatus} is not valid` }

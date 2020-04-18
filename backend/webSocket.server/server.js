@@ -23,18 +23,21 @@ const onConnection = (authenticatedClient) => {
   const nspName = '/' + restaurantId
   authenticatedClient.emit('authenticate success', nspName)
   if (!nsps[restaurantId]) {
-    //create new nsp
-    const nsp = io.of(nspName)
-    nsp.on('connect', serverRules(nsp))
-    nsps[restaurantId] = nsp
+    nsps[restaurantId] = createNewServer(nspName, serverRules)
   }
 }
 
 io.use(authenticate) // middle ware to check user's auth
 io.on('connect', onConnection)
 
+const createNewServer = (nspName, serverRules) => {
+  const nsp = io.of(nspName)
+  nsp.on('connect', serverRules(nsp))
+  return nsp
+}
+
 http.listen(PORT, function () {
   console.log('Websocket listening at ' + PORT)
 })
 
-module.exports = http
+module.exports = { http, nsps, createNewServer }

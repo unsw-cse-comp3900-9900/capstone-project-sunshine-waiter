@@ -7,6 +7,7 @@ const { createOrderItems } = require('./orderItem.controller')
 const _ = require('lodash')
 const isValid = require('mongoose').Types.ObjectId.isValid
 const { present: presentDoc } = require('../util')
+const { sendOrderItems } = require('./sendOrderItem')
 
 const present = async (order) => {
   const obj = presentDoc(order)
@@ -41,8 +42,8 @@ createOrder = async (req, res, next) => {
     })
     await order.save()
 
-    await createOrderItems(req, res, next, order)
-
+    const orderItems = await createOrderItems(req, res, next, order)
+    sendOrderItems(orderItems) // send to websocket server
     res.status(201).json({ data: await present(order) })
   } catch (error) {
     next(error)
