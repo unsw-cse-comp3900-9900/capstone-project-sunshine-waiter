@@ -15,7 +15,7 @@ const { TextArea } = Input
 class NavigationOrderConfirm extends Component {
   state = {}
   renderFooter = () => {
-    const { handleCancelPay, flag } = this.props
+    const { handleCancelPay } = this.props
     return (
       <div
         style={{

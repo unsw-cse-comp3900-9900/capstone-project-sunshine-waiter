@@ -46,5 +46,9 @@
         -   add timeout when jump to order confirmation. --- finish
     -   submit order
         -   order confirmation(check null,confirm jump to payment page)       ----finish(modify table style needed)
-        -   jump to checkorder
-        -   jump to final page ----- 4.17,18
+        -   jump to finish payment page
+        -   jump to final page ----- 4.17,18 (need order number!!!!!)
+
+
+        1.backend to do ---- fix category, need an ordernumber, menuitem name length validation, add total price in db?
+        2. next days to do ---- improve ui
