@@ -48,6 +48,7 @@ createOrderItems = async (req, res, next, order) => {
           'name',
           'amount',
           'notes',
+          'categoryArray',
         ]),
         order: order._id,
         placedBy,
