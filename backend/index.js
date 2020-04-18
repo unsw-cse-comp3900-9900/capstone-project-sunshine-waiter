@@ -19,7 +19,7 @@ const {
 
 // import websocket
 // import websocket
-require('./webSocket.server/server.js').default
+require('./webSocket.server/server.js').http
 
 // check environment variables
 if (!config.get('JWT_SECRET')) {

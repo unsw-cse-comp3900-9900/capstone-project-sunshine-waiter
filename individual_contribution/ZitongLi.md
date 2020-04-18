@@ -146,6 +146,10 @@ Finished dashboard, add total sales, Order amount, sales chart, category pie and
 
     ![homepage](ZitongLi.assets/homepage.jpeg)
 
+#### Saturday, 18 April 2020
+
+Finished pushing orders to kitchen when a customer place order.
+
 #### Todo
 
 *   request api

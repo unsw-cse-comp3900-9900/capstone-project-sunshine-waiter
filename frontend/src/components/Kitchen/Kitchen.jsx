@@ -32,13 +32,12 @@ class Kitchen extends React.Component {
   }
 
   initiate = dishes => {
+    console.log(dishes)
     this.setState({
       dishQue: objToArray(dishes)
         .filter(dish => dish.status === 'PLACED' || dish.status === 'COOKING')
         .sort(
-          (a, b) =>
-            new Date(a.order.createAt).getTime() -
-            new Date(b.order.createAt).getTime()
+          (a, b) => new Date(a.order.createAt) - new Date(b.order.createAt)
         ),
     })
   }
@@ -54,9 +53,7 @@ class Kitchen extends React.Component {
               dish => dish.status === 'PLACED' || dish.status === 'COOKING'
             )
             .sort(
-              (a, b) =>
-                new Date(a.order.createAt).getTime() -
-                new Date(b.order.createAt).getTime()
+              (a, b) => new Date(a.order.createAt) - new Date(b.order.createAt)
             )
           this.setState({
             dishQue: newDishQue,
