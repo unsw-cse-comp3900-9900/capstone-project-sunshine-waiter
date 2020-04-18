@@ -21,7 +21,7 @@ class Dashboard extends Component {
       orderItems: [],
       categories: {},
       data: [],
-      zoomDomain: {},
+      zoomDomain: { x: [0, 0] },
     }
   }
 
@@ -29,9 +29,8 @@ class Dashboard extends Component {
     const [start, end] = this.state.zoomDomain.x || [new Date(0), new Date()]
     // console.log(start, end)
     const selected = this.state.orderItems.filter(item => {
-      return (
-        start <= new Date(item.serveTime) && new Date(item.serveTime) <= end
-      )
+      const date = new Date(item.serveTime)
+      return start <= date && date <= end
     })
 
     return selected
@@ -40,8 +39,9 @@ class Dashboard extends Component {
   getOrderItems = async () => {
     const { id } = this.props.match.params
     const orderItems = await getAllOrderItems(getCookie('token'), id)
-    if (orderItems.length) {
-      const sorted = orderItems.sort(
+    const finishedOrderItems = orderItems.filter(_ => _.status === 'SERVED')
+    if (finishedOrderItems.length) {
+      const sorted = finishedOrderItems.sort(
         (a, b) => new Date(a.serveTime) - new Date(b.serveTime)
       )
       const end = new Date(sorted[sorted.length - 1].serveTime)
