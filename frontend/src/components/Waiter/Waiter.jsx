@@ -98,7 +98,7 @@ class Waiter extends React.Component {
           switch (target.status) {
             case 'SERVED':
               notification['success']({
-                message: target.menuItem.name + ' served!',
+                message: target.name + ' served!',
                 description:
                   'Dish id: ' +
                   target._id +
@@ -109,7 +109,7 @@ class Waiter extends React.Component {
               break
             case 'READY':
               notification['success']({
-                message: 'New dish: ' + target.menuItem.name + ' ready!',
+                message: 'New dish: ' + target.name + ' ready!',
                 description: 'Ordered by table: ' + target.placedBy,
                 duration: 3,
               })

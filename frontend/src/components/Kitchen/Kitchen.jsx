@@ -61,7 +61,7 @@ class Kitchen extends React.Component {
           switch (target.status) {
             case 'PLACED':
               notification['success']({
-                message: target.menuItem.name + ' ordered!',
+                message: target.name + ' ordered!',
                 description:
                   'Dish id: ' + target._id + ' From table: ' + target.placedBy,
                 duration: 3,
@@ -69,7 +69,7 @@ class Kitchen extends React.Component {
               break
             case 'READY':
               notification['success']({
-                message: 'Dish: ' + target.menuItem.name + ' finished!',
+                message: 'Dish: ' + target.name + ' finished!',
                 description: 'Cooked by: ' + target.cookedBy.name,
                 duration: 3,
               })

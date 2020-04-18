@@ -18,7 +18,6 @@ const serverRules = (nsp) => {
         itemRecord.servedBy = item.servedBy._id
 
       await updateItem(restaurantId, itemRecord)
-      console.log(itemRecord)
 
       nsp.to('waiter').emit('update dish', item) // let all other waiter know
       nsp.to('cook').emit('update dish', item)
