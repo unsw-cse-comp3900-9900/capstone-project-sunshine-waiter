@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import DishItemCard from './DishItemCard.js'
 
 import NavigationOrderConfirm from './NavigationOrderConfirm.js'
+import PaymentFinsh from './PaymentFinsh.js'
 
 import { getMenus } from './services/fakemenu'
 import './my-drawer.css'
@@ -54,8 +55,11 @@ class Customer extends Component {
     orderitem: {},
     tableid: '',
     value: '',
-    flag: false,
+    //flag: false,
+    pagestatus: 0, // control page jump
     totalPrice: 0,
+    orderstatus: false,
+    orderId: '',
   }
 
   componentDidMount = () => {
@@ -80,17 +84,6 @@ class Customer extends Component {
     //alert('Your tableid is:' + searchParams.get('tableid'))
     const tableid = searchParams.get('tableid')
     this.FetchTableIdAlert(tableid)
-    // const showAlert = () => {
-    //   const alertInstance = alert('Delete', 'Are you sure???', [
-    //     { text: 'Cancel', onPress: () => console.log('cancel'), style: 'default' },
-    //     { text: 'OK', onPress: () => console.log('ok') },
-    //   ]);
-    //   setTimeout(() => {
-    //     // 可以调用close方法以在外部close
-    //     console.log('auto close');
-    //     alertInstance.close();
-    //   }, 500000);
-    // };
   }
 
   FetchTableIdAlert = tableid => {
@@ -104,7 +97,7 @@ class Customer extends Component {
     await fetchPublicMenuApi(id, this.onSetCurrentMenu)
   }
 
-  onSubmit = async () => {
+  onSubmit = () => {
     // console.log('test1')
     // console.log('orderdata', this.state.orderItemsData)
     // console.log('thisprops', this.props.location.search)
@@ -114,16 +107,16 @@ class Customer extends Component {
       return
     }
     //e.preventDefault()
-    const { id } = this.props.match.params
-    const param = {
-      placedBy: this.state.placedBy,
+    // const { id } = this.props.match.params
+    // const param = {
+    //   placedBy: this.state.placedBy,
 
-      orderItemsData: this.state.orderItemsData,
-    }
-    console.log('param', param)
-    console.log('props', this.props)
+    //   orderItemsData: this.state.orderItemsData,
+    // }
+    // console.log('param', param)
+    // console.log('props', this.props)
 
-    await createOrder(getCookie('token'), id, param)
+    // await createOrder(getCookie('token'), id, param)
 
     this.computeTotalPrice()
     Toast.loading('loading...', 1)
@@ -133,7 +126,7 @@ class Customer extends Component {
 
   handleflag() {
     this.setState({
-      flag: true,
+      pagestatus: 1,
     })
   }
 
@@ -257,7 +250,39 @@ class Customer extends Component {
 
   handleCancelPay = () => {
     this.setState({
-      flag: false,
+      pagestatus: 0,
+    })
+  }
+
+  handleConfirmPay = () => {
+    this.handleOrderStatus()
+    this.setState({
+      pagestatus: 2,
+    })
+  }
+
+  handleOrderStatus = async () => {
+    // this.setState({
+    //   orderstatus: true,
+    // })
+    const { id } = this.props.match.params
+    const param = {
+      placedBy: this.state.placedBy,
+
+      orderItemsData: this.state.orderItemsData,
+    }
+    console.log('param', param)
+    console.log('beforeprops', this.props)
+
+    await createOrder(getCookie('token'), id, param, this.getOrderdata)
+    console.log('afterprops', this.props)
+    Toast.loading('loading...', 1)
+  }
+
+  getOrderdata = data => {
+    console.log('customerordercallback->', data)
+    this.setState({
+      orderId: data._id,
     })
   }
 
@@ -319,7 +344,7 @@ class Customer extends Component {
   )
 
   render() {
-    if (this.state.flag === false) {
+    if (this.state.pagestatus === 0) {
       console.log('currentmenu', this.state.currentMenu)
       console.log('_id', this.state.currentMenu._id)
       console.log('category', this.state.currentMenu.categories)
@@ -456,7 +481,7 @@ class Customer extends Component {
           </Drawer>
         </div>
       )
-    } else {
+    } else if (this.state.pagestatus === 1) {
       return (
         <NavigationOrderConfirm
           flag={this.state.flag}
@@ -464,6 +489,14 @@ class Customer extends Component {
           orderItemsData={this.state.orderItemsData}
           handleCancelPay={this.handleCancelPay}
           handleConfirmPay={this.handleConfirmPay}
+        />
+      )
+    } else if (this.state.pagestatus === 2) {
+      return (
+        <PaymentFinsh
+          handleOrderStatus={this.handleOrderStatus}
+          id={this.props.match.params.id}
+          orderId={this.state.orderId}
         />
       )
     }

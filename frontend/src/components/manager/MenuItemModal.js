@@ -24,6 +24,7 @@ class MenuItemModal extends React.Component {
   UNSAFE_componentWillReceiveProps = nextProps => {
     const { currentParam } = nextProps
 
+    console.log('menuitemmodal->!!!!!!', currentParam)
     if (currentParam !== null) {
       const {
         _id,
@@ -212,6 +213,7 @@ class MenuItemModal extends React.Component {
   }
 
   render() {
+    console.log('menuitemmodalrender')
     const { visible, onCancel } = this.props
     return (
       <Modal visible={visible} onCancel={onCancel} onOk={this.onSubmit}>
