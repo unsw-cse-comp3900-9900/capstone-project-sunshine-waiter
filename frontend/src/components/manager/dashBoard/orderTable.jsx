@@ -104,7 +104,7 @@ class OrderTable extends Component {
     ]
   }
 
-  componentWillReceiveProps() {
+  setData() {
     const { data } = this.props
     // console.log(this.props)
 
@@ -125,6 +125,10 @@ class OrderTable extends Component {
     }
 
     this.setState({ groupByOrder, detailVisible, orders })
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps !== this.props) this.setData()
   }
 
   toggleShowDetail = orderId => {
