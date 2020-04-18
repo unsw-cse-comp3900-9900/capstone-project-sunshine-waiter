@@ -32,6 +32,7 @@ const TimeSelector = ({ data, zoomDomain, handleZoom }) => {
       <TimeIntervalMessage start={start} end={end} />
       <VictoryChart
         padding={{ top: 10, bottom: 30 }}
+        domainPadding={20}
         width={1000}
         height={90}
         scale={{ x: 'time' }}
