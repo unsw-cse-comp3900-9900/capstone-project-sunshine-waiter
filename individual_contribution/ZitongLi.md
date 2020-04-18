@@ -150,6 +150,8 @@ Finished dashboard, add total sales, Order amount, sales chart, category pie and
 
 Finished pushing orders to kitchen when a customer place order.
 
+*   dashboard bug fixed
+
 #### Todo
 
 *   request api
