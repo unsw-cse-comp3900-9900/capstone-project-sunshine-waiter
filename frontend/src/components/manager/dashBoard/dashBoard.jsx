@@ -40,8 +40,9 @@ class Dashboard extends Component {
   getOrderItems = async () => {
     const { id } = this.props.match.params
     const orderItems = await getAllOrderItems(getCookie('token'), id)
-    if (orderItems.length) {
-      const sorted = orderItems.sort(
+    const finishedOrderItems = orderItems.filter(_ => _.status === 'SERVED')
+    if (finishedOrderItems.length) {
+      const sorted = finishedOrderItems.sort(
         (a, b) => new Date(a.serveTime) - new Date(b.serveTime)
       )
       const end = new Date(sorted[sorted.length - 1].serveTime)
