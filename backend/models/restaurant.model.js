@@ -1,6 +1,16 @@
 const mongoose = require('mongoose')
 
 const restaurantSchema = new mongoose.Schema({
+  intradayId: {
+    type: Number,
+    required: true,
+    default: 0,
+  },
+  lastOpenDate: {
+    type: Date,
+    required: true,
+    default: new Date(),
+  },
   name: {
     type: String,
     required: true,
