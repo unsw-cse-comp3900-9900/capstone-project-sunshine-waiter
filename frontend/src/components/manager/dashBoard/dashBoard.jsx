@@ -29,9 +29,8 @@ class Dashboard extends Component {
     const [start, end] = this.state.zoomDomain.x || [new Date(0), new Date()]
     // console.log(start, end)
     const selected = this.state.orderItems.filter(item => {
-      return (
-        start <= new Date(item.serveTime) && new Date(item.serveTime) <= end
-      )
+      const date = new Date(item.serveTime)
+      return start <= date && date <= end
     })
 
     return selected

@@ -6,7 +6,7 @@ import { numberWithCommas } from './totalSale'
 class OrderTable extends Component {
   constructor(props) {
     super(props)
-    this.data = {
+    this.state = {
       groupByOrder: new Map(),
       detailVisible: {},
       orders: [],
@@ -85,7 +85,7 @@ class OrderTable extends Component {
             </Button>
             <Modal
               title={order.orderId}
-              visible={this.data.detailVisible[order.orderId]}
+              visible={this.state.detailVisible[order.orderId]}
               onOk={() => this.toggleShowDetail(order.orderId)}
               onCancel={() => this.toggleShowDetail(order.orderId)}
               okText="OK"
@@ -93,7 +93,7 @@ class OrderTable extends Component {
             >
               <Table
                 columns={this.itemColums}
-                dataSource={this.data.groupByOrder.get(order.orderId)}
+                dataSource={this.state.groupByOrder.get(order.orderId)}
                 scroll={{ x: 800 }}
                 pagination={{ pageSize: 3 }}
               />
@@ -124,7 +124,7 @@ class OrderTable extends Component {
       orders.push(order)
     }
 
-    this.data = { groupByOrder, detailVisible, orders }
+    this.setState({ groupByOrder, detailVisible, orders })
   }
 
   componentDidUpdate(prevProps) {
@@ -132,13 +132,13 @@ class OrderTable extends Component {
   }
 
   toggleShowDetail = orderId => {
-    let detailVisible = { ...this.data.detailVisible }
+    let detailVisible = { ...this.state.detailVisible }
     detailVisible[orderId] = !detailVisible[orderId]
-    this.data.detailVisible = detailVisible
+    this.setState({ detailVisible })
   }
 
   render() {
-    const { orders } = this.data
+    const { orders } = this.state
     const columns = this.columns
     return (
       <Table
