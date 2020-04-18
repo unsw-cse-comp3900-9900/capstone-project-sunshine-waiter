@@ -21,7 +21,7 @@ class Dashboard extends Component {
       orderItems: [],
       categories: {},
       data: [],
-      zoomDomain: {},
+      zoomDomain: { x: [0, 0] },
     }
   }
 

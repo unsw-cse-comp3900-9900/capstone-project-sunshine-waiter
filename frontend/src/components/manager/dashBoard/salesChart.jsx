@@ -5,6 +5,7 @@ import {
   VictoryLine,
   VictoryTheme,
   VictoryAxis,
+  VictoryBar,
 } from 'victory'
 
 const SalesChart = ({ data, zoomDomain, handleZoom }) => {
@@ -40,17 +41,18 @@ const SalesChart = ({ data, zoomDomain, handleZoom }) => {
       >
         <VictoryAxis
           style={{
-            axis: { stroke: '#756f6a' },
             axisLabel: { fontSize: 20, padding: 30 },
-            grid: { stroke: 'grey' },
+            // grid: { stroke: 'grey' },
           }}
         />
         <VictoryAxis dependentAxis tickFormat={x => `$${x}`} />
-        <VictoryLine
+        <VictoryBar
+          // barWidth={10}
+          barRatio={4}
           data={data}
-          interpolation="basis"
+          cornerRadius={{ top: 4 }}
           style={{
-            data: { stroke: '#2393d3ce' },
+            data: { fill: '#2393d3' },
           }}
         />
       </VictoryChart>

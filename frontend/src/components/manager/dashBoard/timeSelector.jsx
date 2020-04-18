@@ -4,6 +4,7 @@ import {
   VictoryBrushContainer,
   VictoryLine,
   VictoryAxis,
+  VictoryBar,
 } from 'victory'
 
 const TimeIntervalMessage = ({ start, end }) => {
@@ -47,11 +48,7 @@ const TimeSelector = ({ data, zoomDomain, handleZoom }) => {
         }
       >
         <VictoryAxis />
-        <VictoryLine
-          data={data}
-          interpolation="basis"
-          style={{ data: { stroke: '#2393d3ce' } }}
-        />
+        <VictoryBar data={data} style={{ data: { fill: '#2393d3' } }} />
       </VictoryChart>
     </React.Fragment>
   )
