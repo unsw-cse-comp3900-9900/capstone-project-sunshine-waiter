@@ -150,6 +150,8 @@ Finished dashboard, add total sales, Order amount, sales chart, category pie and
 
 Finished pushing orders to kitchen when a customer place order.
 
+![push_order](ZitongLi.assets/push_order.gif)
+
 *   dashboard bug fixed
 
 #### Sunday, 19 April 2020
