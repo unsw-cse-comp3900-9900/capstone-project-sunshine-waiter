@@ -52,3 +52,8 @@
 
         1.backend to do ---- fix category, need an ordernumber, menuitem name length validation, add total price in db?
         2. next days to do ---- improve ui
+
+### week10
+
+    -   improve ui
+    -   add request function

@@ -37,7 +37,7 @@ export const getSingleRestaurant = (token, id, callback = () => {}) => {
     }
     BaseProvider.get(`/restaurants/${id}`, config)
       .then(res => {
-        console.log({ res })
+        // console.log('restaurents->', { res })
         callback(res.data.data)
       })
       .catch(err => {
