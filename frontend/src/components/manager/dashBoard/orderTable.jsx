@@ -62,7 +62,7 @@ class OrderTable extends Component {
         dataIndex: 'serveTime',
         key: 'serveTime',
         defaultSortOrder: 'descend',
-        sorter: (a, b) => a.serveTime - b.serveTime,
+        sorter: (a, b) => new Date(a.serveTime) - new Date(b.serveTime),
       },
       {
         title: 'Total Price',
