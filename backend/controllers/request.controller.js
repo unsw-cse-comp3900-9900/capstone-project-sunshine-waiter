@@ -28,8 +28,29 @@ createRequest = async (req, res, next) => {
     if (!order.restaurant.equals(restaurantId))
       throw {
         httpCode: 400,
-        message: `request ${requestId} is not in current restaurant!`,
+        message: `order ${requestId} is not in current restaurant!`,
       }
+    if (order.isAllServed)
+      throw {
+        httpCode: 400,
+        message: `order ${requestId} is closed!`,
+      }
+
+    let requests = await Request.find({
+      restaurant: restaurantId,
+      order: orderId,
+    })
+    requests = await Promise.all(
+      requests.filter((_) => _.finishTime === undefined)
+    )
+    console.log(requests)
+    if (requests.length) {
+      res.status(208).json({
+        message: 'An active request already exist.',
+        data: requests[0],
+      })
+      return
+    }
 
     const request = new Request({
       tableId: tableId,
