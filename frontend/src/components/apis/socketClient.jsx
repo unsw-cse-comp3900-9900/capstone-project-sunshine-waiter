@@ -12,6 +12,7 @@ const connect = (component, URL, userData, config) => {
     const safeConnect = io(URL + namespace, { autoConnect: false })
     safeConnect.io.opts.query = userData
     safeConnect.connect()
+    safeConnect.on('connect', () => message.success('Connect established'))
     for (let [event, response] of Object.entries(config)) {
       safeConnect.on(event, response)
     }
