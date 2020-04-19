@@ -34,7 +34,7 @@ class Kitchen extends React.Component {
   initiate = dishes => {
     console.log(dishes)
     this.setState({
-      dishQue: objToArray(dishes)
+      dishQue: dishes
         .filter(dish => dish.status === 'PLACED' || dish.status === 'COOKING')
         .sort(
           (a, b) => new Date(a.order.createAt) - new Date(b.order.createAt)

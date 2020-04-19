@@ -1,6 +1,8 @@
 const { updateItem } = require('../controllers/orderItem.controller')
-const { requests } = require('./fakeData')
+// const { requests } = require('./fakeData')
+const { updateRequest } = require('../controllers/request.controller')
 const { OrderItem } = require('../models/orderItem.model')
+const Request = require('../models/request.model')
 
 const serverRules = (nsp) => {
   return async (socket) => {
@@ -23,9 +25,13 @@ const serverRules = (nsp) => {
       nsp.to('cook').emit('update dish', item)
     })
 
-    socket.on('update request', (request) => {
-      // update db
+    socket.on('update request', async (request) => {
+      let requestRecord = { ...request }
+      if (request.handleBy && request.handleBy._id)
+        requestRecord.handleBy = request.handleBy._id
 
+      // update db
+      await updateRequest(restaurantId, requestRecord)
       nsp.to('waiter').emit('update request', request)
     })
     socket.on('disconnect', () => {
@@ -34,14 +40,17 @@ const serverRules = (nsp) => {
       )
     })
 
-    // initiate with dummy data
-    const { enRichData } = require('../controllers/sendOrderItem')
+    // initiate with data in db
+    const { enrichOrderItem } = require('../controllers/sendOrderItem')
     let orderItems = await OrderItem.find({ restaurant: restaurantId })
     orderItems = await Promise.all(
       orderItems
         .filter((_) => _.status !== 'SERVED' && _.status !== 'FAILED')
-        .map(enRichData)
+        .map(enrichOrderItem)
     )
+
+    let requests = await Request.find({ restaurant: restaurantId })
+    requests = await Promise.all(requests.filter((_) => _.finishTime === null))
 
     switch (type) {
       case 'cook':
