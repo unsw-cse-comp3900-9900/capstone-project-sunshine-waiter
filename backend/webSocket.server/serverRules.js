@@ -12,8 +12,10 @@ const serverRules = (nsp) => {
       let itemRecord = { ...item }
       itemRecord.order = item.order._id
       itemRecord.menuItem = item.menuItem._id
-      if (item.cookedBy) itemRecord.cookedBy = item.cookedBy._id
-      if (item.servedBy) itemRecord.servedBy = item.servedBy._id
+      if (item.cookedBy && item.cookedBy._id)
+        itemRecord.cookedBy = item.cookedBy._id
+      if (item.servedBy && item.servedBy._id)
+        itemRecord.servedBy = item.servedBy._id
 
       await updateItem(restaurantId, itemRecord)
 
