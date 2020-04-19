@@ -10,8 +10,8 @@ services:
 # - docker build -t lyyjeren/frontend -f ./frontend/Dockerfile.dev ./frontend
 # - docker build -t lyyjeren/nginx -f ./nginx/Dockerfile.dev ./nginx
 
-# script:
-- docker run -e CI=true lyyjeren/react-test npm run start
+script:
+    - docker run -e CI=true lyyjeren/react-test npm run start
 
 branches:
     only: ['master', 'deploy']
