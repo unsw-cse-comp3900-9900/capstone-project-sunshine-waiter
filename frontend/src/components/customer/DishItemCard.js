@@ -1,8 +1,11 @@
 import React, { Component, Fragment } from 'react'
 import { getMenus } from './services/fakemenu'
 
-import { Card, WingBlank, WhiteSpace, Button } from 'antd-mobile'
+import { Card, WingBlank, WhiteSpace } from 'antd-mobile'
 import 'antd-mobile/dist/antd-mobile.css'
+
+import { Table, Typography, Button } from 'antd'
+import 'antd/dist/antd.css'
 
 //to make pictures display correctly. must pay attention to the order of img in file
 const requireContext = require.context('./', true, /\.jpg$/)
@@ -14,7 +17,6 @@ class DishItemCard extends Component {
   state = {
     // menus: getMenus(),
     count: 1,
-    //dish_id: 0,
   }
 
   handleAdd() {
@@ -48,15 +50,7 @@ class DishItemCard extends Component {
 
   render() {
     // const { title, image_id, description, cost, getorder } = this.props
-    const {
-      categoryArray,
-      _id,
-      name,
-      price,
-      description,
-      note,
-      getorder,
-    } = this.props
+    const { categoryArray, name, price, description } = this.props
 
     // var imgURL = Imgs[image_id]
     // console.log('imgurl' + imgURL)

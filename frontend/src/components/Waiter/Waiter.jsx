@@ -134,6 +134,7 @@ class Waiter extends React.Component {
   setUpUser = async () => {
     const user = await getCurrentUser()
 
+    console.log('this is user=>', user)
     const { id: restaurantId } = this.props.match.params
     this.user = { ...user, restaurantId, type: 'waiter' }
   }
