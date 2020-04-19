@@ -67,17 +67,10 @@ class Waiter extends React.Component {
     this.setState({
       dishQue: objToArray(dishes)
         .filter(dish => dish.status === 'READY' || dish.status === 'SERVING')
-        .sort(
-          (a, b) =>
-            new Date(a.readyTime).getTime() - new Date(b.readyTime).getTime()
-        ),
+        .sort((a, b) => new Date(a.readyTime) - new Date(b.readyTime)),
       requestQue: objToArray(requests)
         .filter(request => request.finishTime == null)
-        .sort(
-          (a, b) =>
-            new Date(a.receiveTime).getTime() -
-            new Date(b.receiveTime).getTime()
-        ),
+        .sort((a, b) => new Date(a.receiveTime) - new Date(b.receiveTime)),
     })
   }
 

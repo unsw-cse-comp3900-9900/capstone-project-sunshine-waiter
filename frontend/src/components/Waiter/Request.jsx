@@ -80,9 +80,7 @@ class RenderRequests extends React.Component {
 
   render() {
     const requestQue = this.props.requestQue
-    let result = objToArray(requestQue).map(request =>
-      this.renderSingleRequest(request)
-    )
+    let result = requestQue.map(request => this.renderSingleRequest(request))
 
     return <QueueAnim>{result}</QueueAnim>
   }
