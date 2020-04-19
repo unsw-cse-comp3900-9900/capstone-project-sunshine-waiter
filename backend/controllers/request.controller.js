@@ -43,7 +43,7 @@ createRequest = async (req, res, next) => {
     requests = await Promise.all(
       requests.filter((_) => _.finishTime === undefined)
     )
-    console.log(requests)
+
     if (requests.length) {
       res.status(208).json({
         message: 'An active request already exist.',
