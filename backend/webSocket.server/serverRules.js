@@ -38,7 +38,9 @@ const serverRules = (nsp) => {
     const { enRichData } = require('../controllers/sendOrderItem')
     let orderItems = await OrderItem.find({ restaurant: restaurantId })
     orderItems = await Promise.all(
-      orderItems.filter((_) => _.status !== 'SERVED').map(enRichData)
+      orderItems
+        .filter((_) => _.status !== 'SERVED' && _.status !== 'FAILED')
+        .map(enRichData)
     )
 
     switch (type) {
