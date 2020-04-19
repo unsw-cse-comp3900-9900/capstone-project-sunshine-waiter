@@ -152,7 +152,10 @@ Finished pushing orders to kitchen when a customer place order.
 
 *   dashboard bug fixed
 
-#### Todo
+#### Sunday, 19 April 2020
 
-*   request api
+*   request api finished
 
+    >   thanks to Jason's excellent documentation for api coding
+
+![Screen Shot 2020-04-19 at 12.56.00 pm](../../../../../../../../Desktop/Screen Shot 2020-04-19 at 12.56.00 pm.png)
