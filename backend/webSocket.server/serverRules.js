@@ -12,8 +12,6 @@ const serverRules = (nsp) => {
     socket.on('update dish', async (item) => {
       // dish served or fail send from waiter, server need to update the db
       let itemRecord = { ...item }
-      itemRecord.order = item.order._id
-      itemRecord.menuItem = item.menuItem._id
       if (item.cookedBy && item.cookedBy._id)
         itemRecord.cookedBy = item.cookedBy._id
       if (item.servedBy && item.servedBy._id)
