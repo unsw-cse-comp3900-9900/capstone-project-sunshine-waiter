@@ -132,7 +132,7 @@ class Dashboard extends Component {
             </div>
           </div>
           <div className="row">
-            <div className="col-sm">
+            <div className="col-sm chartCard">
               <OrderTable data={selected} />
             </div>
           </div>
