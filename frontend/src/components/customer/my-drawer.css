@@ -12,3 +12,7 @@
   width: 300px;
   padding: 0;
 }
+
+.my-drawer .am-drawer-content .am-drawer-draghandle {
+  width: 0px;
+}

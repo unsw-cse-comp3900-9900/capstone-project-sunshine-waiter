@@ -12,7 +12,6 @@ import {
   Drawer,
   Icon,
   NavBar,
-  Button,
   Tabs,
   WhiteSpace,
   InputItem,
@@ -25,13 +24,13 @@ import { ShoppingCartOutlined } from '@ant-design/icons'
 import { fetchPublicMenuApi } from '../apis/actions/menus'
 import { createOrder } from '../apis/actions/order'
 import { getCookie } from '../authenticate/Cookies'
+import { getSingleRestaurant } from '../apis/actions/restaurants'
+
 import _ from 'lodash'
 //import { createForm } from 'rc-form'
 import { BrowserRouter as Router, Link, useLocation } from 'react-router-dom'
 
-import { ChooseTable } from './TableId'
-
-import { Table, Typography } from 'antd'
+import { Table, Typography, Button } from 'antd'
 import 'antd/dist/antd.css'
 
 const { Column, ColumnGroup } = Table
@@ -55,16 +54,18 @@ class Customer extends Component {
     orderitem: {},
     tableid: '',
     value: '',
-    //flag: false,
+
     pagestatus: 0, // control page jump
     totalPrice: 0,
     orderstatus: false,
     orderId: '',
+    restaurantName: '',
   }
 
   componentDidMount = () => {
     this.onFetchCurrentMenu()
     this.onFetchTableId()
+    this.setRestaurant()
   }
 
   onSetCurrentMenu = data => {
@@ -81,7 +82,7 @@ class Customer extends Component {
     this.setState({
       placedBy: searchParams.get('tableid'),
     })
-    //alert('Your tableid is:' + searchParams.get('tableid'))
+
     const tableid = searchParams.get('tableid')
     this.FetchTableIdAlert(tableid)
   }
@@ -97,26 +98,23 @@ class Customer extends Component {
     await fetchPublicMenuApi(id, this.onSetCurrentMenu)
   }
 
-  onSubmit = () => {
-    // console.log('test1')
-    // console.log('orderdata', this.state.orderItemsData)
-    // console.log('thisprops', this.props.location.search)
+  setRestaurant = async () => {
+    const { id } = this.props.match.params
 
+    await getSingleRestaurant(getCookie('token'), id, this.onSetName)
+  }
+
+  onSetName = data => {
+    this.setState({
+      restaurantName: data.name,
+    })
+  }
+
+  onSubmit = () => {
     if (this.state.orderItemsData.length === 0) {
       Toast.fail('You have not choose a dish, please double check', 1)
       return
     }
-    //e.preventDefault()
-    // const { id } = this.props.match.params
-    // const param = {
-    //   placedBy: this.state.placedBy,
-
-    //   orderItemsData: this.state.orderItemsData,
-    // }
-    // console.log('param', param)
-    // console.log('props', this.props)
-
-    // await createOrder(getCookie('token'), id, param)
 
     this.computeTotalPrice()
     Toast.loading('loading...', 1)
@@ -186,10 +184,6 @@ class Customer extends Component {
       orderItemsData: [...this.state.orderItemsData, this.state.orderitem],
       orderitem: [],
     })
-
-    console.log('orderitemmull', this.state.orderitem)
-    console.info('dic_orderlist', this.state.dic_order)
-    console.log('orderitemdata', this.state.orderItemsData)
   }
 
   handleDeleteBtn(index, item) {
@@ -235,19 +229,6 @@ class Customer extends Component {
     }
   }
 
-  handleRequest() {
-    console.log('yesssss')
-    //alert('Our waiter is coming...\nplease wait...')
-    Modal.alert('You will ask a request', '...', [
-      { text: 'Cancel', onPress: () => console.log('cancel') },
-      {
-        text: 'Ok',
-        onPress: () =>
-          Toast.success('Your request has been sent, congratulations!', 1),
-      },
-    ])
-  }
-
   handleCancelPay = () => {
     this.setState({
       pagestatus: 0,
@@ -255,28 +236,34 @@ class Customer extends Component {
   }
 
   handleConfirmPay = () => {
+    Modal.alert('You will pay the bill?', '', [
+      { text: 'Cancel', onPress: () => console.log('cancel') },
+      { text: 'Ok', onPress: () => this.handleConfirmPayOk() },
+    ])
+  }
+
+  handleConfirmPayOk = () => {
     this.handleOrderStatus()
-    this.setState({
-      pagestatus: 2,
-    })
+    Toast.loading('loading...', 1)
+
+    setTimeout(
+      () =>
+        this.setState({
+          pagestatus: 2,
+        }),
+      1000
+    )
   }
 
   handleOrderStatus = async () => {
-    // this.setState({
-    //   orderstatus: true,
-    // })
     const { id } = this.props.match.params
     const param = {
       placedBy: this.state.placedBy,
 
       orderItemsData: this.state.orderItemsData,
     }
-    console.log('param', param)
-    console.log('beforeprops', this.props)
 
     await createOrder(getCookie('token'), id, param, this.getOrderdata)
-    console.log('afterprops', this.props)
-    Toast.loading('loading...', 1)
   }
 
   getOrderdata = data => {
@@ -302,8 +289,6 @@ class Customer extends Component {
 
   //index by name, not id,may change later
   renderContent = displayIndex => {
-    console.log('paole ' + displayIndex)
-
     return (
       <div>
         <div>
@@ -344,17 +329,18 @@ class Customer extends Component {
   )
 
   render() {
+    console.log('this is restaurant name->', this.props)
     if (this.state.pagestatus === 0) {
-      console.log('currentmenu', this.state.currentMenu)
-      console.log('_id', this.state.currentMenu._id)
-      console.log('category', this.state.currentMenu.categories)
+      // console.log('currentmenu', this.state.currentMenu)
+      // console.log('_id', this.state.currentMenu._id)
+      // console.log('category', this.state.currentMenu.categories)
 
-      console.log('idvalue->', this.state.value)
+      // console.log('idvalue->', this.state.value)
 
-      console.log('placedby->', this.state.placedBy)
-      if (this.state.currentMenu.categories !== undefined) {
-        console.log('category', this.state.currentMenu.categories[0].name)
-      }
+      // console.log('placedby->', this.state.placedBy)
+      // if (this.state.currentMenu.categories !== undefined) {
+      //   console.log('category', this.state.currentMenu.categories[0].name)
+      // }
 
       if (this.getCategories() !== null) {
         var l = [...this.getCategories().keys()]
@@ -417,7 +403,11 @@ class Customer extends Component {
               )
             }
             type="primary"
-            size="small"
+            style={{
+              width: '100%',
+            }}
+
+            //activeStyle={{ backgroundColor: 'white' }}
           >
             submit the order
           </Button>
@@ -442,11 +432,8 @@ class Customer extends Component {
                 <ShoppingCartOutlined />
               </div>
             }
-            rightContent={
-              <i class="fas fa-bell" onClick={() => this.handleRequest()} />
-            }
           >
-            Sunshine-waiter
+            {this.state.restaurantName}
           </NavBar>
 
           {/* 要调整drawer的位置 */}
@@ -466,8 +453,12 @@ class Customer extends Component {
             //onOpenChange={this.onOpenChange}
             docked={this.state.docked}
           >
-            <div>
-              <WhiteSpace />
+            <div
+              style={{
+                position: 'relative',
+                top: '-40px',
+              }}
+            >
               <Tabs
                 tabs={tabs}
                 renderTabBar={props => (
