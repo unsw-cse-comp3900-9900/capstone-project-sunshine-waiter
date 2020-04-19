@@ -9,7 +9,8 @@ const sendOrderItems = async (orderItemRecords) => {
   if (!nsps[restaurantId]) {
     nsps[restaurantId] = createNewServer('/' + restaurantId, serverRules)
   }
-  nsps[restaurantId].to('cook').emit('initiate data', orderItems)
+  for (let orderItem of orderItems)
+    nsps[restaurantId].to('cook').emit('update dish', orderItem)
 }
 
 async function enrichOrderItem(orderItemRecord) {
