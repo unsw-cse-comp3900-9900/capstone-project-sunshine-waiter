@@ -10,6 +10,7 @@ const categories = require('./routes/category.routes')
 const orders = require('./routes/order.routes')
 const orderItems = require('./routes/orderItem.routes')
 const staff = require('./routes/staff.routes')
+const request = require('./routes/request.routes')
 
 const cors = require('cors')
 const {
@@ -39,6 +40,7 @@ app.use(cors())
 
 // routes
 app.use('/users', users)
+app.use('/restaurants', request)
 app.use('/restaurants', restaurants)
 app.use('/restaurants', menus)
 app.use('/restaurants', menuItems)

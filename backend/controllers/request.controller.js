@@ -1,7 +1,8 @@
 const Request = require('../models/request.model')
+const Order = require('../models/order.model')
 
 const { findRestaurant } = require('./restaurant.controller')
-const { findOrder } = require('./order.controller')
+const { sendRequest } = require('./sendRequet')
 
 const _ = require('lodash')
 const isValid = require('mongoose').Types.ObjectId.isValid
@@ -18,11 +19,11 @@ precond:
 
 createRequest = async (req, res, next) => {
   try {
-    const { tableId } = req.body
+    const { tableId, order: orderId, restaurant: restaurantId } = req.body
     if (!tableId)
       throw { httpCode: 400, message: 'Request body miss key: tableId' }
     const restaurant = await findRestaurant(req)
-    const order = await findOrder(req)
+    const order = await Order.findById(orderId)
     if (!order) throw { httpCode: 400, message: 'Invalid order' }
     if (!order.restaurant.equals(restaurantId))
       throw {
@@ -39,7 +40,7 @@ createRequest = async (req, res, next) => {
     const requestRecord = await request.save()
 
     sendRequest(requestRecord) // send to websocket server
-    res.status(201)
+    res.status(201).json({ data: requestRecord._doc })
   } catch (error) {
     next(error)
   }
