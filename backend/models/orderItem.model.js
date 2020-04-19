@@ -6,7 +6,7 @@ const allowedStatus = Object.freeze({
   READY: 'READY',
   SERVING: 'SERVING',
   SERVED: 'SERVED',
-  FAIL: 'FAIL',
+  FAILED: 'FAILED',
 })
 /*
 Design base
