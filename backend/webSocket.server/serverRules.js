@@ -48,7 +48,9 @@ const serverRules = (nsp) => {
     )
 
     let requests = await Request.find({ restaurant: restaurantId })
-    requests = await Promise.all(requests.filter((_) => _.finishTime === null))
+    requests = await Promise.all(
+      requests.filter((_) => _.finishTime === undefined)
+    )
 
     switch (type) {
       case 'cook':
