@@ -20,8 +20,8 @@ const connect = (component, URL, userData, config) => {
     })
     socket.close()
   })
-  socket.on('connect_error', () => {
-    message.error('Connect error')
+  socket.on('connect_timeout', () => {
+    message.error('Connect timeout')
   })
 }
 
