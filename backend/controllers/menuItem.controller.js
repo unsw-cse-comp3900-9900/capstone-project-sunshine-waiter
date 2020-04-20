@@ -1,5 +1,8 @@
 const Joi = require('joi')
 const _ = require('lodash')
+const fs = require('fs')
+const { promisify } = require('util')
+const unlinkAsync = promisify(fs.unlink)
 
 const MenuItem = require('../models/menuItem.model')
 const Category = require('../models/category.model')
@@ -188,6 +191,105 @@ deleteMany = async (req, res, next) => {
   }
 }
 
+// image endpoints: upload, read, delete
+uploadImage = async (req, res, next) => {
+  try {
+    // 0 - validate input
+    const file = req.file
+    if (!file) throw { httpCode: 400, message: `Image file is required.` }
+    const id = req.params.menuItemId
+    const obj = await MenuItem.findById(id)
+    if (!obj)
+      throw { httpCode: 404, message: `Target object not found. Id: ${id}` }
+
+    // 1 - save newImg  remove oldImage from disk if any;
+    const { path } = obj.img
+    const newImg = {
+      contentType: file.mimetype,
+      originalname: file.originalname,
+      path: file.path,
+    }
+    obj.img = newImg
+    await obj.save()
+    if (path) await diskDeleteFileByPath(path)
+
+    // 2 - reply with presentable image
+    res.json({
+      data: presentImg(obj),
+      message: 'Successfully upload iamge. May have replaced old image if any.',
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+readImage = async (req, res, next) => {
+  try {
+    const { menuItemId: id } = req.params
+    const obj = await MenuItem.findById(id)
+    if (!obj)
+      throw { httpCode: 404, message: `Target obj not found. Id: ${id}` }
+
+    const { path } = obj.img
+    if (!path)
+      throw {
+        httpCode: 404,
+        message: `For obj ${id}, img not found.`,
+      }
+
+    res.sendFile(path, (Headers = { contentType: obj.img.contentType }))
+  } catch (error) {
+    next(error)
+  }
+}
+
+deleteImage = async (req, res, next) => {
+  try {
+    // 0 validate input
+    const { userId: id } = req.params
+    const obj = await User.findById(id)
+    if (!obj)
+      throw { httpCode: 404, message: `Target obj not found. Id: ${id}` }
+
+    // 1 - delete current img
+    const { path } = obj.img
+    if (!path)
+      throw {
+        httpCode: 404,
+        message: `For obj ${id}, img not found.`,
+      }
+
+    obj.img = undefined
+    await obj.save()
+    console.log(path)
+    await diskDeleteFileByPath(path)
+
+    // 2 - reply with presentable image
+    res.json({ message: 'Successfully delete iamge.' })
+  } catch (error) {
+    next(error)
+  }
+}
+
+// Util functions
+presentImg = (obj) => ({
+  relativePath: `/menuitems/${obj._id}/img`,
+  _id: obj.img._id,
+  contentType: obj.img.contentType,
+  originalname: obj.img.originalname,
+})
+
+diskDeleteFileByPath = async (path) => {
+  const err = await unlinkAsync(path)
+  if (err)
+    throw {
+      httpCode: 400,
+      message: `fs failed to delete file. It may have been deleted before.`,
+      error: err,
+    }
+}
+
+// validation functions
 function validateCreateDataFormat(menuItem) {
   const schema = {
     name: Joi.string().max(50).required(),
@@ -228,4 +330,8 @@ module.exports = {
   deleteMenuItem,
   readMany,
   readManyPublicly,
+
+  uploadImage,
+  readImage,
+  deleteImage,
 }
