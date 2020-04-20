@@ -246,8 +246,8 @@ readImage = async (req, res, next) => {
 deleteImage = async (req, res, next) => {
   try {
     // 0 validate input
-    const { userId: id } = req.params
-    const obj = await User.findById(id)
+    const { menuItemId: id } = req.params
+    const obj = await MenuItem.findById(id)
     if (!obj)
       throw { httpCode: 404, message: `Target obj not found. Id: ${id}` }
 
