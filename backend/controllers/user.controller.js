@@ -1,9 +1,8 @@
-const fs = require('fs')
 const Joi = require('joi')
-const User = require('../models/user.model')
-const { performTransaction } = require('../util')
+const fs = require('fs')
 const { promisify } = require('util')
 const unlinkAsync = promisify(fs.unlink)
+const User = require('../models/user.model')
 
 const {
   generateAuthToken,
