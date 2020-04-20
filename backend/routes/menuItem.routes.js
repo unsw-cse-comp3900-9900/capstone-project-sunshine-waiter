@@ -18,9 +18,20 @@ const {
   deleteMenuItem,
   readMany,
   readManyPublicly,
+  uploadImage,
+  readImage,
+  deleteImage,
 } = require('../controllers/menuItem.controller')
+const { singleImageUploadHandler } = require('../middleware/imageUploadHanlder')
 
 // menuItem CRUD
+const paths = {
+  collection: '/:restaurantId/menuitems/',
+  obj: '/:restaurantId/menuitems/:menuItemId',
+  objImg: '/:restaurantId/menuitems/:menuItemId/img',
+  collectionPublic: '/:restaurantId/menuitems/public/',
+  objPublic: '/:restaurantId/menuitems/:menuItemId/public/',
+}
 
 // public access
 router.get('/:restaurantId/menuitems/:menuItemId/public/', readMenuItemPublicly)
@@ -62,6 +73,27 @@ router.delete(
   allowIfLoggedin,
   requestAccess(scopes.restaurant, actions.delete, resources.menu),
   deleteMenuItem
+)
+
+// image: upload, read, delete
+router.post(
+  paths.objImg,
+  verifyAuthToken,
+  allowIfLoggedin,
+  requestAccess(scopes.restaurant, actions.update, resources.menu),
+  singleImageUploadHandler((key = 'image')),
+  // when frontend uploads file, the above key matches
+  uploadImage
+)
+
+router.get(paths.objImg, readImage)
+
+router.delete(
+  paths.objImg,
+  verifyAuthToken,
+  allowIfLoggedin,
+  requestAccess(scopes.restaurant, actions.update, resources.menu),
+  deleteImage
 )
 
 module.exports = router
