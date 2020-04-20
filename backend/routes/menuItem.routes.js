@@ -34,33 +34,33 @@ const paths = {
 }
 
 // public access
-router.get('/:restaurantId/menuitems/:menuItemId/public/', readMenuItemPublicly)
-router.get('/:restaurantId/menuitems/public/', readManyPublicly)
+router.get(paths.objPublic, readMenuItemPublicly)
+router.get(paths.collectionPublic, readManyPublicly)
 
 // owner/manager access
 router.post(
-  '/:restaurantId/menuitems/',
+  paths.collection,
   verifyAuthToken,
   allowIfLoggedin,
   requestAccess(scopes.restaurant, actions.create, resources.menu),
   createMenuItem
 )
 router.get(
-  '/:restaurantId/menuitems/:menuItemId',
+  paths.obj,
   verifyAuthToken,
   allowIfLoggedin,
   requestAccess(scopes.restaurant, actions.read, resources.menu),
   readMenuItem
 )
 router.get(
-  '/:restaurantId/menuitems',
+  paths.collection,
   verifyAuthToken,
   allowIfLoggedin,
   requestAccess(scopes.restaurant, actions.read, resources.menu),
   readMany
 )
 router.put(
-  '/:restaurantId/menuitems/:menuItemId',
+  paths.obj,
   verifyAuthToken,
   allowIfLoggedin,
   requestAccess(scopes.restaurant, actions.update, resources.menu),
@@ -68,7 +68,7 @@ router.put(
 )
 
 router.delete(
-  '/:restaurantId/menuitems/:menuItemId',
+  paths.obj,
   verifyAuthToken,
   allowIfLoggedin,
   requestAccess(scopes.restaurant, actions.delete, resources.menu),
