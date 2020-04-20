@@ -16,7 +16,12 @@ const {
   updateUser,
   deleteUser,
   readMe,
+  uploadImage,
+  readImage,
+  deleteImage,
 } = require('../controllers/user.controller')
+
+const { singleImageUploadHandler } = require('../middleware/imageUploadHanlder')
 
 router.post('/login', login)
 
@@ -40,6 +45,26 @@ router.delete(
   allowIfLoggedin,
   requestAccess(scopes.account, actions.delete, resources.profile),
   deleteUser
+)
+
+router.post(
+  '/:userId/img',
+  verifyAuthToken,
+  allowIfLoggedin,
+  requestAccess(scopes.account, actions.update, resources.profile),
+  singleImageUploadHandler((key = 'image')),
+  // when frontend uploads file, the above key matches
+  uploadImage
+)
+
+router.get('/:userId/img', readImage)
+
+router.delete(
+  '/:userId/img',
+  verifyAuthToken,
+  allowIfLoggedin,
+  requestAccess(scopes.account, actions.update, resources.profile),
+  deleteImage
 )
 
 module.exports = router
