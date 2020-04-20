@@ -161,26 +161,26 @@ readImage = async (req, res, next) => {
 deleteImage = async (req, res, next) => {
   try {
     // 0 validate input
-    const { userId } = req.params
-    const user = await User.findById(userId)
-    if (!user)
-      throw { httpCode: 404, message: `Target user not found. Id: ${userId}` }
-    if (!user._id.equals(req.user._id))
+    const { userId: id } = req.params
+    const obj = await User.findById(id)
+    if (!obj)
+      throw { httpCode: 404, message: `Target obj not found. Id: ${id}` }
+    if (!obj._id.equals(req.user._id))
       throw {
         httpCode: 401,
         message: `Currently, user can only modify own image.`,
       }
 
     // 1 - delete current img
-    const { path } = user.img
+    const { path } = obj.img
     if (!path)
       throw {
         httpCode: 404,
-        message: `For user ${userId}, img not found.`,
+        message: `For obj ${id}, img not found.`,
       }
 
-    user.img = undefined
-    await user.save()
+    obj.img = undefined
+    await obj.save()
     console.log(path)
     await diskDeleteFileByPath(path)
 
