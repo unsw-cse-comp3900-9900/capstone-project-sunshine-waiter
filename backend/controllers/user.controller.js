@@ -107,30 +107,30 @@ uploadImage = async (req, res, next) => {
     const id = req.params.userId
     const file = req.file
     if (!file) throw { httpCode: 400, message: `Image file is required.` }
-    const user = await User.findById(id)
-    if (!user)
+    const obj = await User.findById(id)
+    if (!obj)
       throw { httpCode: 404, message: `Target user not found. Id: ${id}` }
-    if (!user._id.equals(req.user._id))
+    if (!obj._id.equals(req.user._id))
       throw {
         httpCode: 401,
         message: `Currently, user can only update own image.`,
       }
 
     // 1 - save newImg  remove oldImage from disk if any;
-    const { path: oldImagePath } = user.img
+    const { path: oldImagePath } = obj.img
     const newImg = {
       contentType: file.mimetype,
       originalname: file.originalname,
       path: file.path,
     }
-    user.img = newImg
-    await user.save()
+    obj.img = newImg
+    await obj.save()
 
     if (oldImagePath) await diskDeleteFileByPath(oldImagePath)
 
     // 2 - reply with presentable image
     res.json({
-      data: presentImg(user),
+      data: presentImg(obj),
       message: 'Successfully upload iamge. May have replaced old image if any.',
     })
   } catch (error) {
