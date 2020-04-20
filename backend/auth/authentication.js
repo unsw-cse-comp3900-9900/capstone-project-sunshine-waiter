@@ -77,7 +77,7 @@ const verifyAuthToken = async (req, res, next) => {
     next()
   } catch (error) {
     // 3.2 token invalid
-    res.status(400).json({ error: 'Invalid token.' })
+    next(new Error({ httpCode: 400, message: 'Invalid token.' }))
   }
 }
 
