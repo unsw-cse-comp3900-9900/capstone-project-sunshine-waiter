@@ -14,7 +14,7 @@ services:
 #     - docker run -e CI=true lyyjeren/frontend npm run start
 
 branches:
-    only: ['master', 'deploy']
+    only: ['master', 'production']
 
 after_success:
     - docker build -t lyyjeren/backend ./backend
@@ -35,7 +35,6 @@ deploy:
     bucket_name: elasticbeanstalk-us-east-2-040261308632
     bucket_path: sunshine
     on:
-        branches:
-            only: ['master', 'deploy']
+        branch: production
     access_key_id: $AWS_ACCESS_KEY
     secret_access_key: $AWS_SECRET_KEY
