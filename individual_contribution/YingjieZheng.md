@@ -162,27 +162,14 @@ BackEnd framework Setup **week2** `Jason`
 
 > 4.13-4.18
 
-- [ ] `picture upload`
+- [x] `picture upload`
 
-  > Post/Delete/Get `sw.com/theobjecturl/img` 
-
-  -   menuItem
-  -   user avatar
-
-* [ ] Integrate websocket
-
-  > These jobs are reallocated to Steve ( Zitong Li ).
-  > I will be an assistant on this.
-
-  - [ ] new order placement update
-    
-    > We deside to use `polling` rather than `event emit`.
-    
-  - [ ] new change on orderItem
+  - Backend: 6 APIs
+> image `upload`, `read`, `delete` for `User` and `MenuItem` 
+  - Frontend: 
+  `ImageUploader` as a independen React Component.
+  > Comes with Proptype validation: https://reactjs.org/docs/typechecking-with-proptypes.html
   
-  - [ ] new assistant-request update
+  [Interactive Demo](https://stackblitz.com/edit/react-ddubl1-2ia1xo)
   
-  - [ ] push new request to waiter client
-  
-- [ ] QRCode-generator
-
+  > You need to change the data like: `userId`, `x-auth-token` and run your local backend.
