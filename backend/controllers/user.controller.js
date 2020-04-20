@@ -140,19 +140,19 @@ uploadImage = async (req, res, next) => {
 
 readImage = async (req, res, next) => {
   try {
-    const { userId } = req.params
-    const user = await User.findById(userId)
-    if (!user)
-      throw { httpCode: 404, message: `Target user not found. Id: ${userId}` }
+    const { userId: id } = req.params
+    const obj = await User.findById(id)
+    if (!obj)
+      throw { httpCode: 404, message: `Target obj not found. Id: ${id}` }
 
-    const { path } = user.img
+    const { path } = obj.img
     if (!path)
       throw {
         httpCode: 404,
-        message: `For user ${userId}, img not found.`,
+        message: `For obj ${id}, img not found.`,
       }
 
-    res.sendFile(path, (Headers = { contentType: user.img.contentType }))
+    res.sendFile(path, (Headers = { contentType: obj.img.contentType }))
   } catch (error) {
     next(error)
   }
