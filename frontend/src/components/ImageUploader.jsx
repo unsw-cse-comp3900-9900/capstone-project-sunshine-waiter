@@ -79,3 +79,10 @@ class ImageUpload extends React.Component {
     )
   }
 }
+
+ImageUpload.propTypes = {
+  url: React.PropTypes.string.isRequired,
+  headers: React.PropTypes.object.isRequired,
+}
+
+export default ImageUpload
