@@ -18,6 +18,7 @@ const {
   readMe,
   uploadImage,
   readImage,
+  deleteImage,
 } = require('../controllers/user.controller')
 
 const { singleImageUploadHandler } = require('../middleware/imageUploadHanlder')
@@ -57,5 +58,13 @@ router.post(
 )
 
 router.get('/:userId/img', readImage)
+
+router.delete(
+  '/:userId/img',
+  verifyAuthToken,
+  allowIfLoggedin,
+  requestAccess(scopes.account, actions.update, resources.profile),
+  deleteImage
+)
 
 module.exports = router

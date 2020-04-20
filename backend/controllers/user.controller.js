@@ -141,23 +141,52 @@ uploadImage = async (req, res, next) => {
 
 readImage = async (req, res, next) => {
   try {
-    const id = req.params.userId
-    const user = await User.findById(id)
+    const { userId } = req.params
+    const user = await User.findById(userId)
     if (!user)
-      throw { httpCode: 404, message: `Target user not found. Id: ${id}` }
+      throw { httpCode: 404, message: `Target user not found. Id: ${userId}` }
 
-    console.log('1')
+    const { path } = user.img
+    if (!path)
+      throw {
+        httpCode: 404,
+        message: `For user ${userId}, img not found.`,
+      }
 
-    const imgFound = user.img
-    if (!imgFound)
-      return res.status(404).json({ message: `For user ${id}, img not found.` })
-    console.log('2')
-    console.log(imgFound.path)
+    res.sendFile(path, (Headers = { contentType: user.img.contentType }))
+  } catch (error) {
+    next(error)
+  }
+}
 
-    return res.sendFile(
-      imgFound.path,
-      (Headers = { contentType: imgFound.contentType })
-    )
+deleteImage = async (req, res, next) => {
+  try {
+    // 0 validate input
+    const { userId } = req.params
+    const user = await User.findById(userId)
+    if (!user)
+      throw { httpCode: 404, message: `Target user not found. Id: ${userId}` }
+    if (!user._id.equals(req.user._id))
+      throw {
+        httpCode: 401,
+        message: `Currently, user can only modify own image.`,
+      }
+
+    // 1 - delete current img
+    const { path } = user.img
+    if (!path)
+      throw {
+        httpCode: 404,
+        message: `For user ${userId}, img not found.`,
+      }
+
+    user.img = undefined
+    await user.save()
+    console.log(path)
+    await diskDeleteFileByPath(path)
+
+    // 2 - reply with presentable image
+    res.json({ message: 'Successfully delete iamge.' })
   } catch (error) {
     next(error)
   }
@@ -257,6 +286,7 @@ module.exports = {
   deleteUser,
   uploadImage,
   readImage,
+  deleteImage,
 
   readCollection,
   // Util functions interact with DB
