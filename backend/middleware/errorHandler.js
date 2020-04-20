@@ -27,6 +27,10 @@ const dbErrorHandler = (err, req, res, next) => {
 }
 
 const httpCodeErrorHandler = (err, req, res, next) => {
+  if (err.name == 'MulterError') {
+    return res.status(400).json(err)
+  }
+
   if (err && err.httpCode)
     res.status(err.httpCode).json({
       error: err.message,
