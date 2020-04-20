@@ -1,6 +1,6 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import 'antd/dist/antd.css'
-import './index.css'
 import { Upload, message } from 'antd'
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons'
 
@@ -81,8 +81,8 @@ class ImageUpload extends React.Component {
 }
 
 ImageUpload.propTypes = {
-  url: React.PropTypes.string.isRequired,
-  headers: React.PropTypes.object.isRequired,
+  url: PropTypes.string.isRequired,
+  headers: PropTypes.object.isRequired,
 }
 
 export default ImageUpload
