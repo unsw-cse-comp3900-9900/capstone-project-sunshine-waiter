@@ -139,6 +139,30 @@ uploadImage = async (req, res, next) => {
   }
 }
 
+readImage = async (req, res, next) => {
+  try {
+    const id = req.params.userId
+    const user = await User.findById(id)
+    if (!user)
+      throw { httpCode: 404, message: `Target user not found. Id: ${id}` }
+
+    console.log('1')
+
+    const imgFound = user.img
+    if (!imgFound)
+      return res.status(404).json({ message: `For user ${id}, img not found.` })
+    console.log('2')
+    console.log(imgFound.path)
+
+    return res.sendFile(
+      imgFound.path,
+      (Headers = { contentType: imgFound.contentType })
+    )
+  } catch (error) {
+    next(error)
+  }
+}
+
 // Util functions
 present = (user) => _.omit(user, ['isAdmin', 'password'])
 
@@ -232,6 +256,7 @@ module.exports = {
   updateUser,
   deleteUser,
   uploadImage,
+  readImage,
 
   readCollection,
   // Util functions interact with DB

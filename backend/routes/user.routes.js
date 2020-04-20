@@ -17,6 +17,7 @@ const {
   deleteUser,
   readMe,
   uploadImage,
+  readImage,
 } = require('../controllers/user.controller')
 
 const { singleImageUploadHandler } = require('../middleware/imageUploadHanlder')
@@ -54,5 +55,7 @@ router.post(
   // when frontend uploads file, the above key matches
   uploadImage
 )
+
+router.get('/:userId/img', readImage)
 
 module.exports = router
