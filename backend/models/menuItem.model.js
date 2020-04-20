@@ -30,11 +30,11 @@ const schema = new mongoose.Schema({
     required: false,
     maxlength: 1023,
   },
-  pic: {
-    type: String,
+  img: {
+    path: String,
+    contentType: String,
+    originalname: String,
     required: false,
-    minlength: 5,
-    maxlength: 200,
   },
   thumbnail: {
     type: String,

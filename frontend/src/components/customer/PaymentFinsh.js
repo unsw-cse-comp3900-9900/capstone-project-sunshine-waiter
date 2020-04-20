@@ -1,22 +1,27 @@
 import React, { Component } from 'react'
 
 import { Link } from 'react-router-dom'
-import { Button, Icon, WingBlank, WhiteSpace } from 'antd-mobile'
+import { WhiteSpace } from 'antd-mobile'
 import 'antd-mobile/dist/antd-mobile.css'
+
+import { Button } from 'antd'
+import 'antd/dist/antd.css'
 
 class PaymentFinsh extends Component {
   state = {}
+
   render() {
-    const { handleOrderStatus, orderId, id } = this.props
+    const { orderId, id } = this.props
     console.log('thisid->', id, orderId)
     return (
       <div style={{ height: '800px' }}>
         <div
           style={{
             position: 'absolute',
-            top: '30%',
+            top: '20%',
             fontSize: '40px',
-            fontFamily: 'Times New Roman',
+            fontFamily: 'bold',
+            textAlign: 'center',
           }}
         >
           Congratulations! You have finished payment successfully..
@@ -32,7 +37,7 @@ class PaymentFinsh extends Component {
         <Link to={'/restaurants/' + id + '/customer/' + orderId}>
           <Button
             type="ghost"
-            //size="large"
+            size="large"
             style={{
               width: '200px',
               position: 'absolute',

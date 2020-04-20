@@ -2,11 +2,11 @@ import React, { Component } from 'react'
 import { Table, Typography, Input } from 'antd'
 import 'antd/dist/antd.css'
 
-import { Button, Icon, WingBlank, WhiteSpace } from 'antd-mobile'
+import { WingBlank } from 'antd-mobile'
 import 'antd-mobile/dist/antd-mobile.css'
 
-import { Link } from 'react-router-dom'
-import styles from './page1.less'
+import { Button } from 'antd'
+import 'antd/dist/antd.css'
 
 const { Column } = Table
 const { Text } = Typography
@@ -19,7 +19,7 @@ class NavigationOrderConfirm extends Component {
     return (
       <div
         style={{
-          marginBottom: '50%',
+          marginBottom: '30%',
         }}
       >
         <TextArea rows={4} placeholder="Notes:"></TextArea>
@@ -38,7 +38,6 @@ class NavigationOrderConfirm extends Component {
         </Button>
         <Button
           type="ghost"
-          size="small"
           inline
           style={{
             position: 'absolute',
@@ -53,30 +52,13 @@ class NavigationOrderConfirm extends Component {
     )
   }
 
-  renderHeader = () => {
-    return (
-      <div
-        style={{
-          fontSize: '20px',
-          fontFamily: 'times',
-          position: 'relative',
-          left: '10%',
-          right: '10%',
-        }}
-      >
-        Payment Confirmation
-      </div>
-    )
-  }
-
   render() {
     const { totalPrice, orderItemsData } = this.props
     return (
-      <div
-        style={{
-          height: '800px',
-        }}
-      >
+      <div>
+        <header>
+          <h1 id="header-message">Payment Confirmation</h1>
+        </header>
         <WingBlank size="md">
           <Table
             style={{
@@ -84,7 +66,6 @@ class NavigationOrderConfirm extends Component {
             }}
             dataSource={orderItemsData}
             footer={() => this.renderFooter()}
-            title={() => this.renderHeader()}
             bordered
             pagination={false}
             summary={() => {

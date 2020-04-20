@@ -1,12 +1,15 @@
 const Joi = require('joi')
 const _ = require('lodash')
+const fs = require('fs')
+const { promisify } = require('util')
+const unlinkAsync = promisify(fs.unlink)
 
 const MenuItem = require('../models/menuItem.model')
 const Category = require('../models/category.model')
 const { findMenu } = require('./menu.controller')
 
 // present data to client side
-const present = obj => {
+const present = (obj) => {
   const { __v, ...data } = obj._doc
   return data
 }
@@ -19,7 +22,7 @@ createMenuItem = async (req, res, next) => {
     if (error) return res.status(400).json({ error: error.details[0].message })
     const menuId = (await findMenu(req, res))._id
     // validate categoryArray
-    await req.body.categoryArray.forEach(async categoryId => {
+    await req.body.categoryArray.forEach(async (categoryId) => {
       try {
         const category = await Category.findById(categoryId)
         if (!category || !category.menu.equals(menuId) || category.isArchived)
@@ -73,7 +76,7 @@ readMany = async (req, res, next) => {
     const menu = await findMenu(req, res)
     const menuItems = await MenuItem.find({ menu: menu._id })
 
-    res.json({ data: menuItems.map(v => present(v)) })
+    res.json({ data: menuItems.map((v) => present(v)) })
   } catch (error) {
     next(error)
   }
@@ -102,7 +105,7 @@ readManyPublicly = async (req, res, next) => {
       isArchived: false,
       isPrivate: false,
     })
-    res.json({ data: menuItems.map(v => present(v)) })
+    res.json({ data: menuItems.map((v) => present(v)) })
   } catch (error) {
     next(error)
   }
@@ -188,11 +191,108 @@ deleteMany = async (req, res, next) => {
   }
 }
 
+// image endpoints: upload, read, delete
+uploadImage = async (req, res, next) => {
+  try {
+    // 0 - validate input
+    const file = req.file
+    if (!file) throw { httpCode: 400, message: `Image file is required.` }
+    const id = req.params.menuItemId
+    const obj = await MenuItem.findById(id)
+    if (!obj)
+      throw { httpCode: 404, message: `Target object not found. Id: ${id}` }
+
+    // 1 - save newImg  remove oldImage from disk if any;
+    const { path } = obj.img
+    const newImg = {
+      contentType: file.mimetype,
+      originalname: file.originalname,
+      path: file.path,
+    }
+    obj.img = newImg
+    await obj.save()
+    if (path) await diskDeleteFileByPath(path)
+
+    // 2 - reply with presentable image
+    res.json({
+      data: presentImg(obj),
+      message: 'Successfully upload iamge. May have replaced old image if any.',
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+readImage = async (req, res, next) => {
+  try {
+    const { menuItemId: id } = req.params
+    const obj = await MenuItem.findById(id)
+    if (!obj)
+      throw { httpCode: 404, message: `Target obj not found. Id: ${id}` }
+
+    const { path } = obj.img
+    if (!path)
+      throw {
+        httpCode: 404,
+        message: `For obj ${id}, img not found.`,
+      }
+
+    res.sendFile(path, (Headers = { contentType: obj.img.contentType }))
+  } catch (error) {
+    next(error)
+  }
+}
+
+deleteImage = async (req, res, next) => {
+  try {
+    // 0 validate input
+    const { menuItemId: id } = req.params
+    const obj = await MenuItem.findById(id)
+    if (!obj)
+      throw { httpCode: 404, message: `Target obj not found. Id: ${id}` }
+
+    // 1 - delete current img
+    const { path } = obj.img
+    if (!path)
+      throw {
+        httpCode: 404,
+        message: `For obj ${id}, img not found.`,
+      }
+
+    obj.img = undefined
+    await obj.save()
+    console.log(path)
+    await diskDeleteFileByPath(path)
+
+    // 2 - reply with presentable image
+    res.json({ message: 'Successfully delete iamge.' })
+  } catch (error) {
+    next(error)
+  }
+}
+
+// Util functions
+presentImg = (obj) => ({
+  relativePath: `/menuitems/${obj._id}/img`,
+  _id: obj.img._id,
+  contentType: obj.img.contentType,
+  originalname: obj.img.originalname,
+})
+
+diskDeleteFileByPath = async (path) => {
+  const err = await unlinkAsync(path)
+  if (err)
+    throw {
+      httpCode: 400,
+      message: `fs failed to delete file. It may have been deleted before.`,
+      error: err,
+    }
+}
+
+// validation functions
 function validateCreateDataFormat(menuItem) {
   const schema = {
-    name: Joi.string()
-      .max(50)
-      .required(),
+    name: Joi.string().max(50).required(),
     price: Joi.number().required(),
     description: Joi.string().max(2047),
     note: Joi.string().max(255),
@@ -212,15 +312,9 @@ function validateCreateDataFormat(menuItem) {
 */
 function validateUpdateDataFormat(menuItem) {
   const schema = {
-    name: Joi.string()
-      .min(1)
-      .max(50),
-    description: Joi.string()
-      .min(1)
-      .max(2047),
-    note: Joi.string()
-      .min(1)
-      .max(2047),
+    name: Joi.string().min(1).max(50),
+    description: Joi.string().min(1).max(2047),
+    note: Joi.string().min(1).max(2047),
     price: Joi.number().min(0),
     categoryArray: Joi.array(),
     isPrivate: Joi.boolean(),
@@ -236,4 +330,8 @@ module.exports = {
   deleteMenuItem,
   readMany,
   readManyPublicly,
+
+  uploadImage,
+  readImage,
+  deleteImage,
 }

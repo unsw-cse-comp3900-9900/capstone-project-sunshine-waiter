@@ -22,11 +22,11 @@ const userSchema = new mongoose.Schema(
       minlength: 10,
       maxlength: 1023, // **hashed** password
     },
-    avatar: {
-      type: String, // picture url
+    img: {
+      path: String,
+      contentType: String,
+      originalname: String,
       required: false,
-      minlength: 10,
-      maxlength: 1023,
     },
     currentJobs: {
       type: [
