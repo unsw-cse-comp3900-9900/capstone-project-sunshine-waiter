@@ -1,5 +1,10 @@
+const fs = require('fs')
 const Joi = require('joi')
 const User = require('../models/user.model')
+const { performTransaction } = require('../util')
+const { promisify } = require('util')
+const unlinkAsync = promisify(fs.unlink)
+
 const {
   generateAuthToken,
   generateHashedPassword,
@@ -97,8 +102,62 @@ deleteUser = async (req, res, next) => {
   }
 }
 
+uploadImage = async (req, res, next) => {
+  try {
+    // 0 - validate input
+    const id = req.params.userId
+    const file = req.file
+    if (!file) throw { httpCode: 400, message: `Image file is required.` }
+    const user = await User.findById(id)
+    if (!user)
+      throw { httpCode: 404, message: `Target user not found. Id: ${id}` }
+    if (!user._id.equals(req.user._id))
+      throw {
+        httpCode: 401,
+        message: `Currently, user can only update own image.`,
+      }
+
+    // 1 - save newImg  remove oldImage from disk if any;
+    const { path: oldImagePath } = user.img
+    const newImg = {
+      contentType: file.mimetype,
+      originalname: file.originalname,
+      path: file.path,
+    }
+    user.img = newImg
+    await user.save()
+
+    if (oldImagePath) await diskDeleteFileByPath(oldImagePath)
+
+    // 2 - reply with presentable image
+    res.json({
+      data: presentImg(user),
+      message: 'Successfully upload iamge. May have replaced old image if any.',
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
 // Util functions
 present = (user) => _.omit(user, ['isAdmin', 'password'])
+
+presentImg = (user) => ({
+  relativePath: `/users/${user._id}/img`,
+  _id: user.img._id,
+  contentType: user.img.contentType,
+  originalname: user.img.originalname,
+})
+
+diskDeleteFileByPath = async (path) => {
+  const err = await unlinkAsync(path)
+  if (err)
+    throw {
+      httpCode: 400,
+      message: `fs failed to delete file. It may have been deleted before.`,
+      error: err,
+    }
+}
 
 async function dbUpdateUser(data, user) {
   const { name, password } = data
@@ -172,8 +231,9 @@ module.exports = {
   readMe,
   updateUser,
   deleteUser,
-  readCollection,
+  uploadImage,
 
+  readCollection,
   // Util functions interact with DB
   dbCreateUser,
   findByEmail,
