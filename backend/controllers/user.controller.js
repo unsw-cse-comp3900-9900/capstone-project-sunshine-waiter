@@ -194,11 +194,11 @@ deleteImage = async (req, res, next) => {
 // Util functions
 present = (user) => _.omit(user, ['isAdmin', 'password'])
 
-presentImg = (user) => ({
-  relativePath: `/users/${user._id}/img`,
-  _id: user.img._id,
-  contentType: user.img.contentType,
-  originalname: user.img.originalname,
+presentImg = (obj) => ({
+  relativePath: `/users/${obj._id}/img`,
+  _id: obj.img._id,
+  contentType: obj.img.contentType,
+  originalname: obj.img.originalname,
 })
 
 diskDeleteFileByPath = async (path) => {
