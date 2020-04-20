@@ -26,3 +26,15 @@ after_success:
     - docker push lyyjeren/backend
     - docker push lyyjeren/frontend
     - docker push lyyjeren/nginx
+
+deploy:
+    provider: elasticbeanstalk
+    region: us-east-2
+    app: sunshine-waiter
+    env: SunshineWaiter-env
+    bucket_name: elasticbeanstalk-us-east-2-040261308632
+    bucket_path: sunshine
+    on:
+        branch: deploy
+    access_key_id: $AWS_ACCESS_KEY
+    secret_access_key: $AWS_SECRET_KEY
