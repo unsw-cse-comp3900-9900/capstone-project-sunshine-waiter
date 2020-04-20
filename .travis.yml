@@ -35,6 +35,7 @@ deploy:
     bucket_name: elasticbeanstalk-us-east-2-040261308632
     bucket_path: sunshine
     on:
-        branch: deploy
+        branches:
+            only: ['master', 'deploy']
     access_key_id: $AWS_ACCESS_KEY
     secret_access_key: $AWS_SECRET_KEY
