@@ -1,0 +1,63 @@
+{
+	"AWSEBDockerrunVersion": 2,
+	"containerDefinitions": [
+		{
+			"name": "frontend",
+			"image": "lyyjeren/frontend",
+			"hostname": "frontend",
+			"essential": false,
+			"portMappings": [
+				{
+					"hostPort": 3000,
+					"containerPort": 3000
+				}
+			],
+			"memory": 128
+		},
+		{
+			"name": "mongo",
+			"image": "mongo:4.2",
+			"hostname": "mongo",
+			"essential": true,
+			"portMappings": [
+				{
+					"hostPort": 27017,
+					"containerPort": 27017
+				}
+			],
+			"memory": 128
+		},
+		{
+			"name": "backend",
+			"image": "lyyjeren/backend",
+			"hostname": "backend",
+			"essential": false,
+			"portMappings": [
+				{
+					"hostPort": 8000,
+					"containerPort": 8000
+				},
+				{
+					"hostPort": 5000,
+					"containerPort": 5000
+				}
+			],
+			"memory": 128,
+			"links": ["mongo"]
+		},
+		{
+			"name": "nginx",
+			"image": "lyyjeren/nginx",
+			"hostname": "nginx",
+			"essential": true,
+			"portMappings": [
+				{
+					"hostPort": 80,
+					"containerPort": 80
+				}
+			],
+			"memory": 128,
+			"links": ["frontend", "backend"]
+		}
+	]
+}
