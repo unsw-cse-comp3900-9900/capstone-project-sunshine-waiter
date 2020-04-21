@@ -180,29 +180,29 @@ class RenderDishes extends React.Component {
           )}
 
           {dish.status === SERVING &&
-            this.props.user._id === dish.servedBy._id && (
-              <Tooltip title="finish">
-                <button
-                  className="finish"
-                  onClick={e => this.props.handleClick(dish, 'finish', e)}
+            (this.props.user._id === dish.servedBy._id ||
+              this.props.user._id === dish.servedBy) && (
+              <React.Fragment>
+                <Tooltip title="finish">
+                  <button
+                    className="finish"
+                    onClick={e => this.props.handleClick(dish, 'finish', e)}
+                  >
+                    <i className="fas fa-check"></i>
+                  </button>
+                </Tooltip>
+                <Popconfirm
+                  title="Failed to serve?"
+                  onConfirm={e => this.confirmFail(dish, e)}
+                  okText="Yes"
+                  cancelText="No"
                 >
-                  <i className="fas fa-check"></i>
-                </button>
-              </Tooltip>
+                  <button className="fail">
+                    <i className="fas fa-times"></i>
+                  </button>
+                </Popconfirm>
+              </React.Fragment>
             )}
-
-          {dish.status === SERVING && (
-            <Popconfirm
-              title="Failed to serve?"
-              onConfirm={e => this.confirmFail(dish, e)}
-              okText="Yes"
-              cancelText="No"
-            >
-              <button className="fail">
-                <i className="fas fa-times"></i>
-              </button>
-            </Popconfirm>
-          )}
 
           {dish.status === READY && (
             <Popconfirm

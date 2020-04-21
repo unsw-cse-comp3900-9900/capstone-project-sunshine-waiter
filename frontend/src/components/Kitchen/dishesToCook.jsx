@@ -129,7 +129,8 @@ class RenderDishes extends React.Component {
           )}
 
           {dish.status === COOKING &&
-            this.props.user._id === dish.cookedBy._id && (
+            (this.props.user._id === dish.cookedBy._id ||
+              this.props.user._id === dish.cookedBy) && (
               <Tooltip title="finish">
                 <button
                   className="finish"
