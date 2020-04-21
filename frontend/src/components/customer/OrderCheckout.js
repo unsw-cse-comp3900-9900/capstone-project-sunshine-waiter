@@ -3,10 +3,10 @@ import React, { Component } from 'react'
 import { fetchOrderApi } from '../apis/actions/order'
 
 import { getCookie } from '../authenticate/Cookies'
-import { Button, Icon, WingBlank, WhiteSpace, Modal, Toast } from 'antd-mobile'
+import { Icon, WingBlank, WhiteSpace, Modal, Toast } from 'antd-mobile'
 import 'antd-mobile/dist/antd-mobile.css'
 
-import { Table, Typography, Input } from 'antd'
+import { Table, Typography, Input, Button } from 'antd'
 import 'antd/dist/antd.css'
 import { sendRequest } from '../apis/actions/request'
 import './Customer.css'
@@ -110,7 +110,12 @@ class OrderCheckout extends Component {
             <Column title="Price" dataIndex="price" key="price" />
           </Table>
           <footer>
-            <Button onClick={() => this.handlerequest()}>
+            <Button
+              type="ghost"
+              size="large"
+              style={{ width: '100%', color: 'dodgerblue' }}
+              onClick={() => this.handlerequest()}
+            >
               Request Assistance
               <i class="fas fa-bell" />
             </Button>

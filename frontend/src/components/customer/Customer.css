@@ -16,6 +16,10 @@
   justify-content: space-evenly; */
 }
 
+.ant-table-wrapper {
+  margin-bottom: 40px;
+}
+
 #header-message {
   position: relative;
   z-index: 1;
