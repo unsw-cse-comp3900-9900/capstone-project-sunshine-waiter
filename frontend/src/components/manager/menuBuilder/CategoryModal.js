@@ -4,8 +4,8 @@ import { Modal, Select } from 'antd'
 import {
   createCategoryItem,
   updateCategoryItem,
-} from '../apis/actions/category'
-import { getCookie } from '../authenticate/Cookies'
+} from '../../apis/actions/category'
+import { getCookie } from '../../authenticate/Cookies'
 
 class CategoryModal extends React.Component {
   state = {
@@ -42,12 +42,14 @@ class CategoryModal extends React.Component {
     const { currentParam } = nextProps
 
     if (currentParam !== null) {
-      this._id = currentParam._id
-      this.setState({
-        name: currentParam.name,
-        description: currentParam.description,
-        isPrivate: currentParam.isPrivate,
-      })
+      if (this._id === '') {
+        this._id = currentParam._id
+        this.setState({
+          name: currentParam.name,
+          description: currentParam.description,
+          isPrivate: currentParam.isPrivate,
+        })
+      }
     } else {
       this._id = ''
       this.setState({

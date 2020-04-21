@@ -22,7 +22,10 @@ export const createMenuItem = (
         message.success(res.statusText, 3)
         callback()
       })
-      .catch(err => message.error(err.response.data.error, 3))
+      .catch(err => {
+        console.log({ err })
+        message.error(err.response.data.error, 3)
+      })
   }
 }
 

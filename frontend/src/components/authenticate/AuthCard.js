@@ -58,7 +58,13 @@ const onAuth = ([param, onAuthenticated, showSignUp]) => event => {
         setCookie('token', token)
         getCookie('token') !== undefined && onAuthenticated(true)
       })
-      .catch(({ response }) => message.error(response.data.error, 3))
+      .catch(({ response }) => {
+        if (response !== undefined) {
+          message.error(response.data.error, 3)
+        } else {
+          message.error('The server is down!', 3)
+        }
+      })
   }
 }
 

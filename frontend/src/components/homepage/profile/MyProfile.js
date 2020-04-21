@@ -13,6 +13,9 @@ import OwnedRestaurants from './OwnedRestaurants'
 import WorkAtRestaurants from './WorkAtRestaurants'
 import { Polling } from '../../apis/Polling'
 import { compareTwoArraysOfInvitationObj } from '../../services'
+import ImageUploadModal from '../../imageUpload/ImageUploadModal'
+
+const baseURL = 'http://localhost:8000'
 
 class MyProfile extends React.Component {
   state = {
@@ -24,9 +27,15 @@ class MyProfile extends React.Component {
     me: null,
     pendingJobs: [],
     currentJobs: null,
+    imageUploadModalVisible: false,
+    avatarUrl: '',
   }
 
-  onSetPendingJobs = ({ currentJobs, pendingJobs }) => {
+  onSetPendingJobs = data => {
+    const { currentJobs, pendingJobs, img } = data
+    this.setState({
+      avatarUrl: baseURL + img.relativePath,
+    })
     if (this.state.currentJobs === null) {
       this.setState({
         currentJobs,
@@ -73,11 +82,14 @@ class MyProfile extends React.Component {
   renderViewModeBasic = name => {
     return (
       <span>
-        <img
-          className="ui avatar image"
-          src={require('../SWLogo.png')}
-          alt=""
-        />
+        <span
+          className="clickable"
+          onClick={() => {
+            this.setState({ imageUploadModalVisible: true })
+          }}
+        >
+          <img className="ui avatar image" src={this.state.avatarUrl} alt="" />
+        </span>
         {name}
         {this.state.mode === MODE.VIEW && this.renderViewModeBasicIcons()}
       </span>
@@ -130,11 +142,7 @@ class MyProfile extends React.Component {
     return (
       <form onSubmit={this.handleUserFormSubmit}>
         <span>
-          <img
-            className="ui avatar image"
-            src={require('../SWLogo.png')}
-            alt=""
-          />
+          <img className="ui avatar image" src={this.state.avatarUrl} alt="" />
           <input
             className="input"
             type="text"
@@ -175,15 +183,34 @@ class MyProfile extends React.Component {
     )
   }
 
+  renderImageUploadModal = () => {
+    const params = {
+      token: getCookie('token'),
+    }
+    return (
+      <ImageUploadModal
+        visible={this.state.imageUploadModalVisible}
+        onCancel={() => {
+          this.setState({
+            imageUploadModalVisible: false,
+          })
+        }}
+        tag="avatar"
+        params={params}
+      />
+    )
+  }
+
   render() {
     const { updateState } = this.props
     if (this.state.me === null) {
       return null
     }
 
-    const { _id, name, email, avatar } = this.state.me
+    const { _id, name, email } = this.state.me
     return (
       <div className="profile">
+        {this.renderImageUploadModal()}
         <PendingInvitationModal
           visible={this.state.inviationModalVisible}
           onCancel={this.onCloseInvitationModal}
