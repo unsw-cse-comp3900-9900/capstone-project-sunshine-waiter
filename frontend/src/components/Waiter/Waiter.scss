@@ -40,7 +40,8 @@ $theme-color2: rgba(255, 255, 255, 1);
     margin-bottom: 5%;
     .dishBox {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-gap: 20px;
+      grid-template-columns: 4fr 1fr 2fr 2fr;
       margin-bottom: 3%;
       align-items: center;
       justify-items: left;

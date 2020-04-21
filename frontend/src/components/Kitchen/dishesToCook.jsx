@@ -114,6 +114,7 @@ class RenderDishes extends React.Component {
     const renderedDish = (
       <div className="dishBox" key={dish._id}>
         <div className="dishName">{dish.name}</div>
+        <div>{dish.amount}</div>
         <div>{dish.order.createdAt}</div>
         <div className="buttonBox">
           {dish.status === COOKING && <div>Cooking...</div>}
