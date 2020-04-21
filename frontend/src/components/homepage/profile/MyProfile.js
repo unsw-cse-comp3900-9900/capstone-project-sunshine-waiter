@@ -277,7 +277,7 @@ class MyProfile extends React.Component {
         />
         <span className="ui horizontal divider" />
         <WorkAtRestaurants currentJobs={this.state.currentJobs} />
-        <div className="footer">
+        {/* <div className="footer">
           <div
             className="ui red button"
             onClick={() => {
@@ -287,7 +287,7 @@ class MyProfile extends React.Component {
           >
             Delete My Account
           </div>
-        </div>
+        </div> */}
       </div>
     )
   }

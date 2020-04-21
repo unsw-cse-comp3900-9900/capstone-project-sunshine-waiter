@@ -12,7 +12,11 @@ class PaymentFinsh extends Component {
 
   render() {
     const { orderId, id } = this.props
-    console.log('thisid->', id, orderId)
+    console.log(`id: ${id}  orderId: ${orderId}`)
+
+    const orderpageURL = '/restaurants/' + id + '/customer/' + orderId
+    console.log({ orderpageURL })
+
     return (
       <div style={{ height: '100%' }}>
         <div
@@ -32,10 +36,10 @@ class PaymentFinsh extends Component {
               textAlign: 'center',
             }}
           >
-            <i class="fas fa-check-circle" />
+            <i className="fas fa-check-circle" />
           </div>
         </div>
-        <Link to={'/restaurants/' + id + '/customer/' + orderId}>
+        <Link to={orderpageURL}>
           <div
             style={{
               textAlign: 'center',
@@ -51,7 +55,6 @@ class PaymentFinsh extends Component {
                 marginTop: '15%',
                 color: 'dodgerblue',
               }}
-              // onClick={() => handleOrderStatus()}
             >
               check my order
             </Button>
