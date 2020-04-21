@@ -192,11 +192,15 @@ deleteImage = async (req, res, next) => {
 }
 
 // Util functions
-present = (user) => _.omit(user, ['isAdmin', 'password'])
+present = user => {
+  const presentableUser = _.omit(user, ['isAdmin', 'password'])
+
+  if (presentableUser.img) presentableUser.img = presentUserImg(presentableUser)
+  return presentableUser
+}
 
 presentUserImg = obj => ({
   relativePath: `/users/${obj._id}/img`,
-  _id: obj.img._id,
   contentType: obj.img.contentType,
   originalname: obj.img.originalname,
 })
