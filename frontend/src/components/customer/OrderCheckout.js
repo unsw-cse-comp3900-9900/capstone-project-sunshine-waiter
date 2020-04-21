@@ -113,7 +113,7 @@ class OrderCheckout extends Component {
             <Button
               type="ghost"
               size="large"
-              style={{ width: '100%', color: 'dodgerblue' }}
+              style={{ width: '100%', color: 'dodgerblue', marginTop: '40px' }}
               onClick={() => this.handlerequest()}
             >
               Request Assistance
