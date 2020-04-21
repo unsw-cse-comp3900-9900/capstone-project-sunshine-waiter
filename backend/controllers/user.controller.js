@@ -193,8 +193,7 @@ deleteImage = async (req, res, next) => {
 
 // Util functions
 present = user => {
-  const presentableUser = _.omit(user, ['isAdmin', 'password'])
-
+  const presentableUser = _.omit(user._doc, ['isAdmin', 'password'])
   if (presentableUser.img) presentableUser.img = presentUserImg(presentableUser)
   return presentableUser
 }
