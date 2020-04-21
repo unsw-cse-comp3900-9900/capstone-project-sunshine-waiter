@@ -3,9 +3,12 @@ const Restaurant = require('../models/restaurant.model')
 const Menu = require('../models/menu.model')
 const Category = require('../models/category.model')
 const MenuItem = require('../models/menuItem.model')
+const {
+  present: presentMenuItem,
+} = require('../controllers/menuItem.controller')
 const _ = require('lodash')
 
-const present = (obj) => {
+const present = obj => {
   const { __v, ...data } = obj._doc
   return data
 }
@@ -19,7 +22,13 @@ readMenu = async (req, res, next) => {
     const menuItems = (await MenuItem.find({ menu: obj._id })) || []
     const categories = (await Category.find({ menu: obj._id })) || []
 
-    res.json({ data: { menuItems, categories, ...present(obj) } })
+    res.json({
+      data: {
+        menuItems: menuItems.map(i => presentMenuItem(i)),
+        categories,
+        ...present(obj),
+      },
+    })
   } catch (error) {
     next(error)
   }
@@ -99,8 +108,12 @@ const findMenu = async (req, res) => {
 
 function validateUpdateDataFormat(menu) {
   const schema = {
-    name: Joi.string().min(1).max(50),
-    description: Joi.string().min(1).max(2047),
+    name: Joi.string()
+      .min(1)
+      .max(50),
+    description: Joi.string()
+      .min(1)
+      .max(2047),
   }
 
   return Joi.validate(menu, schema)
