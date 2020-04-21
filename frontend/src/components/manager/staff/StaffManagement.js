@@ -4,7 +4,7 @@ import _ from 'lodash'
 import 'antd/dist/antd.css'
 
 import './staff.css'
-import { sendInvitation } from '../../apis/actions/invitation'
+import { sendInvitation, sendDismiss } from '../../apis/actions/invitation'
 import { getCookie } from '../../authenticate/Cookies'
 import { getSingleRestaurant } from '../../apis/actions/restaurants'
 import StaffItemCard from './StaffItemCard'
@@ -60,6 +60,75 @@ class StaffManagement extends React.Component {
     )
   }
 
+  onSendDismiss = async (e) => {
+    e.preventDefault()
+    this.setState({
+      sending: true,
+    })
+
+    const { restaurantId } = this.props
+    await sendDismiss(
+      getCookie('token'),
+      restaurantId,
+      _.pick(this.state, ['email', 'role']),
+      this.onFinishSend
+    )
+  }
+
+  renderDismissBlock = () => {
+    return (
+      <div>
+        <h1>Dissmiss a staff</h1>
+        <div className="invitation-block">
+          <form className="ui form" onSubmit={this.onSendDismiss}>
+            <div className="field field-block" style={{ marginTop: '10px' }}>
+              <label htmlFor="email">Email</label>
+              <input
+                type="text"
+                id="email"
+                placeholder="Input the email of the staff you want to dismiss."
+                value={this.state.email}
+                onChange={(e) =>
+                  this.setState({
+                    email: e.target.value,
+                  })
+                }
+              />
+            </div>
+            <div className="field field-block">
+              <label htmlFor="role">Role</label>
+              <Select
+                id="role"
+                size="small"
+                style={{ width: 150 }}
+                value={this.state.role}
+                onChange={(e) =>
+                  this.setState({
+                    role: e,
+                  })
+                }
+              >
+                <Select.Option key="cook">cook</Select.Option>
+                <Select.Option key="waiter">waiter</Select.Option>
+                <Select.Option key="manager">manager</Select.Option>
+              </Select>
+              <small>Choose a role</small>
+            </div>
+            <button
+              className={
+                this.state.sending
+                  ? 'my-button ui right loading primary button'
+                  : 'my-button ui right primary button'
+              }
+            >
+              Send
+            </button>
+          </form>
+        </div>
+      </div>
+    )
+  }
+
   renderInvitationBlock = () => {
     return (
       <div>
@@ -67,11 +136,11 @@ class StaffManagement extends React.Component {
         <div className="invitation-block">
           <form className="ui form" onSubmit={this.onSend}>
             <div className="field field-block" style={{ marginTop: '10px' }}>
-              <label htmlFor="email">Inviting Email</label>
+              <label htmlFor="email">Email</label>
               <input
                 type="text"
                 id="email"
-                placeholder="Input the email to send the invitation"
+                placeholder="Input the email of the user you want to invite."
                 value={this.state.email}
                 onChange={e =>
                   this.setState({
@@ -158,6 +227,9 @@ class StaffManagement extends React.Component {
       <div>
         <Row>
           <Col push={4}>{this.renderInvitationBlock()}</Col>
+        </Row>
+        <Row>
+          <Col push={4}>{this.renderDismissBlock()}</Col>
         </Row>
         <div className="ui clearing divider"></div>
         <Row>

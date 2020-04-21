@@ -18,11 +18,37 @@ export const sendInvitation = (
     const URL = `/restaurants/${restaurantId}/staff`
 
     BaseProvider.post(URL, params, config)
-      .then(res => {
+      .then((res) => {
         callback()
         message.success(res.data.message, 2)
       })
-      .catch(err => message.error(err.response.data.error))
+      .catch((err) => message.error(err.response.data.error))
+  }
+}
+
+export const sendDismiss = (
+  token,
+  restaurantId,
+  params,
+  callback = () => {}
+) => {
+  console.log({ token })
+
+  if (token !== undefined) {
+    const config = {
+      headers: {
+        'x-auth-token': token,
+      },
+      data: params,
+    }
+    const URL = `/restaurants/${restaurantId}/staff`
+
+    BaseProvider.delete(URL, config)
+      .then((res) => {
+        callback()
+        message.success(res.data.message, 2)
+      })
+      .catch((err) => message.error(err.response.data.error))
   }
 }
 
