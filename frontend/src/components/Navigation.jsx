@@ -14,7 +14,6 @@ export default class Navigation extends React.Component {
   render() {
     const { activeItem } = this.state
     const { id } = this.props
-    console.log(id)
 
     return (
       <div>
