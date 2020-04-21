@@ -174,6 +174,7 @@ class RenderFinished extends React.Component {
     return (
       <div className="dishBox" key={dish._id}>
         <div className="dishName">{dish.name}</div>
+        <div>{dish.amount}</div>
         <div>{new Date(dish.readyTime).toLocaleTimeString()}</div>
         <div className="buttonBox">
           <Popconfirm
