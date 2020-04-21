@@ -60,6 +60,7 @@ class DishItemCard extends Component {
       restaurantId,
       menuItemId,
       img,
+
     } = this.props
 
     // var imgURL = Imgs[image_id]
@@ -82,12 +83,16 @@ class DishItemCard extends Component {
         >
           <Card.Header title={name} />
           <Card.Body>
+
             <img
               src={img ? imgURL : require('./SWLogo.png')}
               alt="wrong"
               width="60%"
               height="20%"
             />
+
+            <img src={imgURL} alt="wrong" width="60%" height="20%" />
+
             {/* <img
               src={require('./services/statics/0_Roseberry.jpg')}
               alt="wrong"

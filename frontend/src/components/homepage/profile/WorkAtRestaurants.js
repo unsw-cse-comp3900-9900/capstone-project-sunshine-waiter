@@ -87,15 +87,17 @@ class WorkAtRestaurants extends React.Component {
           Positions
         </h4>
         <div className="scroller-container">
-          <InfiniteScroll
-            initialLoad={false}
-            pageStart={0}
-            loadMore={() => message.info("You've loaded all", 1)}
-            hasMore={false}
-            useWindow={false}
-          >
-            {this.renderWorkAtRestaurantsList()}
-          </InfiniteScroll>
+          {this.renderWorkAtRestaurantsList() === null ? null : (
+            <InfiniteScroll
+              initialLoad={false}
+              pageStart={0}
+              loadMore={() => message.info("You've loaded all", 1)}
+              hasMore={false}
+              useWindow={false}
+            >
+              {this.renderWorkAtRestaurantsList()}
+            </InfiniteScroll>
+          )}
         </div>
       </div>
     )

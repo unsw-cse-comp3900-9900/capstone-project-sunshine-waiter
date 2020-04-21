@@ -35,7 +35,6 @@ const CategoryPie = ({ data, categories }) => {
       <VictoryPie
         name="pie"
         data={pieData}
-        // labelRadius={({ innerRadius }) => innerRadius + 5}
         colorScale={[
           '#3a74b2',
           '#409dae',
@@ -45,9 +44,10 @@ const CategoryPie = ({ data, categories }) => {
           '#54fa87',
           '#39fd5a',
         ]}
-        radius={({ datum }) => 30 + datum.y * 400}
+        labels={({ datum }) => `${datum.x}: ${(datum.y * 100).toFixed(2)}%`}
+        radius={({ datum }) => Math.min(datum.y * 400, 100) + 30}
         padAngle={({ datum }) => datum.y * 20}
-        labelRadius={({ datum }) => 50 + datum.y * 400}
+        labelRadius={({ datum }) => Math.min(datum.y * 400, 100) + 40}
         innerRadius={30}
         animate={{
           duration: 1000,
@@ -65,7 +65,8 @@ const CategoryPie = ({ data, categories }) => {
                       return {
                         style: Object.assign({}, props.style, {
                           stroke: '#39fd5a',
-                          strokeWidth: ({ datum }) => 1 + datum.y * 20,
+                          strokeWidth: ({ datum }) =>
+                            Math.min(1 + datum.y * 20, 10),
                         }),
                       }
                     },

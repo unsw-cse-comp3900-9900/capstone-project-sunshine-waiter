@@ -114,6 +114,7 @@ class RenderDishes extends React.Component {
     const renderedDish = (
       <div className="dishBox" key={dish._id}>
         <div className="dishName">{dish.name}</div>
+        <div>{dish.amount}</div>
         <div>{dish.order.createdAt}</div>
         <div className="buttonBox">
           {dish.status === COOKING && <div>Cooking...</div>}
@@ -129,7 +130,8 @@ class RenderDishes extends React.Component {
           )}
 
           {dish.status === COOKING &&
-            this.props.user._id === dish.cookedBy._id && (
+            (this.props.user._id === dish.cookedBy._id ||
+              this.props.user._id === dish.cookedBy) && (
               <Tooltip title="finish">
                 <button
                   className="finish"
@@ -172,6 +174,7 @@ class RenderFinished extends React.Component {
     return (
       <div className="dishBox" key={dish._id}>
         <div className="dishName">{dish.name}</div>
+        <div>{dish.amount}</div>
         <div>{new Date(dish.readyTime).toLocaleTimeString()}</div>
         <div className="buttonBox">
           <Popconfirm

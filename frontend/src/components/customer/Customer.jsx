@@ -68,7 +68,7 @@ class Customer extends Component {
     this.setRestaurant()
   }
 
-  onSetCurrentMenu = data => {
+  onSetCurrentMenu = (data) => {
     console.log('onsetcuren', data)
     this.setState({
       currentMenu: data,
@@ -87,7 +87,7 @@ class Customer extends Component {
     this.FetchTableIdAlert(tableid)
   }
 
-  FetchTableIdAlert = tableid => {
+  FetchTableIdAlert = (tableid) => {
     Modal.alert('Your table number is', tableid, [
       { text: 'OK', onPress: () => console.log('ok') },
     ])
@@ -104,7 +104,7 @@ class Customer extends Component {
     await getSingleRestaurant(getCookie('token'), id, this.onSetName)
   }
 
-  onSetName = data => {
+  onSetName = (data) => {
     this.setState({
       restaurantName: data.name,
     })
@@ -143,7 +143,7 @@ class Customer extends Component {
     })
   }
 
-  onDock = d => {
+  onDock = (d) => {
     this.setState({
       [d]: !this.state[d],
     })
@@ -278,34 +278,20 @@ class Customer extends Component {
     ])
   }
 
-  handleConfirmPayOk = () => {
-    this.handleOrderStatus()
-    Toast.loading('loading...', 1)
-
-    setTimeout(
-      () =>
-        this.setState({
-          pagestatus: 2,
-        }),
-      1000
-    )
-  }
-
-  handleOrderStatus = async () => {
+  handleConfirmPayOk = async () => {
+    // prepare request data
     const { id } = this.props.match.params
     const param = {
       placedBy: this.state.placedBy,
-
       orderItemsData: this.state.orderItemsData,
     }
 
-    await createOrder(id, param, this.getOrderdata)
-  }
-
-  getOrderdata = data => {
-    console.log('customerordercallback->', data)
-    this.setState({
-      orderId: data._id,
+    await createOrder(token, id, param, (data) => {
+      console.log('Order created. Here is the order:  ', data)
+      this.setState({
+        orderId: data._id,
+        pagestatus: 2,
+      })
     })
   }
 
@@ -324,7 +310,7 @@ class Customer extends Component {
   }
 
   //index by name, not id,may change later
-  renderContent = displayIndex => {
+  renderContent = (displayIndex) => {
     return (
       <div>
         <div>
@@ -338,6 +324,7 @@ class Customer extends Component {
               note,
               restaurant,
               img,
+
             }) => {
               return (
                 categoryArray[0] === displayIndex && (
@@ -350,7 +337,9 @@ class Customer extends Component {
                     _id={_id}
                     restaurantId={restaurant}
                     menuItemId={_id}
+
                     img={img}
+
                     getorder={this.increaseorder}
                   />
                 )
@@ -362,7 +351,7 @@ class Customer extends Component {
     )
   }
 
-  renderContentTab = tab => (
+  renderContentTab = (tab) => (
     <div
       style={{
         display: 'flex',
@@ -509,7 +498,7 @@ class Customer extends Component {
             >
               <Tabs
                 tabs={tabs}
-                renderTabBar={props => (
+                renderTabBar={(props) => (
                   <Tabs.DefaultTabBar {...props} page={3} />
                 )}
               >
@@ -533,7 +522,7 @@ class Customer extends Component {
     } else if (this.state.pagestatus === 2) {
       return (
         <PaymentFinsh
-          // handleOrderStatus={this.handleOrderStatus}
+
           id={this.props.match.params.id}
           orderId={this.state.orderId}
         />
