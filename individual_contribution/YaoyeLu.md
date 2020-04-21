@@ -37,7 +37,7 @@
 -   finish persisting page after refresh
 -   improve menu builder
 
-#### WEEK9 -- todo
+#### WEEK9
 
 -   improve UI
 -   adjust menu builder into archived and active
@@ -54,11 +54,13 @@
     -   render restaurants where users work
 -   finish frontend authority control
 
+#### WEEK10
+
+-   Improve menu builder UI
+-   finish upload image
+
 todo
 
--   To add menu builder no-cateogory menuItems
 -   To finish deployment
 
-*   To add img upload(menu and avatar)
 *   To finish QRCode generator
-*   To Improve Myprofile UI
