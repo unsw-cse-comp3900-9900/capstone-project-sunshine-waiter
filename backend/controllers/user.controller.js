@@ -130,7 +130,7 @@ uploadImage = async (req, res, next) => {
 
     // 2 - reply with presentable image
     res.json({
-      data: presentImg(obj),
+      data: presentUserImg(obj),
       message: 'Successfully upload iamge. May have replaced old image if any.',
     })
   } catch (error) {
@@ -194,7 +194,7 @@ deleteImage = async (req, res, next) => {
 // Util functions
 present = (user) => _.omit(user, ['isAdmin', 'password'])
 
-presentImg = (obj) => ({
+presentUserImg = obj => ({
   relativePath: `/users/${obj._id}/img`,
   _id: obj.img._id,
   contentType: obj.img.contentType,
