@@ -19,13 +19,7 @@ class ImageUploadModal extends React.Component {
     }
     if (tag === 'menuItem') {
       const { restaurantId, menuItemId } = params
-      this.URL =
-        baseURL +
-        '/restaurants/' +
-        restaurantId +
-        '/menuitems/' +
-        menuItemId +
-        '/img'
+      this.URL = `${baseURL}/restaurants/${restaurantId}/menuItems/${menuItemId}/img`
     }
 
     const headers = {
