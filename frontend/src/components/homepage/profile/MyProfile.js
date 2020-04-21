@@ -29,13 +29,16 @@ class MyProfile extends React.Component {
     currentJobs: null,
     imageUploadModalVisible: false,
     avatarUrl: '',
+    isLoading: true,
   }
 
   onSetPendingJobs = data => {
     const { currentJobs, pendingJobs, img } = data
-    this.setState({
-      avatarUrl: baseURL + img.relativePath,
-    })
+    if (img.originalname !== undefined && !this.state.avatarUrl) {
+      this.setState({
+        avatarUrl: baseURL + img.relativePath,
+      })
+    }
     if (this.state.currentJobs === null) {
       this.setState({
         currentJobs,
@@ -61,6 +64,18 @@ class MyProfile extends React.Component {
   }
 
   onSetMe = data => {
+    const { img } = data
+
+    if (this.state.isLoading) {
+      this.setState({
+        isLoading: false,
+      })
+    }
+    if (img.originalname !== undefined) {
+      this.setState({
+        avatarUrl: baseURL + img.relativePath,
+      })
+    }
     this.setState({
       me: data,
       editingName: data.name,
@@ -88,7 +103,17 @@ class MyProfile extends React.Component {
             this.setState({ imageUploadModalVisible: true })
           }}
         >
-          <img className="ui avatar image" src={this.state.avatarUrl} alt="" />
+          <img
+            className="ui avatar image"
+            src={
+              this.state.isLoading
+                ? ''
+                : this.state.avatarUrl
+                ? this.state.avatarUrl
+                : require('../../homepage/SWLogo.png')
+            }
+            alt=""
+          />
         </span>
         {name}
         {this.state.mode === MODE.VIEW && this.renderViewModeBasicIcons()}
@@ -142,7 +167,17 @@ class MyProfile extends React.Component {
     return (
       <form onSubmit={this.handleUserFormSubmit}>
         <span>
-          <img className="ui avatar image" src={this.state.avatarUrl} alt="" />
+          <img
+            className="ui avatar image"
+            src={
+              this.state.isLoading
+                ? ''
+                : this.state.avatarUrl
+                ? this.state.avatarUrl
+                : require('../../homepage/SWLogo.png')
+            }
+            alt=""
+          />
           <input
             className="input"
             type="text"

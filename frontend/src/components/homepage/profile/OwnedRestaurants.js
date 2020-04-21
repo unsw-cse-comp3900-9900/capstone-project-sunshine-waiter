@@ -99,15 +99,17 @@ class OwnedRestaurants extends React.Component {
           </span>
         </h4>
         <div className="scroller-container">
-          <InfiniteScroll
-            initialLoad={false}
-            pageStart={0}
-            loadMore={() => message.info("You've loaded all", 1)}
-            hasMore={false}
-            useWindow={false}
-          >
-            {this.renderOwnedRestaurantsList()}
-          </InfiniteScroll>
+          {this.renderOwnedRestaurantsList() === null ? null : (
+            <InfiniteScroll
+              initialLoad={false}
+              pageStart={0}
+              loadMore={() => message.info("You've loaded all", 1)}
+              hasMore={false}
+              useWindow={false}
+            >
+              {this.renderOwnedRestaurantsList()}
+            </InfiniteScroll>
+          )}
         </div>
       </div>
     )
