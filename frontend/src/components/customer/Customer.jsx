@@ -293,7 +293,15 @@ class Customer extends Component {
       <div>
         <div>
           {this.state.currentMenu.menuItems.map(
-            ({ categoryArray, _id, name, price, description, note }) => {
+            ({
+              categoryArray,
+              _id,
+              name,
+              price,
+              description,
+              note,
+              restaurant,
+            }) => {
               return (
                 categoryArray[0] === displayIndex && (
                   <DishItemCard
@@ -303,6 +311,8 @@ class Customer extends Component {
                     price={price}
                     key={_id}
                     _id={_id}
+                    restaurantId={restaurant}
+                    menuItemId={_id}
                     getorder={this.increaseorder}
                   />
                 )

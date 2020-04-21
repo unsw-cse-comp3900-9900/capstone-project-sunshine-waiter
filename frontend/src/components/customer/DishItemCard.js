@@ -11,6 +11,8 @@ import 'antd/dist/antd.css'
 const requireContext = require.context('./', true, /\.jpg$/)
 const Imgs = requireContext.keys().map(requireContext)
 
+const baseURL = 'http://localhost:8000'
+
 console.log('Imgs->' + Imgs)
 
 class DishItemCard extends Component {
@@ -50,27 +52,41 @@ class DishItemCard extends Component {
 
   render() {
     // const { title, image_id, description, cost, getorder } = this.props
-    const { categoryArray, name, price, description } = this.props
+    const {
+      categoryArray,
+      name,
+      price,
+      description,
+      restaurantId,
+      menuItemId,
+    } = this.props
 
     // var imgURL = Imgs[image_id]
     // console.log('imgurl' + imgURL)
+    const imgURL =
+      baseURL +
+      '/restaurants/' +
+      restaurantId +
+      '/menuItems/' +
+      menuItemId +
+      '/img'
     return (
       <WingBlank size="sm">
         <WhiteSpace size="sm" />
         <Card
           style={{
-            width: '300px',
+            width: '100%',
           }}
         >
           <Card.Header title={name} />
           <Card.Body>
-            {/* <img src={imgURL} alt="wrong" width="200px" height="100px" /> */}
-            <img
+            <img src={imgURL} alt="wrong" width="60%" height="20%" />
+            {/* <img
               src={require('./services/statics/0_Roseberry.jpg')}
               alt="wrong"
               width="200px"
               height="100px"
-            />
+            /> */}
           </Card.Body>
           <Card.Footer
             content={description}
@@ -102,8 +118,10 @@ class DishItemCard extends Component {
                 </span>
 
                 <Button
-                  type="ghost"
-                  size="small"
+                  size="default"
+                  style={{
+                    color: 'dodgerblue',
+                  }}
                   onClick={() => this.handleClick()}
                 >
                   add to cart

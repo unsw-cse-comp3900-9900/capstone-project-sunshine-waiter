@@ -24,25 +24,26 @@ class NavigationOrderConfirm extends Component {
       >
         <TextArea rows={4} placeholder="Notes:"></TextArea>
         <Button
-          type="ghost"
-          size="small"
+          size="default"
           inline
           style={{
             position: 'absolute',
             left: '20px',
             bottom: '10px',
+            color: 'dodgerblue',
           }}
           onClick={() => handleCancelPay()}
         >
           cancel
         </Button>
         <Button
-          type="ghost"
+          size="default"
           inline
           style={{
             position: 'absolute',
             right: '20px',
             bottom: '10px',
+            color: 'dodgerblue',
           }}
           onClick={() => this.props.handleConfirmPay()}
         >

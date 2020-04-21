@@ -14,40 +14,48 @@ class PaymentFinsh extends Component {
     const { orderId, id } = this.props
     console.log('thisid->', id, orderId)
     return (
-      <div style={{ height: '800px' }}>
+      <div style={{ height: '100%' }}>
         <div
           style={{
-            position: 'absolute',
-            top: '20%',
+            marginTop: '30%',
+
             fontSize: '40px',
             fontFamily: 'bold',
             textAlign: 'center',
+            marginBottom: '10%',
           }}
         >
           Congratulations! You have finished payment successfully..
           <WhiteSpace size="lg" />
-          <i
-            class="fas fa-check-circle"
+          <div
             style={{
-              position: 'absolute',
-              left: '40%',
+              textAlign: 'center',
             }}
-          ></i>
+          >
+            <i class="fas fa-check-circle" />
+          </div>
         </div>
         <Link to={'/restaurants/' + id + '/customer/' + orderId}>
-          <Button
-            type="ghost"
-            size="large"
+          <div
             style={{
-              width: '200px',
-              position: 'absolute',
-              left: '20%',
-              bottom: '30%',
+              textAlign: 'center',
             }}
-            // onClick={() => handleOrderStatus()}
           >
-            check my order
-          </Button>
+            <Button
+              type="ghost"
+              size="large"
+              style={{
+                width: '70%',
+                height: '20%',
+
+                marginTop: '15%',
+                color: 'dodgerblue',
+              }}
+              // onClick={() => handleOrderStatus()}
+            >
+              check my order
+            </Button>
+          </div>
         </Link>
       </div>
     )
