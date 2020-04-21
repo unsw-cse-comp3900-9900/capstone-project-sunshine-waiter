@@ -88,7 +88,15 @@ class MyProfile extends React.Component {
             this.setState({ imageUploadModalVisible: true })
           }}
         >
-          <img className="ui avatar image" src={this.state.avatarUrl} alt="" />
+          <img
+            className="ui avatar image"
+            src={
+              this.state.avatarUrl
+                ? this.state.avatarUrl
+                : require('../../homepage/SWLogo.png')
+            }
+            alt=""
+          />
         </span>
         {name}
         {this.state.mode === MODE.VIEW && this.renderViewModeBasicIcons()}
@@ -142,7 +150,15 @@ class MyProfile extends React.Component {
     return (
       <form onSubmit={this.handleUserFormSubmit}>
         <span>
-          <img className="ui avatar image" src={this.state.avatarUrl} alt="" />
+          <img
+            className="ui avatar image"
+            src={
+              this.state.avatarUrl
+                ? this.state.avatarUrl
+                : require('../../homepage/SWLogo.png')
+            }
+            alt=""
+          />
           <input
             className="input"
             type="text"
