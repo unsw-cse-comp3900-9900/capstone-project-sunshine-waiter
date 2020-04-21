@@ -6,6 +6,20 @@ const present = (obj) => {
   return data
 }
 
+const presentMenuItem = (obj) => {
+  const { __v, ...data } = obj._doc
+  if (data.img) {
+    data.img = presentMenuItemImg(data)
+  }
+  return data
+}
+const presentMenuItemImg = (obj) => ({
+  relativePath: `/menuitems/${obj._id}/img`,
+  _id: obj.img._id,
+  contentType: obj.img.contentType,
+  originalname: obj.img.originalname,
+})
+
 const validateObjectId = (id) => {
   const isValid = mongoose.Types.ObjectId.isValid
   if (!isValid(id))
@@ -41,4 +55,6 @@ module.exports = {
   validateObjectId,
   validateRole,
   performTransaction,
+  presentMenuItem,
+  presentMenuItemImg,
 }

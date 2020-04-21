@@ -38,7 +38,7 @@ const httpCodeErrorHandler = (err, req, res, next) => {
       problematicData: err.problematicData,
     })
   else {
-    console.log(err)
+    console.log('other type of error', err)
     res.status(500).send(err.message)
   }
 }

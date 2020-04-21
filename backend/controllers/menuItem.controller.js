@@ -7,15 +7,10 @@ const unlinkAsync = promisify(fs.unlink)
 const MenuItem = require('../models/menuItem.model')
 const Category = require('../models/category.model')
 const { findMenu } = require('./menu.controller')
-
-// present data to client side
-const present = obj => {
-  const { __v, ...data } = obj._doc
-  if (data.img) {
-    data.img = presentImg(data)
-  }
-  return data
-}
+const {
+  presentMenuItem: present,
+  presentMenuItemImg: presentImg,
+} = require('../util')
 
 // create menuItem { name, price, description, note  }
 createMenuItem = async (req, res, next) => {
@@ -25,7 +20,7 @@ createMenuItem = async (req, res, next) => {
     if (error) return res.status(400).json({ error: error.details[0].message })
     const menuId = (await findMenu(req, res))._id
     // validate categoryArray
-    await req.body.categoryArray.forEach(async categoryId => {
+    await req.body.categoryArray.forEach(async (categoryId) => {
       try {
         const category = await Category.findById(categoryId)
         if (!category || !category.menu.equals(menuId) || category.isArchived)
@@ -79,7 +74,7 @@ readMany = async (req, res, next) => {
     const menu = await findMenu(req, res)
     const menuItems = await MenuItem.find({ menu: menu._id })
 
-    res.json({ data: menuItems.map(v => present(v)) })
+    res.json({ data: menuItems.map((v) => present(v)) })
   } catch (error) {
     next(error)
   }
@@ -108,7 +103,7 @@ readManyPublicly = async (req, res, next) => {
       isArchived: false,
       isPrivate: false,
     })
-    res.json({ data: menuItems.map(v => present(v)) })
+    res.json({ data: menuItems.map((v) => present(v)) })
   } catch (error) {
     next(error)
   }
@@ -275,14 +270,8 @@ deleteImage = async (req, res, next) => {
 }
 
 // Util functions
-presentImg = obj => ({
-  relativePath: `/menuitems/${obj._id}/img`,
-  _id: obj.img._id,
-  contentType: obj.img.contentType,
-  originalname: obj.img.originalname,
-})
 
-diskDeleteFileByPath = async path => {
+diskDeleteFileByPath = async (path) => {
   const err = await unlinkAsync(path)
   if (err)
     throw {
@@ -295,9 +284,7 @@ diskDeleteFileByPath = async path => {
 // validation functions
 function validateCreateDataFormat(menuItem) {
   const schema = {
-    name: Joi.string()
-      .max(50)
-      .required(),
+    name: Joi.string().max(50).required(),
     price: Joi.number().required(),
     description: Joi.string().max(2047),
     note: Joi.string().max(255),
@@ -317,15 +304,9 @@ function validateCreateDataFormat(menuItem) {
 */
 function validateUpdateDataFormat(menuItem) {
   const schema = {
-    name: Joi.string()
-      .min(1)
-      .max(50),
-    description: Joi.string()
-      .min(1)
-      .max(2047),
-    note: Joi.string()
-      .min(1)
-      .max(2047),
+    name: Joi.string().min(1).max(50),
+    description: Joi.string().min(1).max(2047),
+    note: Joi.string().min(1).max(2047),
     price: Joi.number().min(0),
     categoryArray: Joi.array(),
     isPrivate: Joi.boolean(),
@@ -341,7 +322,6 @@ module.exports = {
   deleteMenuItem,
   readMany,
   readManyPublicly,
-  present,
 
   uploadImage,
   readImage,
