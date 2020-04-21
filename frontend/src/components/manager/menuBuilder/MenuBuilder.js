@@ -7,12 +7,9 @@ import { deleteCategoryItem } from '../../apis/actions/category'
 import MenuItemModal from './MenuItemModal'
 import CategoryModal from './CategoryModal'
 import '../default.css'
-import './menuItem.css'
 import { getCookie } from '../../authenticate/Cookies'
-import ImageUploadModal from '../../imageUpload/ImageUploadModal'
 import Spinner from '../../Spinner'
-
-const baseURL = 'http://localhost:8000'
+import MenuItemCard from './MenuItemCard'
 
 class MenuBuilder extends React.Component {
   state = {
@@ -22,7 +19,6 @@ class MenuBuilder extends React.Component {
     currentCategoryParam: null,
     currentMenuItemParam: null,
     currentMenu: null,
-    showImageUploadModal: false,
     isLoading: true,
   }
 
@@ -42,46 +38,6 @@ class MenuBuilder extends React.Component {
     await fetchMenuApi(getCookie('token'), id, this.onSetCurrentMenu)
   }
 
-  renderImage = item => {
-    const { id } = this.props.match.params
-    const { img } = item
-
-    //backend api is a bit buggy, but the workaround is that no orginalname, then no image uploaded yet
-    if (img.originalname !== undefined) {
-      return (
-        <span
-          className="clickable"
-          onClick={() =>
-            this.setState({
-              showImageUploadModal: true,
-            })
-          }
-        >
-          <img
-            className="ui avatar image"
-            src={baseURL + `/restaurants/${id}` + img.relativePath}
-          />
-        </span>
-      )
-    }
-
-    return (
-      <span
-        className="clickable"
-        onClick={() =>
-          this.setState({
-            showImageUploadModal: true,
-          })
-        }
-      >
-        <img
-          className="ui avatar image"
-          src={require('../../homepage/SWLogo.png')}
-        />
-      </span>
-    )
-  }
-
   renderActiveMenuItem = category => {
     const { id: restaurantId } = this.props.match.params
 
@@ -92,65 +48,22 @@ class MenuBuilder extends React.Component {
       return <div>Create a menuItem</div>
     }
     return (
-      <div className="ui items">
+      <div className="ui four cards">
         {this.state.currentMenu.menuItems.map(item => {
           if (!item.isArchived) {
             return item.categoryArray.map(caId => {
               if (caId === category._id) {
                 return (
-                  <div className="item item-box" key={item._id}>
-                    <ImageUploadModal
-                      visible={this.state.showImageUploadModal}
-                      onCancel={() =>
-                        this.setState({
-                          showImageUploadModal: false,
-                        })
-                      }
-                      tag="menuItem"
-                      params={{
-                        token: getCookie('token'),
-                        restaurantId,
-                        menuItemId: item._id,
-                      }}
-                    />
-                    {this.renderImage(item)}
-                    <div className="middle aligned">
-                      <Tooltip
-                        placement="topLeft"
-                        title={`price is ${item.price}`}
-                        arrowPointAtCenter
-                      >
-                        {item.name}
-                      </Tooltip>
-                      <Tooltip
-                        placement="topLeft"
-                        title="modify the menuItem"
-                        arrowPointAtCenter
-                      >
-                        <span
-                          className="right"
-                          onClick={() => {
-                            this.setState({ currentMenuItemParam: item })
-                            this.handleMenuItemEdit()
-                          }}
-                        >
-                          <i className="clickable pencil alternate icon"></i>
-                        </span>
-                      </Tooltip>
-                      <Tooltip
-                        placement="topLeft"
-                        title="delete the menuItem"
-                        arrowPointAtCenter
-                      >
-                        <span
-                          className="right"
-                          onClick={() => this.onDeleteMenuItem(item._id)}
-                        >
-                          <i className="clickable trash icon"></i>
-                        </span>
-                      </Tooltip>
-                    </div>
-                  </div>
+                  <MenuItemCard
+                    key={item._id}
+                    {...this.props}
+                    item={item}
+                    categoryId={caId}
+                    handleMenuItemEdit={this.handleMenuItemEdit}
+                    currentMenu={this.state.currentMenu}
+                    onSetCurrentMenuParam={this.onSetCurrentMenuParam}
+                    onDeleteMenuItem={this.onDeleteMenuItem}
+                  ></MenuItemCard>
                 )
               }
             })
@@ -203,6 +116,10 @@ class MenuBuilder extends React.Component {
     this.setState({
       showMenuItemModal: true,
     })
+  }
+
+  onSetCurrentMenuParam = data => {
+    this.setState({ currentMenuItemParam: data })
   }
 
   onCloseMenuItemModal = () => {
