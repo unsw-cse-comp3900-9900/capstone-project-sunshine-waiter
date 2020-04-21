@@ -3,8 +3,8 @@ import { Modal, Tag, Select } from 'antd'
 import { TweenOneGroup } from 'rc-tween-one'
 import _ from 'lodash'
 
-import { createMenuItem, updateMenuItem } from '../apis/actions/menuItem'
-import { getCookie } from '../authenticate/Cookies'
+import { createMenuItem, updateMenuItem } from '../../apis/actions/menuItem'
+import { getCookie } from '../../authenticate/Cookies'
 
 class MenuItemModal extends React.Component {
   state = {
@@ -24,7 +24,6 @@ class MenuItemModal extends React.Component {
   UNSAFE_componentWillReceiveProps = nextProps => {
     const { currentParam } = nextProps
 
-    console.log('menuitemmodal->!!!!!!', currentParam)
     if (currentParam !== null) {
       const {
         _id,
@@ -62,7 +61,6 @@ class MenuItemModal extends React.Component {
     const categoryArray = this.state.categoryArray.filter(
       ca => ca !== removedTagId
     )
-    console.log(categoryArray)
     this.setState({ categoryArray: categoryArray })
   }
 
@@ -213,7 +211,6 @@ class MenuItemModal extends React.Component {
   }
 
   render() {
-    console.log('menuitemmodalrender')
     const { visible, onCancel } = this.props
     return (
       <Modal visible={visible} onCancel={onCancel} onOk={this.onSubmit}>

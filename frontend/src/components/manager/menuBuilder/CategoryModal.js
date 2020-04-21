@@ -4,8 +4,8 @@ import { Modal, Select } from 'antd'
 import {
   createCategoryItem,
   updateCategoryItem,
-} from '../apis/actions/category'
-import { getCookie } from '../authenticate/Cookies'
+} from '../../apis/actions/category'
+import { getCookie } from '../../authenticate/Cookies'
 
 class CategoryModal extends React.Component {
   state = {
