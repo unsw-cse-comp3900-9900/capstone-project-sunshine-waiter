@@ -155,6 +155,28 @@ class Customer extends Component {
   }
 
   increaseorder = (name, id, price, num, categoryArray) => {
+    if (this.state.orderItemsData != []) {
+      for (var i = 0; i < this.state.orderItemsData.length; i++) {
+        if (this.state.orderItemsData[i].name === name) {
+          const originamount = this.state.orderItemsData[i].amount
+          this.state.orderItemsData[i].amount = originamount + num
+
+          if (this.state.dic_order.has(name)) {
+            this.state.dic_order.set(name, this.state.dic_order.get(name) + num)
+          } else {
+            this.state.dic_order.set(name, num)
+          }
+
+          this.setState({
+            orderlist: [...this.state.dic_order.keys()],
+            orderItemsData: [...this.state.orderItemsData],
+            orderitem: [],
+          })
+          return
+        }
+      }
+    }
+
     if (this.state.dic_order.has(name)) {
       this.state.dic_order.set(name, this.state.dic_order.get(name) + num)
       this.state.orderitem = {
@@ -209,8 +231,15 @@ class Customer extends Component {
   handleAdd(index, item) {
     const num = this.state.dic_order.get(item)
     this.state.dic_order.set(item, num + 1)
+    const orderItemsData = [...this.state.orderItemsData]
+    for (var i = 0; i < this.state.orderItemsData.length; i++) {
+      if (this.state.orderItemsData[i].name === item) {
+        orderItemsData[i].amount = num + 1
+      }
+    }
     this.setState({
       dic_order: this.state.dic_order,
+      orderItemsData: [...orderItemsData],
     })
   }
 
@@ -223,8 +252,15 @@ class Customer extends Component {
       this.handleDeleteBtn(index, item)
       console.log('orderlist', this.state.orderlist)
     } else {
+      const orderItemsData = [...this.state.orderItemsData]
+      for (var i = 0; i < this.state.orderItemsData.length; i++) {
+        if (this.state.orderItemsData[i].name === item) {
+          orderItemsData[i].amount = num - 1
+        }
+      }
       this.setState({
         dic_order: this.state.dic_order,
+        orderItemsData: [...orderItemsData],
       })
     }
   }
@@ -249,9 +285,6 @@ class Customer extends Component {
       placedBy: this.state.placedBy,
       orderItemsData: this.state.orderItemsData,
     }
-    const token = getCookie('token')
-
-    console.log({ token })
 
     await createOrder(token, id, param, (data) => {
       console.log('Order created. Here is the order:  ', data)
@@ -290,6 +323,8 @@ class Customer extends Component {
               description,
               note,
               restaurant,
+              img,
+
             }) => {
               return (
                 categoryArray[0] === displayIndex && (
@@ -302,6 +337,9 @@ class Customer extends Component {
                     _id={_id}
                     restaurantId={restaurant}
                     menuItemId={_id}
+
+                    img={img}
+
                     getorder={this.increaseorder}
                   />
                 )
@@ -328,7 +366,7 @@ class Customer extends Component {
   )
 
   render() {
-    console.log('this is restaurant name->', this.props)
+    console.log('this is restaurant name->', this.state.orderItemsData)
     if (this.state.pagestatus === 0) {
       // console.log('currentmenu', this.state.currentMenu)
       // console.log('_id', this.state.currentMenu._id)
@@ -484,6 +522,7 @@ class Customer extends Component {
     } else if (this.state.pagestatus === 2) {
       return (
         <PaymentFinsh
+
           id={this.props.match.params.id}
           orderId={this.state.orderId}
         />

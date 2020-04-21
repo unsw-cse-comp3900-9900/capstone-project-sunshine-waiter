@@ -1,20 +1,21 @@
 import BaseProvider from '../BaseProvider'
 
 export const createOrder = (
-  token,
+  // token,
   restaurantId,
   param,
   callback = () => {}
 ) => {
-  console.log('createOrder called!')
 
   const config = {
     headers: {
-      'x-auth-token': token,
+      // 'x-auth-token': token,
+
       'Content-Type': 'application/json',
     },
   }
   const URL = `/restaurants/${restaurantId}/orders/`
+
 
   BaseProvider.post(URL, param, config)
     .then((res) => {
@@ -23,6 +24,7 @@ export const createOrder = (
     .catch((err) => {
       console.log({ err })
     })
+
 }
 
 export const fetchOrderApi = (

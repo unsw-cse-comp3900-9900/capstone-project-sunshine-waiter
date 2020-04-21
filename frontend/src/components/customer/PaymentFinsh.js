@@ -36,10 +36,12 @@ class PaymentFinsh extends Component {
               textAlign: 'center',
             }}
           >
+
             <i className="fas fa-check-circle" />
           </div>
         </div>
         <Link to={orderpageURL}>
+
           <div
             style={{
               textAlign: 'center',
@@ -55,6 +57,7 @@ class PaymentFinsh extends Component {
                 marginTop: '15%',
                 color: 'dodgerblue',
               }}
+
             >
               check my order
             </Button>
