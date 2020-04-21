@@ -27,7 +27,7 @@ class Manager extends React.Component {
   componentDidMount = () => {
     const { id } = this.props.match.params
 
-    getSingleRestaurant(getCookie('token'), id, data => {
+    getSingleRestaurant(getCookie('token'), id, (data) => {
       //finish loading
       this.setState({
         isLoading: false,
@@ -52,9 +52,9 @@ class Manager extends React.Component {
     if (this.state.displayIndex === MENUS) {
       return <MenuBuilder {...this.props} />
     }
-    if (this.state.displayIndex === QRCODE) {
-      return <div>code</div>
-    }
+    // if (this.state.displayIndex === QRCODE) {
+    //   return <div>code</div>
+    // }
   }
 
   render() {
@@ -88,12 +88,12 @@ class Manager extends React.Component {
                 <i className="list icon"></i>
                 Menu
               </Menu.Item>
-              <Menu.Item
+              {/* <Menu.Item
                 onClick={() => this.setState({ displayIndex: QRCODE })}
               >
                 <i className="qrcode icon"></i>
                 QRCode
-              </Menu.Item>
+              </Menu.Item> */}
             </Menu>
           </Sider>
           <Content className="content">
