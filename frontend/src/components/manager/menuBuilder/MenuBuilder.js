@@ -338,13 +338,15 @@ class MenuBuilder extends React.Component {
           onFetchCurrentMenu={this.onFetchCurrentMenu}
         />
         <Row>
-          <Col span={8}>{this.renderActiveMenu()}</Col>
-          <Col span={8} push={0.5}>
-            {this.renderArchivedMenu()}
-          </Col>
-          <Col span={8} push={0.5}>
-            {this.renderArchivedMenuItem()}
-          </Col>
+          <Col span={24}>{this.renderActiveMenu()}</Col>
+        </Row>
+        <div className="ui clearing divider"></div>
+        <Row>
+          <Col span={24}>{this.renderArchivedMenu()}</Col>
+        </Row>
+        <div className="ui clearing divider"></div>
+        <Row>
+          <Col span={24}>{this.renderArchivedMenuItem()}</Col>
         </Row>
       </div>
     )
