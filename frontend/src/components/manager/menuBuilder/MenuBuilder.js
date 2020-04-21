@@ -10,6 +10,7 @@ import '../default.css'
 import './menuItem.css'
 import { getCookie } from '../../authenticate/Cookies'
 import ImageUploadModal from '../../imageUpload/ImageUploadModal'
+import Spinner from '../../Spinner'
 
 const baseURL = 'http://localhost:8000'
 
@@ -22,6 +23,7 @@ class MenuBuilder extends React.Component {
     currentMenuItemParam: null,
     currentMenu: null,
     showImageUploadModal: false,
+    isLoading: true,
   }
 
   componentDidMount = () => {
@@ -31,6 +33,7 @@ class MenuBuilder extends React.Component {
   onSetCurrentMenu = data => {
     this.setState({
       currentMenu: data,
+      isLoading: false,
     })
   }
 
@@ -326,13 +329,6 @@ class MenuBuilder extends React.Component {
   }
 
   renderActiveMenu = () => {
-    if (this.state.currentMenu === null) {
-      return (
-        <div className="ui red message">
-          The menu is null, pls contact the admin!
-        </div>
-      )
-    }
     return (
       <div className="menu-builder">
         <div>
@@ -383,6 +379,17 @@ class MenuBuilder extends React.Component {
 
   render() {
     const { id } = this.props.match.params
+    const { isLoading } = this.state
+    if (isLoading) {
+      return <Spinner />
+    }
+    if (!isLoading && this.state.currentMenu === null) {
+      return (
+        <div className="ui red message">
+          The menu is null, pls contact the admin!
+        </div>
+      )
+    }
     return (
       <div>
         <MenuItemModal
