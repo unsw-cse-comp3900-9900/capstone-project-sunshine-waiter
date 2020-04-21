@@ -2,7 +2,6 @@ import React from 'react'
 import {
   VictoryChart,
   VictoryBrushContainer,
-  VictoryLine,
   VictoryAxis,
   VictoryBar,
 } from 'victory'

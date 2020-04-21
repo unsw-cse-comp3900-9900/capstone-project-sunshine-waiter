@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { groupBy } from '../../Waiter/Dishes'
 import { Button, Modal, Table } from 'antd'
 import { numberWithCommas } from './totalSale'
+import UserCard from './userCard'
 
 class OrderTable extends Component {
   constructor(props) {
@@ -9,6 +10,7 @@ class OrderTable extends Component {
     this.state = {
       groupByOrder: new Map(),
       detailVisible: {},
+      userVisible: {},
       orders: [],
     }
     this.itemColums = [
@@ -28,6 +30,9 @@ class OrderTable extends Component {
         title: 'Cooked By',
         dataIndex: 'cookedBy',
         key: 'cookedBy',
+        render: userId => (
+          <a onClick={() => this.toggleUserVisible(userId)}>{userId}</a>
+        ),
       },
       {
         title: 'Cooked At',
@@ -38,6 +43,9 @@ class OrderTable extends Component {
         title: 'Served By',
         dataIndex: 'servedBy',
         key: 'servedBy',
+        render: userId => (
+          <a onClick={() => this.toggleUserVisible(userId)}>{userId}</a>
+        ),
       },
       {
         title: 'Served At',
@@ -90,6 +98,7 @@ class OrderTable extends Component {
               onCancel={() => this.toggleShowDetail(order.orderId)}
               okText="OK"
               width={700}
+              zIndex={500}
             >
               <Table
                 columns={this.itemColums}
@@ -110,6 +119,7 @@ class OrderTable extends Component {
 
     const groupByOrder = groupBy(data, 'order')
     let detailVisible = {}
+    let userVisible = {}
     let orders = []
     for (let [orderId, orderItems] of groupByOrder) {
       detailVisible[orderId] = false
@@ -122,13 +132,24 @@ class OrderTable extends Component {
         totalPrice,
       }
       orders.push(order)
+      for (let orderItem of orderItems) {
+        const { servedBy, cookedBy } = orderItem
+        if (servedBy) userVisible[servedBy] = false
+        if (cookedBy) userVisible[cookedBy] = false
+      }
     }
 
-    this.setState({ groupByOrder, detailVisible, orders })
+    this.setState({ groupByOrder, detailVisible, orders, userVisible })
   }
 
   componentDidUpdate(prevProps) {
     if (prevProps !== this.props) this.setData()
+  }
+
+  toggleUserVisible = userId => {
+    let userVisible = { ...this.state.userVisible }
+    userVisible[userId] = !userVisible[userId]
+    this.setState({ userVisible })
   }
 
   toggleShowDetail = orderId => {
@@ -138,14 +159,24 @@ class OrderTable extends Component {
   }
 
   render() {
-    const { orders } = this.state
+    const { orders, userVisible: users } = this.state
     const columns = this.columns
     return (
-      <Table
-        columns={columns}
-        dataSource={orders}
-        pagination={{ pageSize: 7 }}
-      />
+      <React.Fragment>
+        {Object.keys(users).map(id => (
+          <UserCard
+            key={id}
+            userId={id}
+            visible={users[id]}
+            handleVisible={this.toggleUserVisible}
+          />
+        ))}
+        <Table
+          columns={columns}
+          dataSource={orders}
+          pagination={{ pageSize: 7 }}
+        />
+      </React.Fragment>
     )
   }
 }
