@@ -7,15 +7,10 @@ const unlinkAsync = promisify(fs.unlink)
 const MenuItem = require('../models/menuItem.model')
 const Category = require('../models/category.model')
 const { findMenu } = require('./menu.controller')
-
-// present data to client side
-const present = (obj) => {
-  const { __v, ...data } = obj._doc
-  if (data.img) {
-    data.img = presentImg(data)
-  }
-  return data
-}
+const {
+  presentMenuItem: present,
+  presentMenuItemImg: presentImg,
+} = require('../util')
 
 // create menuItem { name, price, description, note  }
 createMenuItem = async (req, res, next) => {
@@ -275,12 +270,6 @@ deleteImage = async (req, res, next) => {
 }
 
 // Util functions
-presentImg = (obj) => ({
-  relativePath: `/menuitems/${obj._id}/img`,
-  _id: obj.img._id,
-  contentType: obj.img.contentType,
-  originalname: obj.img.originalname,
-})
 
 diskDeleteFileByPath = async (path) => {
   const err = await unlinkAsync(path)
@@ -333,7 +322,6 @@ module.exports = {
   deleteMenuItem,
   readMany,
   readManyPublicly,
-  present,
 
   uploadImage,
   readImage,
