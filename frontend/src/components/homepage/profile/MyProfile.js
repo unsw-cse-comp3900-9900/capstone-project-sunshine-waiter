@@ -29,13 +29,16 @@ class MyProfile extends React.Component {
     currentJobs: null,
     imageUploadModalVisible: false,
     avatarUrl: '',
+    isLoading: true,
   }
 
   onSetPendingJobs = data => {
     const { currentJobs, pendingJobs, img } = data
-    this.setState({
-      avatarUrl: baseURL + img.relativePath,
-    })
+    if (img.originalname !== undefined && !this.state.avatarUrl) {
+      this.setState({
+        avatarUrl: baseURL + img.relativePath,
+      })
+    }
     if (this.state.currentJobs === null) {
       this.setState({
         currentJobs,
@@ -61,6 +64,18 @@ class MyProfile extends React.Component {
   }
 
   onSetMe = data => {
+    const { img } = data
+
+    if (this.state.isLoading) {
+      this.setState({
+        isLoading: false,
+      })
+    }
+    if (img.originalname !== undefined) {
+      this.setState({
+        avatarUrl: baseURL + img.relativePath,
+      })
+    }
     this.setState({
       me: data,
       editingName: data.name,
@@ -91,7 +106,9 @@ class MyProfile extends React.Component {
           <img
             className="ui avatar image"
             src={
-              this.state.avatarUrl
+              this.state.isLoading
+                ? ''
+                : this.state.avatarUrl
                 ? this.state.avatarUrl
                 : require('../../homepage/SWLogo.png')
             }
@@ -153,7 +170,9 @@ class MyProfile extends React.Component {
           <img
             className="ui avatar image"
             src={
-              this.state.avatarUrl
+              this.state.isLoading
+                ? ''
+                : this.state.avatarUrl
                 ? this.state.avatarUrl
                 : require('../../homepage/SWLogo.png')
             }
