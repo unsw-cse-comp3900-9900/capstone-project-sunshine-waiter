@@ -39,8 +39,6 @@ class MenuBuilder extends React.Component {
   }
 
   renderActiveMenuItem = category => {
-    const { id: restaurantId } = this.props.match.params
-
     if (
       this.state.currentMenu === null ||
       this.state.currentMenu.menuItems.length === 0

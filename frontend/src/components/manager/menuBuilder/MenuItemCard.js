@@ -12,7 +12,6 @@ class MenuItemCard extends React.Component {
     super(props)
 
     this.state = {
-      item: props.item,
       categoryId: props.categoryId,
       showImageUploadModal: false,
     }
@@ -41,7 +40,7 @@ class MenuItemCard extends React.Component {
   }
 
   render() {
-    const { item } = this.state
+    const { item } = this.props
     const { id: restaurantId } = this.props.match.params
     const {
       handleMenuItemEdit,

@@ -25,25 +25,27 @@ class MenuItemModal extends React.Component {
     const { currentParam } = nextProps
 
     if (currentParam !== null) {
-      const {
-        _id,
-        categoryArray,
-        name,
-        description,
-        note,
-        price,
-        isPrivate,
-      } = currentParam
+      if (this._id === '') {
+        const {
+          _id,
+          categoryArray,
+          name,
+          description,
+          note,
+          price,
+          isPrivate,
+        } = currentParam
 
-      this._id = _id
-      this.setState({
-        categoryArray,
-        name,
-        description,
-        note,
-        price,
-        isPrivate,
-      })
+        this._id = _id
+        this.setState({
+          categoryArray,
+          name,
+          description,
+          note,
+          price,
+          isPrivate,
+        })
+      }
     } else {
       this._id = ''
       this.setState({
@@ -195,7 +197,10 @@ class MenuItemModal extends React.Component {
       'isPrivate',
     ])
 
+    console.log(param)
+
     if (this._id) {
+      console.log(param)
       await updateMenuItem(
         getCookie('token'),
         this.props.restaurantId,
