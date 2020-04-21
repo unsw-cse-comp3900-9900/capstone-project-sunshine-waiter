@@ -63,7 +63,7 @@ class RenderRequests extends React.Component {
     return (
       <div className="requestBox" key={request._id}>
         <div className="table">Table: {request.tableId}</div>
-        <div>{request.receiveTime}</div>
+        <div>{new Date(request.receiveTime).toLocaleTimeString()}</div>
         <div className="buttonBox">
           <Tooltip title="finish">
             <button

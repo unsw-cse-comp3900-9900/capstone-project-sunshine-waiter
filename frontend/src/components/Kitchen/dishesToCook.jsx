@@ -115,7 +115,7 @@ class RenderDishes extends React.Component {
       <div className="dishBox" key={dish._id}>
         <div className="dishName">{dish.name}</div>
         <div>{dish.amount}</div>
-        <div>{dish.order.createdAt}</div>
+        <div>{new Date(dish.order.createdAt).toLocaleTimeString()}</div>
         <div className="buttonBox">
           {dish.status === COOKING && <div>Cooking...</div>}
           {dish.status === PLACED && (
