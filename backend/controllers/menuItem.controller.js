@@ -11,6 +11,9 @@ const { findMenu } = require('./menu.controller')
 // present data to client side
 const present = (obj) => {
   const { __v, ...data } = obj._doc
+  if (data.img) {
+    data.img = presentImg(data)
+  }
   return data
 }
 
