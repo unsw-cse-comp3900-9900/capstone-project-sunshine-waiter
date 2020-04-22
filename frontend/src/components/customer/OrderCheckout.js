@@ -27,7 +27,7 @@ class OrderCheckout extends Component {
     this.onFetchCurrentOrder()
   }
 
-  OnSetCurrentOrder = data => {
+  OnSetCurrentOrder = (data) => {
     console.log('currentorder->', data)
     this.setState({
       currentOrder: data,
@@ -41,7 +41,7 @@ class OrderCheckout extends Component {
   onFetchCurrentOrder = async () => {
     const { orderId } = this.props.match.params
     const { id } = this.props.match.params
-    await fetchOrderApi(getCookie('token'), id, orderId, this.OnSetCurrentOrder)
+    await fetchOrderApi(id, orderId, this.OnSetCurrentOrder)
   }
 
   computeTotalPrice() {
@@ -68,7 +68,7 @@ class OrderCheckout extends Component {
       order: orderId,
     }
 
-    await sendRequest(getCookie('token'), id, param)
+    await sendRequest(id, param)
   }
 
   handlerequest = async () => {

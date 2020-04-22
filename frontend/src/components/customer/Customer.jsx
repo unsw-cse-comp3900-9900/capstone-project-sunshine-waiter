@@ -286,7 +286,7 @@ class Customer extends Component {
       orderItemsData: this.state.orderItemsData,
     }
 
-    await createOrder(token, id, param, (data) => {
+    await createOrder(id, param, (data) => {
       console.log('Order created. Here is the order:  ', data)
       this.setState({
         orderId: data._id,
@@ -324,7 +324,6 @@ class Customer extends Component {
               note,
               restaurant,
               img,
-
             }) => {
               return (
                 categoryArray[0] === displayIndex && (
@@ -337,9 +336,7 @@ class Customer extends Component {
                     _id={_id}
                     restaurantId={restaurant}
                     menuItemId={_id}
-
                     img={img}
-
                     getorder={this.increaseorder}
                   />
                 )
@@ -522,7 +519,6 @@ class Customer extends Component {
     } else if (this.state.pagestatus === 2) {
       return (
         <PaymentFinsh
-
           id={this.props.match.params.id}
           orderId={this.state.orderId}
         />
