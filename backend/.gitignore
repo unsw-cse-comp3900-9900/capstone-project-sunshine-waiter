@@ -4,8 +4,6 @@
 dev_*
 tmp_*
 
-# env
-.env_file
 
 # upload
 /upload
