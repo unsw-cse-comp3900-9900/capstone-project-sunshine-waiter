@@ -18,40 +18,43 @@ like this:
 
 ## How to Run with Docker
 
-### First time SetUp
 
-- install [Docker](https://www.docker.com/products/docker-desktop)
-- After installation, start the docker in your computer
-- In the terminal, `git clone` the repository from remote and in the working directory run `docker-compose up --build`
+### Build, Setup and Configure
+#### Run with Docker
+##### First-time setup
+1. Open a terminal and `git clone` this [repository](https://github.com/unsw-cse-comp3900-9900/capstone-project-sunshine-waiter)
+2. Install [Docker](https://www.docker.com/products/docker-desktop), and create an account if no
+3. After installation, launch docker in your computer
+4. After docker is running and up in your computer, open a terminal and`cd` to the root directory of this project(same directory with `docker-compose.yml`)
+5. Run `docker-compose up --build` to build and run this project
+6. After everything is built, go to `http://localhost:3000`
 
-### Subsequent runs
+##### Subsequence runs
+1. Run `docker-compose up` in your terminal (make sure the docker is up in your computer, otherwise the docker command will not working)
+2. Go to `http://localhost:3000`
 
-- Just run `docker-compose up`
-- Access to the waiter page throught `http://localhost:3000`
 
-## How to push your code
+### Play around our system and functionalities
+#### Before using our system
+##### 1. Create Multiple profiles
+Due to the persist-login functionality in our system, a chrome profile can only persist a user's cookie from SW website. So it is better to create multiple profiles in chrome and run our website to avoid the situation that logging in one more user will kick out the current user.
 
-- The only way to push is via pull request
-- How to do this?
+Reason to have this multiple profiles to play around our web application is that our web application has all kinds of interaction between different roles.
 
-  ```
-  - git checkout -b branch_name
-  - git add <files>
-  - git commit -m "some thing"
-  - git push origin branch_name:username/branch_name
+Way to create profile in Chrome, [click here](https://www.bettercloud.com/monitor/the-academy/how-to-create-switch-profiles-in-chrome/)
 
-  ```
+##### 2. Generate and Use our dummy data if you want
+- After the system is up, type the following code to initiate dummy data
+ ```
+ curl http://localhost:8000/dbinit
+ ```
+- This will generate hundreds of SW users and thousands of history order records which is enough for sales analysis in dashboard in the manager page
+- All users information can be found in `dummyUsers.json` for the sake of login
 
-- After push code, go to `github`, your pr will be prompted in the page, go and click `compare & pull request` and fill information and request a reviewer
+##### 3. Play around with your own create data
+- Please follow the video guide below to create your own mock-up data step by step
 
-- A PR cannot be merged before being approved
-  - git checkout master
-  - git branch -d branch_name
-
-## Tech Stack
-
-Frontemd: React + Antd + Semantic UI
-
-Backend: Node.js + Express + MongoDB
-
-DevOps: AWS EB + Docker + Nginx
+#### Video Guides
+##### 1. [How to create a restaurant, build menu and invite staffs](https://youtu.be/eb3eQ_ZZ1xo)
+##### 2. [How to make an order](https://www.youtube.com/watch?v=3I23qQJmjWQ)
+##### 3. [Sales analysis section](https://www.youtube.com/watch?v=BgWIriECzFo)
