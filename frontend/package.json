@@ -15,7 +15,7 @@
     "dayjs": "1.8.23",
     "dummy-json": "^2.0.0",
     "jwt-decode": "2.2.0",
-    "lodash": "4.17.15",
+    "lodash": "4.17.19",
     "prop-types": "^15.7.2",
     "rc-queue-anim": "^1.8.4",
     "rc-tween-one": "^2.6.8",
