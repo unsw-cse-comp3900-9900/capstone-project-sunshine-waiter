@@ -4,7 +4,7 @@
   "main": "index.js",
   "dependencies": {
     "accesscontrol": "^2.2.1",
-    "bcrypt": "^4.0.1",
+    "bcrypt": "^5.0.0",
     "config": "^3.3.1",
     "cors": "^2.8.5",
     "dummy-json": "^2.0.0",
